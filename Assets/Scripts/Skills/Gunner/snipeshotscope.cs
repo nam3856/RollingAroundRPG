@@ -4,6 +4,7 @@ using Cinemachine;
 using Photon.Pun;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using System;
 
 public class SnipeShotSkill : MonoBehaviourPunCallbacks
 {
@@ -12,7 +13,7 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
     public float zoomSpeed = 10f;
     public float overlayFadeSpeed = 5f;
     public float zoomInOrthoSize = 3.5f;
-    private bool isSniping = false;
+    public bool isSniping { get; private set; } = false;
     private Transform originalFollow;
     private Transform originalLookAt;
     private AudioClip snipeSound;
@@ -22,6 +23,7 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
     private HashSet<int> attackedPlayers = new HashSet<int>();
 
     private AudioClip reloadSound;
+
     private void Start()
     {
         sniperCamera = GameObject.Find("CMCamera").GetComponent<CinemachineVirtualCamera>();
@@ -35,6 +37,12 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
         
     }
 
+    private SnipeShot snipeShotSkill;
+
+    public void SetSnipeShotSkill(SnipeShot skill)
+    {
+        snipeShotSkill = skill;
+    }
 
     private void Update()
     {
@@ -49,22 +57,15 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
         }
     }
 
-    public IEnumerator ActivateSnipeShot()
+    public async UniTask ActiveSnipeScopeAsync()
     {
         originalBoundingShape = confiner.m_BoundingShape2D;
-        // Stop following the player
         sniperCamera.Follow = null;
         sniperCamera.LookAt = null;
+        confiner.m_BoundingShape2D = null;
 
-        // Disable bounding shape
-        if (confiner != null)
-        {
-            confiner.m_BoundingShape2D = null;
-        }
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        // Zoom in the camera and fade in the overlay simultaneously
         float currentOrthoSize = sniperCamera.m_Lens.OrthographicSize;
+
         while (currentOrthoSize > zoomInOrthoSize || sniperOverlay.alpha < 1)
         {
             if (currentOrthoSize > zoomInOrthoSize)
@@ -78,13 +79,15 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
                 sniperOverlay.alpha += overlayFadeSpeed * Time.deltaTime;
             }
 
-            yield return null;
+            await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
         }
         sniperCamera.m_Lens.OrthographicSize = zoomInOrthoSize;
         Debug.Log("저격준비 완료");
         isSniping = true;
         sniperOverlay.alpha = 1;
+
     }
+    
 
     private void HandleSniperMovement()
     {
@@ -120,23 +123,23 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
                 }
             }
         }
+        snipeShotSkill?.SetLastUsedTime(Time.time);
+
         DeactivateSnipeShot();
     }
-
-    
 
     private void DeactivateSnipeShot()
     {
 
         character.RB.constraints = RigidbodyConstraints2D.FreezeRotation;
+
         UniTask.Void(async () =>
         {
             await UniTask.Delay(1000);
             character.AdjustCurrentMP(-character.GetMaxMP());
         });
         character.SetIsAttacking(false);
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+
         float currentOrthoSize = sniperCamera.m_Lens.OrthographicSize;
         sniperCamera.m_Lens.OrthographicSize = 5f;
         sniperOverlay.alpha = 0;
@@ -144,9 +147,8 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
         sniperCamera.Follow = originalFollow;
         sniperCamera.LookAt = originalLookAt;
 
-        if (confiner != null)
-        {
-            confiner.m_BoundingShape2D = originalBoundingShape;
-        }
+        confiner.m_BoundingShape2D = originalBoundingShape;
+
+        attackedPlayers.Clear();
     }
 }

@@ -14,11 +14,9 @@ public class FireBall : Skill
 
     protected override void ExecuteSkill(Character character)
     {
-        character.SetIsAttacking(true);
-        character.RB.velocity = Vector2.zero;
-
+        character.ResetAttackState(0.5f, true).Forget();
+        
         character.audioSource.PlayOneShot(SpellSoundClip);
-        character.RB.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
         UniTask.Void(async () =>
         {
             Vector2 attackDirection = character.GetLastMoveDirection();
@@ -41,9 +39,6 @@ public class FireBall : Skill
                 bulletPosition += new Vector3(attackDirection.y > 0 ? 0.15f : -0.1f, attackDirection.y * 0.2f, 0);
             }
 
-            //character.audioSource.PlayOneShot(shotSound);
-
-            // PhotonNetwork.Instantiate를 사용하여 총알 생성
             GameObject fireball = PhotonNetwork.Instantiate("Fireball", bulletPosition, Quaternion.identity);
             FireballScript fireballScript = fireball.GetComponent<FireballScript>();
             Collider2D shooterCollider = character.GetComponent<Collider2D>();
@@ -52,9 +47,6 @@ public class FireBall : Skill
 
             // 스킬 쿨타임 설정
             SetLastUsedTime(Time.time);
-
-            character.SetIsAttacking(false);
-            character.RB.constraints = RigidbodyConstraints2D.FreezeRotation;
         });
     }
 

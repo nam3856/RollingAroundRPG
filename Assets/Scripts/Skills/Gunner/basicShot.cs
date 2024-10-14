@@ -16,9 +16,8 @@ public class basicShot : Skill
 
     protected override void ExecuteSkill(Character character)
     {
-        character.SetIsAttacking(true);
-        character.SetLastAttackTime(Time.time);
-        character.RB.velocity = Vector2.zero;
+        character.ResetAttackState(0.3f, true).Forget();
+
         Vector2 attackDirection = character.GetLastMoveDirection();
         int attackDamage = character.attackDamage;
         Vector3 bulletPosition = character.transform.position;
@@ -41,24 +40,22 @@ public class basicShot : Skill
         GameObject bullet = PhotonNetwork.Instantiate("Bullet", bulletPosition, Quaternion.identity);
         BulletScript bulletScript = bullet.GetComponent<BulletScript>();
         Collider2D shooterCollider = character.GetComponent<Collider2D>();
-        bulletScript.SetDirectionAndDamage(new object[] { attackDirection, attackDamage, character.PV.OwnerActorNr, shooterCollider, true, character.PV.ViewID});
+        bulletScript.SetDirectionAndDamage(new object[] { attackDirection, attackDamage, character.PV.OwnerActorNr, shooterCollider, true, character.PV.ViewID });
 
         // 캐릭터의 공격 모션 동기화
         character.PV.RPC("StartAttackingMotion", RpcTarget.All, attackDirection, 0);
 
         // 스킬 쿨타임 설정
         SetLastUsedTime(Time.time);
-        UniTask.Void(async () =>
+        if (character.GetCurrentMP() == 0)
         {
-            await UniTask.Delay(300);
-            character.SetIsAttacking(false);
-
-            if(character.GetCurrentMP() == 0)
+            UniTask.Void(async () =>
             {
-                character.audioSource.PlayOneShot(reloadSound);
-                await UniTask.Delay(1000);
-                character.AdjustCurrentMP(-character.GetMaxMP());
-            }
-        });
+            await UniTask.Delay(290);
+            character.audioSource.PlayOneShot(reloadSound);
+            await UniTask.Delay(1000);
+            character.AdjustCurrentMP(-character.GetMaxMP());
+            });
+        }
     }
 }

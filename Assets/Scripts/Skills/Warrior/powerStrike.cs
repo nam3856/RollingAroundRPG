@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
@@ -17,26 +18,25 @@ public class powerStrike : Skill
         {
             warrior = character as Warrior;
         }
-        warrior.SetIsAttacking(true);
-        warrior.SetLastAttackTime(Time.time);
-        warrior.SetAttackTime(Time.time + 0.8f);
-        warrior.RB.velocity = Vector2.zero;
-        warrior.audioSource.PlayOneShot(chargingSound);
-        warrior.StartCoroutine(StartPowerStrike(warrior));
+        
+        warrior.ResetAttackState(0.6f, true).Forget();
+
+        PowerStrikeAsync(warrior).Forget();
     }
-    private IEnumerator StartPowerStrike(Warrior warrior)
+    private async UniTask PowerStrikeAsync(Warrior warrior)
     {
+        warrior.audioSource.PlayOneShot(chargingSound);
+
         Vector2 attackDirection = warrior.GetLastMoveDirection();
         warrior.PV.RPC("StartPowerStrikeMotion", RpcTarget.All, attackDirection);
-        yield return new WaitForSeconds(0.5f); // 0.5ÃÊ ¼±µô
 
+        await UniTask.Delay(500);
 
         warrior.audioSource.PlayOneShot(impactSound);
         PhotonNetwork.Instantiate("FanBullet", warrior.transform.position, Quaternion.identity)
             .GetComponent<PhotonView>().RPC("SetPowerStrike", RpcTarget.All, attackDirection, warrior.attackDamage * 5, warrior.PV.ViewID);
-        SetLastUsedTime(Time.time); // ÄðÅ¸ÀÓ °»½Å
-        yield return new WaitForSeconds(0.06f);
-        warrior.SetIsAttacking(false);
         
+        SetLastUsedTime(Time.time);
+
     }
 }

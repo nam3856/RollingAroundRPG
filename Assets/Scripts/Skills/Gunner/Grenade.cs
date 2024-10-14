@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +11,6 @@ public class GrenadeToss : Skill
 
     private AudioClip grenadeSound2 = Resources.Load<AudioClip>("Sounds/grenadethrow");
     private AudioClip grenadeExplodeSound = Resources.Load<AudioClip>("Sounds/grenadeExplode");
-    private int stacking = 0;
 
     public GrenadeToss(List<Skill> prerequisites) : base("수류탄 투척", "수류탄을 던져 광범위한 피해를 줍니다.", 0, prerequisites, 3, 16f)
     {
@@ -18,11 +18,11 @@ public class GrenadeToss : Skill
 
     protected override void ExecuteSkill(Character character)
     {
-        character.SetLastAttackTime(Time.time);
         character.SetIsAttacking(true);
         character.RB.velocity = Vector2.zero;
 
         character.audioSource.PlayOneShot(grenadeSound);
+        character.ResetAttackState(0.2f, true).Forget();
         character.StartCoroutine(ThrowGrenade(character, 0.2f));
     }
 

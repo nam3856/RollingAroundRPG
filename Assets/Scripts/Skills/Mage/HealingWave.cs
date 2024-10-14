@@ -14,11 +14,9 @@ public class HealingWave : Skill
 
     protected override void ExecuteSkill(Character character)
     {
-        character.SetIsAttacking(true);
-        character.RB.velocity = Vector2.zero;
+        character.ResetAttackState(0.6f, true).Forget();
         Vector2 attackDirection = character.GetLastMoveDirection();
 
-        character.RB.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
         character.PV.RPC("StartAttackingMotion", RpcTarget.All, attackDirection, 0);
 
         character.audioSource.PlayOneShot(SpellSoundClip);
@@ -26,8 +24,6 @@ public class HealingWave : Skill
         {
             await UniTask.Delay(600);
 
-            character.RB.constraints = RigidbodyConstraints2D.FreezeRotation;
-            character.SetIsAttacking(false);
             for (int i = 0; i < 3; i++)
             {
                 Collider2D[] hitColliders = Physics2D.OverlapCircleAll(character.transform.position, 2f);

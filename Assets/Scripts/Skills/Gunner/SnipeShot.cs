@@ -1,5 +1,7 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class SnipeShot : Skill
 {
@@ -13,7 +15,11 @@ public class SnipeShot : Skill
         character.RB.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
         if (character.TryGetComponent(out SnipeShotSkill snipeShotSkill))
         {
-            character.StartCoroutine(snipeShotSkill.ActivateSnipeShot());
+            snipeShotSkill.SetSnipeShotSkill(this);
+
+            snipeShotSkill.ActiveSnipeScopeAsync().Forget(e => Debug.LogException(e));
         }
+
     }
+
 }

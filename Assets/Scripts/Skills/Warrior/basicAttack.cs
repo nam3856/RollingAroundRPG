@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class basicAttack : Skill
 {
@@ -28,7 +29,7 @@ public class basicAttack : Skill
 
         SetLastUsedTime(Time.time); // 쿨타임 갱신
 
-        warrior.StartCoroutine(warrior.ResetAttackState(0.3f));
+        warrior.ResetAttackState(0.3f, true).Forget();
     }
 
 

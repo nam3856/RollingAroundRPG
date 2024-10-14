@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using System;
 using System.Collections;
@@ -7,13 +8,15 @@ using UnityEngine;
 public class shieldBlock : Skill
 {
     private bool isBlocking;
+    private bool isParrying;
     private Warrior warrior;
-    public shieldBlock(List<Skill> prerequisites) : base("방패 막기", "방패를 들어 적의 공격을 막습니다. 타이밍을 맞추면 주위 적들이 뒤로 밀려납니다.", 1, prerequisites, 2,3f) { }
+    private int parryingTime = 500;
+    public shieldBlock(List<Skill> prerequisites) : base("방패 막기", "방패를 들어 적의 공격을 막습니다. 타이밍을 맞추면 주위 적들이 뒤로 밀려납니다.", 1, prerequisites, 2,2f) { }
     protected override void ExecuteSkill(Character character)
     {
         if (character is Warrior){
             warrior = character as Warrior;
-            isBlocking = true;
+            isParrying = true;
             warrior.SetIsBlocking(true);
             warrior.RB.velocity = Vector2.zero;
             warrior.RB.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
@@ -21,29 +24,28 @@ public class shieldBlock : Skill
 
         warrior.PV.RPC("StartBlockingAnimation", RpcTarget.All);
         // 1초 후 방어 완료 처리
-        warrior.StartCoroutine(EndBlock());
+        EndParryingAsync(parryingTime).Forget();
     }
 
-    private IEnumerator EndBlock()
+    private async UniTask EndParryingAsync(int parryingTime)
     {
-        yield return new WaitForSeconds(1f); // 1초 동안 패링 상태
-
-        isBlocking = false; // 1초 후 일반 블록 상태로 전환
+        await UniTask.Delay(parryingTime);
+        isParrying = false;
     }
 
     [PunRPC]
     public void OnReceiveDamage(float damage, Vector2 attackDirection)
     {
         GameObject damageTextInstance = PhotonNetwork.Instantiate("DamageText", warrior.canvasTransform.position, Quaternion.identity);
-            //Instantiate(warrior.damageTextPrefab, warrior.canvasTransform);
         DamageText damageTextScript = damageTextInstance.GetComponent<DamageText>();
         GameObject uiCanvas = GameObject.Find("Canvas");
         damageTextInstance.transform.SetParent(uiCanvas.transform, false);
         PhotonView damageTextPV = damageTextInstance.GetComponent<PhotonView>();
         int curHealth = warrior.GetCurrentHealth();
-        if (isBlocking) // 패링 상태
+
+        if (isParrying) // 패링 상태
         {
-            KnockbackEnemies(1f); // 적 넉백 처리
+            KnockbackEnemies(1.2f); // 적 넉백 처리
             damageTextPV.RPC("SetDamageText", RpcTarget.All, "Guard!");
             warrior.PV.RPC("ActivateGuardEffectObject", RpcTarget.All);
         }
@@ -61,14 +63,12 @@ public class shieldBlock : Skill
             warrior.SetCurrentHealth(curHealth - (int)damage); // 방어하지 않는 경우 일반 데미지
         }
         
-        
         warrior.PV.RPC("UpdateHealthBar", RpcTarget.All);
     }
 
-    // 적을 넉백시키는 로직
     private void KnockbackEnemies(float force)
     {
-        Collider2D[] enemies = Physics2D.OverlapCircleAll(warrior.transform.position, 1f, warrior.enemyLayer);
+        Collider2D[] enemies = Physics2D.OverlapCircleAll(warrior.transform.position, 0.6f, warrior.enemyLayer);
         foreach (Collider2D enemy in enemies)
         {
             PhotonView monsterPV = enemy.GetComponent<PhotonView>();

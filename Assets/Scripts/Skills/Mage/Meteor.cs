@@ -12,10 +12,11 @@ public class Meteor : Skill
 
     protected override void ExecuteSkill(Character character)
     {
-        character.SetIsAttacking(true);
-        character.RB.velocity = Vector2.zero;
+        character.ResetAttackState(1f, true).Forget();
+
         Vector2 attackDirection = character.GetLastMoveDirection();
         character.PV.RPC("StartAttackingMotion", RpcTarget.All, attackDirection, 0);
+
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(character.transform.position, 3f);
 
         foreach (var collider in hitColliders)
@@ -35,14 +36,7 @@ public class Meteor : Skill
 
             effectedMonsters.Add(monsterPV.ViewID);
         }
-        UniTask.Void(async () =>
-        {
-
-            await UniTask.Delay(500);
-            character.SetIsAttacking(false);
-            character.RB.constraints = RigidbodyConstraints2D.FreezeRotation;
-            effectedMonsters.Clear();
-        });
+        effectedMonsters.Clear();
     }
 
 

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class ArcaneShield : Skill
 {
@@ -15,37 +16,31 @@ public class ArcaneShield : Skill
 
     protected override void ExecuteSkill(Character character)
     {
-        character.SetIsAttacking(true);
-        character.RB.velocity = Vector2.zero;
+        character.ResetAttackState(0.5f, true).Forget();
         Vector2 attackDirection = character.GetLastMoveDirection();
         character.PV.RPC("StartAttackingMotion", RpcTarget.All, attackDirection, 0);
         character.audioSource.PlayOneShot(SpellSoundClip);
-        character.RB.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-        UniTask.Void(async () =>
-        {
 
-            await UniTask.Delay(500);
-            Collider2D[] hitColliders = Physics2D.OverlapCircleAll(character.transform.position, 2f);
-            foreach (var collider in hitColliders)
-            {
-
-                if (collider.CompareTag("Player"))
-                {
-                    PhotonView playerPV = collider.GetComponent<PhotonView>();
-                    if (effectedPlayers.Contains(playerPV.ViewID)) continue;
-                    effectedPlayers.Add(playerPV.ViewID);
-                    if (playerPV != null)
-                    {
-                        playerPV.RPC("SetArcaneShield", RpcTarget.All);
-                    }
-                }
-            }
-            character.SetIsAttacking(false);
-            character.RB.constraints = RigidbodyConstraints2D.FreezeRotation;
-
-            effectedPlayers.Clear();
-        });
+        SetArcaneShieldInRangeAsync(character, 2f).Forget(e => Debug.LogException(e));
     }
 
-    
+    private async UniTask SetArcaneShieldInRangeAsync(Character character, float range)
+    {
+        await UniTask.Delay(500);
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(character.transform.position, range);
+        foreach (var collider in hitColliders)
+        {
+
+            if (collider.CompareTag("Player"))
+            {
+                PhotonView playerPV = collider.GetComponent<PhotonView>();
+                if (effectedPlayers.Contains(playerPV.ViewID)) continue;
+                effectedPlayers.Add(playerPV.ViewID);
+                if (playerPV != null)
+                {
+                    playerPV.RPC("SetArcaneShield", RpcTarget.All);
+                }
+            }
+        }
+    }
 }

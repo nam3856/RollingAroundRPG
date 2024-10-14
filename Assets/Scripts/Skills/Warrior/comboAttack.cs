@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class comboAttack : Skill
 {
@@ -28,7 +29,7 @@ public class comboAttack : Skill
         bullet.GetComponent<PhotonView>().RPC("DirRPC", RpcTarget.All, attackDirection, character.attackDamage * 2, character.PV.ViewID);
 
 
-        warrior.StartCoroutine(warrior.ResetAttackState(0.3f));
+        warrior.ResetAttackState(0.3f, true).Forget();
     }
 
     

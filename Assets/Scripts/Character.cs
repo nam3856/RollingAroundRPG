@@ -11,6 +11,8 @@ using Cinemachine;
 using System;
 using ExitGames.Client.Photon;
 using Cysharp.Threading.Tasks;
+using UnityEngine.TextCore.Text;
+using Cysharp.Threading.Tasks.CompilerServices;
 
 
 public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
@@ -104,10 +106,32 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             CM.Follow = transform;
             CM.LookAt = transform;
         }
+        else
+        {
+            UpdatePositionAsync().Forget();
+        }
 
-        InvokeRepeating("RecoveryHPMP", 1f, 1f);
+        RecoveryHpMpAsync().Forget();
     }
 
+    private async UniTaskVoid UpdatePositionAsync()
+    {
+        while (true)
+        {
+            float distance = (transform.position - curPos).sqrMagnitude;
+
+            if (distance > 1.0f)
+            {
+                transform.position = curPos;
+            }
+            else
+            {
+                transform.position = Vector3.Lerp(transform.position, curPos, Time.deltaTime * 10);
+            }
+
+            await UniTask.Yield();
+        }
+    }
     public int GetCurrentMP()
     {
         return (int)currentMP;
@@ -148,19 +172,30 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
         magicTransform.gameObject.SetActive(true);
         magicAnimator.SetTrigger("Healing Wave");
     }
-    protected virtual void RecoveryHPMP()
-    {
-        if (!PV.IsMine) return;
-        currentHealth += maxHealth / 400;
-        if (currentHealth > maxHealth) currentHealth = maxHealth;
-        currentMP += maxMP / 300;
-        if (currentMP > maxMP) currentMP = maxMP;
-        uiManager.SetHp((int)currentHealth, (int)maxHealth, this);
-        uiManager.SetMp((int)currentMP, (int)maxMP);
 
-        foreach(Skill skill in skills)
+    protected virtual async UniTask RecoveryHpMpAsync()
+    {
+        while (!isDead)
         {
-            skill.UpdateSkillUI(this);
+            currentHealth += maxHealth / 400;
+            if (currentHealth > maxHealth) currentHealth = maxHealth;
+            currentMP += maxMP / 300;
+            if (currentMP > maxMP) currentMP = maxMP;
+
+            HealthImage.fillAmount = currentHealth / maxHealth;
+
+            if (PV.IsMine)
+            {
+                uiManager.SetHp((int)currentHealth, (int)maxHealth, this);
+                uiManager.SetMp((int)currentMP, (int)maxMP);
+            }
+
+            foreach (Skill skill in skills)
+            {
+                skill.UpdateSkillUI(this);
+            }
+
+            await UniTask.Delay(1000);
         }
     }
     void LoadCharacterData()
@@ -203,33 +238,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     {
         return 0;
     }
-    public virtual IEnumerator ResetAttackState(float sec)
-    {
-        yield return new WaitForSeconds(sec);
-        isAttacking = false;
-    }
 
-    protected virtual void Update()
-    {
-        if (PV.IsMine)
-        {
-            
-        }
-        else
-        {
-            //Debug.Log(curPos);
-            float distance = (transform.position - curPos).sqrMagnitude;
-
-            if (distance > 1.0f)
-            {
-                transform.position = curPos;
-            }
-            else
-            {
-                transform.position = Vector3.Lerp(transform.position, curPos, Time.deltaTime * 10);
-            }
-        }
-    }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
@@ -441,8 +450,8 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
         // 소유한 플레이어만 죽음 처리
         if (!PV.IsMine) return;
         isDead = true;
-        CancelInvoke("RecoveryHPMP");
-
+        currentHealth = 0;
+        uiManager.SetHp((int)currentHealth, (int)maxHealth, this);
         PhotonNetwork.Instantiate("Death", transform.position, Quaternion.identity);
         GameObject.Find("UI").transform.Find("RespawnPanel").gameObject.SetActive(true);
         isAttacking = false;
@@ -505,10 +514,11 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     public virtual void Respawn()
     {
         isDead = false;
-        InvokeRepeating("RecoveryHPMP",1f,1f);
         currentHealth = maxHealth;
         currentMP = maxMP;
-        UpdateHealthBar();
+
+        RecoveryHpMpAsync().Forget();
+
         if (PV.IsMine)
         {
             uiManager.SetHp((int)currentHealth, (int)maxHealth, this);
@@ -516,6 +526,21 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    public virtual async UniTask ResetAttackState(float sec, bool lockPosition)
+    {
+        if(lockPosition)
+        {
+            RB.velocity = Vector2.zero;
+            RB.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+        }
+        isAttacking = true;
+
+        await UniTask.Delay(TimeSpan.FromSeconds(sec));
+
+
+        RB.constraints = RigidbodyConstraints2D.FreezeRotation;
+        isAttacking = false;
+    }
     
 }
 
@@ -529,6 +554,28 @@ public class Warrior : Character
     private float comboResetTime;
     private float comboDelay = 3f;
 
+
+    public override void Start()
+    {
+        base.Start();
+        attackDamage = 2;
+        swordSounds = new AudioClip[20];
+        for (int i = 0; i < swordSounds.Length; i++)
+        {
+            string clipName = $"Sounds/sword_{(i + 1).ToString("D2")}";
+            swordSounds[i] = Resources.Load<AudioClip>(clipName);
+        }
+
+        rush.OnRushStarted += HandleRushStart;
+        rush.OnRushEnded += HandleRushEnd;
+
+        for (int i = 0; i < 5; i++)
+        {
+            skills.Add(skillTreeManager.CharacterClasses[0].Skills[i]);
+        }
+    }
+
+    //Getter and Setter ========
     public void SetIsBlocking(bool status)
     {
         isBlocking = status;
@@ -537,50 +584,6 @@ public class Warrior : Character
     public bool GetIsBlocking()
     {
         return isBlocking;
-    }
-    public override void Start()
-    {
-        base.Start();
-        AttackDuration = 0.3f;
-        AttackCooldown = 0.05f;
-        attackDamage = 2;
-        swordSounds = new AudioClip[20];
-        for (int i = 0; i < swordSounds.Length; i++)
-        {
-            string clipName = $"Sounds/sword_{(i + 1).ToString("D2")}";  // sword_01, sword_02 ... sword_20
-            swordSounds[i] = Resources.Load<AudioClip>(clipName);
-        }
-
-        rush.OnRushStarted += HandleRushStart;
-        rush.OnRushEnded += HandleRushEnd;
-        
-        for(int i = 0; i < 5; i++)
-        {
-            skills.Add(skillTreeManager.CharacterClasses[0].Skills[i]);
-        }
-    }
-    protected override int CalculateMaxMP(int level)
-    {
-        return 50;
-    }
-    public override IEnumerator ResetAttackState(float sec)
-    {
-        yield return new WaitForSeconds(sec);
-        isAttacking = false;
-
-        comboResetTime = Time.time + comboDelay;
-        attackStep = (attackStep + 1) % 2;
-    }
-    protected override int CalculateMaxHealth(int level)
-    {
-        return 100 + (level - 1) * 10;
-    }
-
-    [PunRPC]
-    public override void Respawn()
-    {
-        base.Respawn();
-        AN.SetTrigger("warrior init");
     }
     public int GetAttackStep()
     {
@@ -595,6 +598,34 @@ public class Warrior : Character
         comboResetTime = time;
     }
 
+    protected override int CalculateMaxHealth(int level)
+    {
+        return 100 + (level - 1) * 10;
+    }
+    protected override int CalculateMaxMP(int level)
+    {
+        return 50;
+    }
+    
+    public override async UniTask ResetAttackState(float sec, bool lockPosition)
+    {
+        await base.ResetAttackState(sec, lockPosition);
+
+        comboResetTime = Time.time + comboDelay;
+        attackStep = (attackStep + 1) % 2;
+    }
+
+    //========
+
+    [PunRPC]
+    public override void Respawn()
+    {
+        base.Respawn();
+        AN.SetTrigger("warrior init");
+    }
+    
+    
+
 
     public override void StartSkill(int skillIdx)
     {
@@ -607,6 +638,7 @@ public class Warrior : Character
         base.StartSkill(skillIdx);
     }
 
+    //Warrior Attack =========
     public override void Attack()
     {
         if (isAttacking) return;
@@ -624,6 +656,22 @@ public class Warrior : Character
             Vector2 attackDirection = GetLastMoveDirection();
 
         }
+    }
+
+    public void ResetAttack()
+    {
+        if (Time.time > comboResetTime)
+        {
+            attackStep = 0;
+            //Debug.Log("공격 리셋: 콤보가 초기화되었습니다.");
+        }
+    }
+    public void PlayRandomSwordSound()
+    {
+        int randomIndex = UnityEngine.Random.Range(0, swordSounds.Length);
+
+        audioSource.clip = swordSounds[randomIndex];
+        audioSource.Play();
     }
 
     [PunRPC]
@@ -646,36 +694,9 @@ public class Warrior : Character
         }
     }
 
-    private void HandleRushStart()
-    {
-        Debug.Log("Warrior: 돌진!");
-    }
+    //=========
 
-    private void HandleRushEnd()
-    {
-        isRushing = false;
-        Debug.Log("돌진 종료!");
-    }
-
-    
-
-    
-
-    public void ResetAttack()
-    {
-        if (Time.time > comboResetTime)
-        {
-            attackStep = 0;
-            //Debug.Log("공격 리셋: 콤보가 초기화되었습니다.");
-        }
-    }
-    public void PlayRandomSwordSound()
-    {
-        int randomIndex = UnityEngine.Random.Range(0, swordSounds.Length);
-
-        audioSource.clip = swordSounds[randomIndex];
-        audioSource.Play();
-    }
+    //Warrior Block =========
     public override void StartSpecialSkill(bool isDown)
     {
         if (isDown)
@@ -689,19 +710,6 @@ public class Warrior : Character
                 EndBlock();  // 방어 중이면 종료
         }
     }
-
-    //public override void Block(bool p)
-    //{
-    //    if (p)
-    //    {
-    //        StartBlock();  // 방어 시작
-    //        base.Block(p);
-    //    }
-    //    else
-    //    {
-    //        EndBlock();  // 방어 중이면 종료
-    //    }
-    //}
 
     public void StartBlock()
     {
@@ -719,15 +727,6 @@ public class Warrior : Character
             guardEffectObject.SetActive(true); // 방패 막기 성공 오브젝트 활성화
         }
     }
-    [PunRPC]
-    void StartPowerStrikeMotion(Vector2 attackDirection)
-    {
-        if (attackDirection.x > 0) AN.SetTrigger("powerstrike right");
-        else if (attackDirection.x < 0) AN.SetTrigger("powerstrike left");
-        else if (attackDirection.y > 0) AN.SetTrigger("powerstrike up");
-        else if (attackDirection.y < 0) AN.SetTrigger("powerstrike down");
-    }
-
 
     // 방어 종료
     public void EndBlock()
@@ -743,6 +742,18 @@ public class Warrior : Character
     }
 
     [PunRPC]
+    void StartBlockingAnimation()
+    {
+        Vector2 blockDirection = lastMoveDirection;
+
+        if (blockDirection.x > 0) AN.SetBool("block right", true);
+        else if (blockDirection.x < 0) AN.SetBool("block left", true);
+        else if (blockDirection.y > 0) AN.SetBool("block up", true);
+        else if (blockDirection.y < 0) AN.SetBool("block down", true);
+
+        shieldEffectObject.SetActive(true);
+    }
+    [PunRPC]
     void EndBlockingAnimation()
     {
         if (shieldEffectObject != null)
@@ -755,19 +766,29 @@ public class Warrior : Character
         AN.SetBool("block down", false);
     }
 
-    [PunRPC]
-    void StartBlockingAnimation()
+
+    //=========
+    private void HandleRushStart()
     {
-        Vector2 blockDirection = lastMoveDirection;
-
-        if (blockDirection.x > 0) AN.SetBool("block right", true);
-        else if (blockDirection.x < 0) AN.SetBool("block left", true);
-        else if (blockDirection.y > 0) AN.SetBool("block up", true);
-        else if (blockDirection.y < 0) AN.SetBool("block down", true);
-
-        shieldEffectObject.SetActive(true);
+        Debug.Log("Warrior: 돌진!");
+        //Collider 활성화
     }
 
+    private void HandleRushEnd()
+    {
+        isRushing = false;
+        Debug.Log("돌진 종료!");
+        //Collider 비활성화
+    }
+
+    [PunRPC]
+    void StartPowerStrikeMotion(Vector2 attackDirection)
+    {
+        if (attackDirection.x > 0) AN.SetTrigger("powerstrike right");
+        else if (attackDirection.x < 0) AN.SetTrigger("powerstrike left");
+        else if (attackDirection.y > 0) AN.SetTrigger("powerstrike up");
+        else if (attackDirection.y < 0) AN.SetTrigger("powerstrike down");
+    }
 
     [PunRPC]
     public override void ReceiveDamage(int damage, Vector2 attackDirection)
@@ -831,6 +852,7 @@ public class Gunner : Character
     private float lastRollTime = -10f;
     private BulletPool pool;
     private AudioClip reloadSound;
+
     public override void Start()
     {
         base.Start();
@@ -847,18 +869,27 @@ public class Gunner : Character
         }
     }
 
-    protected override void RecoveryHPMP()
+    protected override async UniTask RecoveryHpMpAsync()
     {
-        if (!PV.IsMine) return;
-        currentHealth += maxHealth / 400;
-        if (currentHealth > maxHealth) currentHealth = maxHealth;
-
-        uiManager.SetHp((int)currentHealth, (int)maxHealth, this);
-        uiManager.SetMp((int)currentMP, (int)maxMP);
-
-        foreach (Skill skill in skills)
+        while (!isDead)
         {
-            skill.UpdateSkillUI(this);
+            currentHealth += maxHealth / 400;
+            if (currentHealth > maxHealth) currentHealth = maxHealth;
+
+            HealthImage.fillAmount = currentHealth / maxHealth;
+
+            if (PV.IsMine)
+            {
+                uiManager.SetHp((int)currentHealth, (int)maxHealth, this);
+                uiManager.SetMp((int)currentMP, (int)maxMP);
+            }
+
+            foreach (Skill skill in skills)
+            {
+                skill.UpdateSkillUI(this);
+            }
+
+            await UniTask.Delay(1000);
         }
     }
     protected override int CalculateMaxMP(int level)
@@ -869,19 +900,7 @@ public class Gunner : Character
     {
         return 80 + (level - 1) * 8;
     }
-    public override void Attack()
-    {
-        Debug.Log("Gunner: 총 발사!");
 
-        skillTreeManager.UseSkill(skills[0], this);
-        UniTask.Void(async () =>
-        {
-
-            await UniTask.Delay(200);
-            isAttacking = false;
-        });
-        base.Attack();
-    }
     [PunRPC]
     public override void Respawn()
     {
@@ -895,22 +914,11 @@ public class Gunner : Character
     }
 
     
-
     public override void StartSpecialSkill(bool isDown)
     {
         if (isRolling || isAttacking) return;
         skillTreeManager.UseSkill(skills[4], this);
     }
-    //public override void Roll()
-    //{
-    //    if (isRolling || isAttacking) return;
-
-    //    //var roll = skillTreeManager.CharacterClasses[1].Skills[4];
-    //    //skillTreeManager.UseSkill(roll, this);
-    //    skillTreeManager.UseSkill(skills[4], this);
-
-    //    base.Roll();
-    //}
 
     private void HandleRollStart()
     {

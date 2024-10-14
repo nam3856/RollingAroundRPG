@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,13 +25,12 @@ public class rush : Skill
         else if (rushDirection.y < 0) warrior.AN.SetTrigger("rush down");
 
         warrior.RB.velocity = rushDirection * rushSpeed;
-        warrior.StartCoroutine(RollEndTrigger(rushDuration));
-        Debug.Log("µ¹Áø");
-    }
 
-    private IEnumerator RollEndTrigger(float rushDuration)
+        _ = RushEndTriggerAsync(rushDuration);
+    }
+    private async UniTask RushEndTriggerAsync(float rushDuration)
     {
-        yield return new WaitForSeconds(rushDuration);
+        await UniTask.Delay(TimeSpan.FromSeconds(rushDuration));
         OnRushEnded?.Invoke();
     }
 }
