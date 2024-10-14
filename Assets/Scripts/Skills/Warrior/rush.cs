@@ -8,7 +8,11 @@ public class rush : Skill
 {
     public static event Action OnRushStarted;
     public static event Action OnRushEnded;
-    public rush(List<Skill> prerequisites) : base("돌진", "전방으로 돌진합니다.", 3, prerequisites, 4,7f) { }
+    public rush(List<Skill> prerequisites) : 
+        base("돌진", "전방으로 돌진합니다.", 3, prerequisites, 4,7f) 
+    {
+        icon = Resources.Load<Sprite>("Icons/Warrior_Skill3");
+    }
     protected override void ExecuteSkill(Character character)
     {
         float rushSpeed = 3f;

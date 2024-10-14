@@ -8,7 +8,11 @@ using Cysharp.Threading.Tasks;
 public class basicAttack : Skill
 {
     private Warrior warrior;
-    public basicAttack() : base("기본 검술", "검을 휘둘러 전방의 적에게 데미지를 줍니다.", 0,null,0,0.4f) { }
+    public basicAttack() : 
+        base("기본 검술", "검을 휘둘러 전방의 적에게 데미지를 줍니다.", 0,null,0,0.4f) 
+    {
+        icon = Resources.Load<Sprite>("Icons/Warrior_Skill1");
+    }
     protected override void ExecuteSkill(Character character)
     {
         if (character is Warrior)

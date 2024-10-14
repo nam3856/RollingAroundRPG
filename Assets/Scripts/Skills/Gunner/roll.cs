@@ -11,6 +11,8 @@ public class roll : Skill
     public static event Action OnRollEnded;
     public roll(List<Skill> prerequisites) : base("구르기", "이동 방향으로 빠르게 구릅니다.", 0, prerequisites, 1, 3f)
     {
+
+        icon = Resources.Load<Sprite>("Icons/Gunner_Skill5");
     }
 
     protected override void ExecuteSkill(Character character)

@@ -11,7 +11,11 @@ public class shieldBlock : Skill
     private bool isParrying;
     private Warrior warrior;
     private int parryingTime = 500;
-    public shieldBlock(List<Skill> prerequisites) : base("방패 막기", "방패를 들어 적의 공격을 막습니다. 타이밍을 맞추면 주위 적들이 뒤로 밀려납니다.", 1, prerequisites, 2,2f) { }
+    public shieldBlock(List<Skill> prerequisites) : 
+        base("방패 막기", "방패를 들어 적의 공격을 막습니다. 타이밍을 맞추면 주위 적들이 뒤로 밀려납니다.", 1, prerequisites, 2,2f) 
+    {
+        icon = Resources.Load<Sprite>("Icons/Warrior_Skill5");
+    }
     protected override void ExecuteSkill(Character character)
     {
         if (character is Warrior){

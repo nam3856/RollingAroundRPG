@@ -9,7 +9,10 @@ public class TeleportSkill : Skill
 {
     public float teleportDistance = 1f;
     private HashSet<int> effectedPlayers = new HashSet<int>();
-    public TeleportSkill(List<Skill> prerequisites) : base("텔레포트", "이동 방향으로 순간이동합니다.", 1, prerequisites, 0, 2f) { }
+    public TeleportSkill(List<Skill> prerequisites) : base("텔레포트", "이동 방향으로 순간이동합니다.", 1, prerequisites, 0, 2f) {
+
+        icon = Resources.Load<Sprite>("Icons/Mage_Skill5");
+    }
 
     protected override void ExecuteSkill(Character character)
     {

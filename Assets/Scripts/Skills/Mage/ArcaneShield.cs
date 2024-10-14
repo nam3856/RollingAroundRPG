@@ -12,6 +12,8 @@ public class ArcaneShield : Skill
     
     private AudioClip SpellSoundClip = Resources.Load<AudioClip>("Sounds/ArcaneShieldSpellSound");
     public ArcaneShield(List<Skill> prerequisites) : base("비전 보호막", "나와 근처의 동료들에게 보호막을 걸어 피해량을 줄여줍니다.", 1, prerequisites, 0, 3f) {
+
+        icon = Resources.Load<Sprite>("Icons/Mage_Skill2");
     }
 
     protected override void ExecuteSkill(Character character)
@@ -22,6 +24,7 @@ public class ArcaneShield : Skill
         character.audioSource.PlayOneShot(SpellSoundClip);
 
         SetArcaneShieldInRangeAsync(character, 2f).Forget(e => Debug.LogException(e));
+
     }
 
     private async UniTask SetArcaneShieldInRangeAsync(Character character, float range)
@@ -30,7 +33,6 @@ public class ArcaneShield : Skill
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(character.transform.position, range);
         foreach (var collider in hitColliders)
         {
-
             if (collider.CompareTag("Player"))
             {
                 PhotonView playerPV = collider.GetComponent<PhotonView>();
@@ -42,5 +44,6 @@ public class ArcaneShield : Skill
                 }
             }
         }
+        effectedPlayers.Clear();
     }
 }

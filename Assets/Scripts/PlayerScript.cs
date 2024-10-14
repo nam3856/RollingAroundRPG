@@ -1,4 +1,5 @@
 using Cinemachine;
+using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
 
     private CinemachineVirtualCamera mainCamera;
 
-    // Start is called before the first frame update
+    
     void Start()
     {
         mainCamera = FindObjectOfType<CinemachineVirtualCamera>();
@@ -56,7 +57,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
             {
                 playerData = SaveSystem.LoadPlayerData();
                 characterIndex = playerData.CharacterClassIndex;
-                
             }
             else
             {
@@ -100,13 +100,9 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                 if (PV.IsMine)
                 {
                     uIManager.InitializeSkillsForClass("Warrior");
+                    skillTreeManager.SetPlayerClass(skillTreeManager.CharacterClasses[0]);
 
-                    // 기본 스킬 획득
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[0].Skills[0], character);  // 전사 기본 공격
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[0].Skills[1], character);  // 전사 콤보 공격
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[0].Skills[2], character); // 전사 돌진
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[0].Skills[3], character);  // 전사 파워 스트라이크
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[0].Skills[4], character);  // 전사 방패 막기
+                    AcquireSkillAsync(skillTreeManager, 0).Forget();// 전사 기본 공격
                 }
 
 
@@ -119,12 +115,9 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                 {
                     uIManager.InitializeSkillsForClass("Gunner");
                     character.gameObject.AddComponent<SnipeShotSkill>();
+                    skillTreeManager.SetPlayerClass(skillTreeManager.CharacterClasses[1]);
 
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[1].Skills[0], character);  // 거너 기본 공격
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[1].Skills[1], character);  // 거너 난사 스킬
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[1].Skills[2], character);  // 거너 수류탄
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[1].Skills[3], character);  // 거너 저격
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[1].Skills[4], character);  // 거너 구르기
+                    AcquireSkillAsync(skillTreeManager, 1).Forget();// 거너 기본 공격
                 }
                 AN.SetTrigger("gunner init");
                 break;
@@ -135,16 +128,21 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                 if (PV.IsMine)
                 {
                     uIManager.InitializeSkillsForClass("Mage");
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[2].Skills[0], character);  //법사 염구
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[2].Skills[1], character);  //법사 보호막
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[2].Skills[2], character);  //법사 치유
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[2].Skills[3], character);  //법사 메테오 ToDo
-                    skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[2].Skills[4], character);  //법사 텔포 ToDo
+                    skillTreeManager.SetPlayerClass(skillTreeManager.CharacterClasses[2]);
+
+                    AcquireSkillAsync(skillTreeManager, 2).Forget();//법사 염구
                 }
                 AN.SetTrigger("mage init");
                 break;
         }
+        uIManager.character = character;
         AddToPhotonObservedComponents(character);
+    }
+
+    public async UniTask AcquireSkillAsync(SkillTreeManager skillTreeManager,int idx)
+    {
+        await UniTask.Delay(100);
+        skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[idx].Skills[0], character);
     }
 
     private void OnApplicationQuit()
@@ -163,7 +161,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
         if (photonView != null && !photonView.ObservedComponents.Contains(component))
         {
             photonView.ObservedComponents.Add(component);
-            //Debug.Log($"{component.GetType().Name}이(가) PhotonView의 Observed Components에 추가되었습니다.");
         }
     }
 
@@ -173,7 +170,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
         {
             HandleInput();
         }
-
     }
 
     void HandleInput()
@@ -270,7 +266,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
     [PunRPC]
     void DeactivateGameObject()
     {
-        //Destroy(gameObject);
         OnPlayerDied?.Invoke(this);
         gameObject.SetActive(false);
     }
@@ -283,6 +278,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
         if (confinerComponent != null)
         {
             confinerComponent.m_BoundingShape2D = confiner;
+            playerData.currentCMRangeId = 1;
         }
         else
         {
@@ -295,7 +291,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
         gameObject.SetActive(true);
         character.PV.RPC("Respawn", RpcTarget.All);
         OnPlayerRespawned?.Invoke(this);
-        //Debug.Log($"{PV.Owner.NickName} 부활, 이벤트 호출됨");
         transform.position = spawnPosition;
     }
 

@@ -10,7 +10,10 @@ public class HealingWave : Skill
     private HashSet<int> effectedPlayers = new HashSet<int>();
 
     private AudioClip SpellSoundClip = Resources.Load<AudioClip>("Sounds/Healing");
-    public HealingWave(List<Skill> prerequisites) : base("치유의 파동", "내 주변의 동료을 3초동안 치유해줍니다. 마나를 회복합니다.", -30, prerequisites, 0, 10f) { }
+    public HealingWave(List<Skill> prerequisites) : base("치유의 파동", "내 주변의 동료을 3초동안 치유해줍니다. 마나를 회복합니다.", -30, prerequisites, 0, 10f) {
+
+        icon = Resources.Load<Sprite>("Icons/Mage_Skill3");
+    }
 
     protected override void ExecuteSkill(Character character)
     {

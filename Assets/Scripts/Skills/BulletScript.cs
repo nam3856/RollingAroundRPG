@@ -13,7 +13,7 @@ public class BulletScript : MonoBehaviourPunCallbacks
     private Rigidbody2D rb;
     public BoxCollider2D boxCollider;
     public PhotonView targetPhotonView;
-    private HashSet<int> attackedPlayers = new HashSet<int>();
+    private bool flag = false;
 
     private void Awake()
     {
@@ -60,17 +60,16 @@ public class BulletScript : MonoBehaviourPunCallbacks
     {
         targetPhotonView = col.GetComponent<PhotonView>();
 
-        if (targetPhotonView == null || attackedPlayers.Contains(targetPhotonView.ViewID))
+        if (targetPhotonView == null || flag)
         {
             return;
         }
 
         if (col.CompareTag("Monster"))
         {
-            attackedPlayers.Add(targetPhotonView.ViewID);
+            flag = true;
             if (targetPhotonView != null)
             {
-                boxCollider.enabled = false;
                 Debug.LogError(shooterActorNumber + "가 쏜 총알에 몬스터 충돌");
                 // 몬스터의 체력 감소 처리
                 targetPhotonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage, attackerViewId);
@@ -96,12 +95,11 @@ public class BulletScript : MonoBehaviourPunCallbacks
     {
         
         dir = Vector2.zero;  // 방향 초기화
-        attackedPlayers.Clear();  // 공격 대상 초기화
+        flag = false;  // 공격 대상 초기화
         rb.velocity = Vector2.zero;  // 속도 초기화
         boxCollider.enabled = false; // 콜라이더 비활성화 (재사용할 때 다시 활성화 필요)
         
         gameObject.SetActive(false);  // 오브젝트 비활성화
-        Debug.Log("총알 파괴");
         // 풀링 시스템을 사용해 오브젝트 관리
         if (photonView.IsMine)
         {

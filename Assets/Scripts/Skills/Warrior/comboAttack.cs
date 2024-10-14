@@ -7,7 +7,11 @@ using Cysharp.Threading.Tasks;
 public class comboAttack : Skill
 {
     private Warrior warrior;
-    public comboAttack(List<Skill> prerequisites) : base("고급 검술", "검을 추가로 휘둘러 전방의 적에게 더 큰 데미지를 줍니다.", 1, prerequisites, 2,0.4f) { }
+    public comboAttack(List<Skill> prerequisites) : 
+        base("고급 검술", "검을 추가로 휘둘러 전방의 적에게 더 큰 데미지를 줍니다.", 1, prerequisites, 2,0.4f) 
+    {
+        icon = Resources.Load<Sprite>("Icons/Warrior_Skill2");
+    }
 
     protected override void ExecuteSkill(Character character)
     {

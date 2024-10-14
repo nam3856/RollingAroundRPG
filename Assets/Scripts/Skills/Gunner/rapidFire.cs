@@ -15,6 +15,8 @@ public class rapidFire : Skill
 
     public rapidFire(List<Skill> prerequisites) : base("난사", "남은 탄창 수만큼 총알을 발사합니다.", 1, prerequisites, 2, 4f)
     {
+
+        icon = Resources.Load<Sprite>("Icons/Gunner_Skill2");
     }
 
     protected override void ExecuteSkill(Character character)

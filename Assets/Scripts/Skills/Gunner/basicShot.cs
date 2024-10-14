@@ -11,7 +11,8 @@ public class basicShot : Skill
 
     public basicShot() : base("기본 사격", "총을 써서 전방의 적 1명에게 데미지를 줍니다.", 1, null, 1, 0.3f)
     {
-        // BulletPool 제거
+
+        icon = Resources.Load<Sprite>("Icons/Gunner_Skill1");
     }
 
     protected override void ExecuteSkill(Character character)

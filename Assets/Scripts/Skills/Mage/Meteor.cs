@@ -8,7 +8,10 @@ using UnityEngine;
 public class Meteor : Skill
 {
     private HashSet<int> effectedMonsters = new HashSet<int>();
-    public Meteor(List<Skill> prerequisites) : base("메테오", "주위 모든 적에게 운석을 떨어뜨립니다", 50, prerequisites, 0, 30f) { }
+    public Meteor(List<Skill> prerequisites) : base("메테오", "주위 모든 적에게 운석을 떨어뜨립니다", 50, prerequisites, 0, 30f) {
+
+        icon = Resources.Load<Sprite>("Icons/Mage_Skill4");
+    }
 
     protected override void ExecuteSkill(Character character)
     {

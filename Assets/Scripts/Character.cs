@@ -942,7 +942,7 @@ public class Gunner : Character
         grenadeChargeTime += Time.deltaTime * chargeSpeed;
         currentGrenadeForce += Time.deltaTime * chargeSpeed; // 던지는 힘 증가
 
-        Debug.Log($"수류탄 충전중: {grenadeChargeTime} {currentGrenadeForce}");
+        //Debug.Log($"수류탄 충전중: {grenadeChargeTime} {currentGrenadeForce}");
         currentGrenadeForce = Mathf.Clamp(currentGrenadeForce, 1f, 8f); // 던지는 힘 제한
     }
 

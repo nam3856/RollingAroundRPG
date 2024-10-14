@@ -7,6 +7,8 @@ using UnityEngine.UI;
 using TMPro;
 using Unity.Mathematics;
 using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
+using UnityEngine.TextCore.Text;
 
 public class UIManager : MonoBehaviour
 {
@@ -20,6 +22,17 @@ public class UIManager : MonoBehaviour
     private Sprite[] mageSkillIcons;     // 마법사 스킬 아이콘들
     private SkillTreeManager skillTreeManager;
     public GameObject menuPanel;
+    public GameObject SkillTreePanel;
+    public Button ResetButton;
+    public Transform SkillsContainer;
+    public GameObject SkillButtonPrefab;
+    private List<SkillButton> skillButtons = new List<SkillButton>();
+    private int characterIndex;
+    public Character character;
+    public TMP_Text skillPointText;
+    public Skill selectedSkill;
+    public Button learnButton;
+
     public Image hp;
     public Image mp;
     public Image exp;
@@ -32,6 +45,10 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            ToggleSkillTree();
+        }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (menuPanel.activeSelf)
@@ -58,9 +75,138 @@ public class UIManager : MonoBehaviour
         skillcooldownManager.OnSkillUsed += HandleSkillUsed;
         skillcooldownManager.OnSkillReady += HandleSkillReady;
 
+        if (learnButton != null)
+            learnButton.onClick.AddListener(OnLearnButtonClicked);
         // 아이콘들을 리소스에서 로드
         LoadSkillIcons();
 
+        if (ResetButton != null)
+        {
+            ResetButton.onClick.AddListener(OnResetButtonClicked);
+        }
+        else
+        {
+            Debug.LogError("UIManager: ResetButton이 할당되지 않았습니다.");
+        }
+    }
+    public void SelectSkill(Skill skill)
+    {
+        selectedSkill = skill;
+        UpdateLearnButton();
+    }
+
+    void UpdateLearnButton()
+    {
+        if (selectedSkill == null)
+        {
+            learnButton.interactable = false;
+            return;
+        }
+
+        // 이미 배운 스킬이거나 스킬 포인트가 부족하면 비활성화
+        if (selectedSkill.IsAcquired || skillTreeManager.PlayerSkillPoints < selectedSkill.Point)
+        {
+            learnButton.interactable = false;
+        }
+        else
+        {
+            learnButton.interactable = true;
+        }
+    }
+    void OnLearnButtonClicked()
+    {
+        if (selectedSkill == null)
+        {
+            Debug.LogWarning("선택된 스킬이 없습니다.");
+            return;
+        }
+
+        if (selectedSkill.IsAcquired)
+        {
+            Debug.Log($"{selectedSkill.Name} 이미 배웠습니다.");
+            return;
+        }
+
+        if (skillTreeManager.PlayerSkillPoints > 0)
+        {
+            // 스킬을 획득하고 스킬 포인트를 소모
+            skillTreeManager.AcquireSkill(selectedSkill, character);
+            PopulateSkills(); // UI 업데이트
+            skillPointText.text = "현재 스킬 포인트 : "+skillTreeManager.PlayerSkillPoints.ToString();
+            UpdateLearnButton(); // LearnButton 상태 업데이트
+        }
+        else
+        {
+            Debug.Log("스킬 포인트가 부족합니다.");
+        }
+    }
+    private void OnResetButtonClicked()
+    {
+        ResetSkills();
+    }
+
+    public void ResetSkills()
+    {
+        skillTreeManager.ResetSkills();
+        PopulateSkills();
+        skillPointText.text = "현재 스킬 포인트 : " + skillTreeManager.PlayerSkillPoints.ToString();
+    }
+
+    public void CloseSkillMenu()
+    {
+        SkillTreePanel.SetActive(false);
+    }
+
+    void ToggleSkillTree()
+    {
+        bool isActive = SkillTreePanel.activeSelf;
+        SkillTreePanel.SetActive(!isActive);
+
+        if (!isActive)
+        {
+            PopulateSkills();
+        }
+    }
+
+    void PopulateSkills()
+    {
+        CharacterClass playerClass = skillTreeManager.PlayerClass;
+        if (playerClass == null)
+        {
+            Debug.LogError("UIManager: PlayerClass이 null입니다.");
+            return;
+        }
+
+        foreach (Transform child in SkillsContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        skillButtons.Clear();
+
+        foreach (var skill in skillTreeManager.PlayerClass.Skills)
+        {
+            GameObject btnObj = Instantiate(SkillButtonPrefab, SkillsContainer);
+            SkillButton btnScript = btnObj.GetComponent<SkillButton>();
+            if (btnScript != null)
+            {
+                btnScript.Initialize(skill, skillTreeManager, character);
+                skillButtons.Add(btnScript);
+            }
+            else
+            {
+                Debug.LogError("SkillButtonPrefab에 SkillButton 스크립트가 없습니다.");
+            }
+        }
+
+        // 스킬 이름 배열 업데이트
+        for (int i = 0; i < playerClass.Skills.Count; i++)
+        {
+            skillNames[i] = playerClass.Skills[i].Name;
+            skillIcons[i].sprite = playerClass.Skills[i].icon;
+            skillIcons[i].color = playerClass.Skills[i].IsAcquired ? Color.white : Color.gray;
+            cooldownOverlays[i].fillAmount = 0;
+        }
     }
 
     public void SetHp(int currentHp, int maxHp, Character character)
@@ -168,16 +314,19 @@ public class UIManager : MonoBehaviour
     {
         if (characterClass == "Warrior")
         {
+            characterIndex = 0;
             skillNames = new string[] { "기본 검술", "고급 검술", "돌진", "필살 일격", "방패 막기" };
             UpdateSkillIcons(warriorSkillIcons);  // 전사 스킬 아이콘으로 업데이트
         }
         else if (characterClass == "Gunner")
         {
+            characterIndex = 1;
             skillNames = new string[] { "기본 사격", "난사", "수류탄 투척", "저격", "구르기" };
             UpdateSkillIcons(gunnerSkillIcons);  // 거너 스킬 아이콘으로 업데이트
         }
         else if (characterClass == "Mage")
         {
+            characterIndex = 2;
             skillNames = new string[] { "화염구", "비전 보호막", "치유의 파동", "메테오", "텔레포트" };
             UpdateSkillIcons(mageSkillIcons);  // 마법사 스킬 아이콘으로 업데이트
         }
@@ -193,8 +342,6 @@ public class UIManager : MonoBehaviour
             if (i < newIcons.Length && newIcons[i] != null)
             {
                 skillIcons[i].sprite = newIcons[i];  // 아이콘 업데이트
-
-                skillIcons[i+5].sprite = newIcons[i];  // 아이콘 업데이트
             }
         }
     }

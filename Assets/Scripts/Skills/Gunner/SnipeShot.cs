@@ -5,7 +5,10 @@ using UnityEngine.TextCore.Text;
 
 public class SnipeShot : Skill
 {
-    public SnipeShot(List<Skill> prerequisites) : base("저격", "줌인 상태에서 강력한 한발을 날려 큰 데미지를 입히고 적을 기절시킵니다.", 9, prerequisites, 2, 30f) { }
+    public SnipeShot(List<Skill> prerequisites) : base("저격", "줌인 상태에서 강력한 한발을 날려 큰 데미지를 입히고 적을 기절시킵니다.", 9, prerequisites, 2, 30f) 
+    {
+        icon = Resources.Load<Sprite>("Icons/Gunner_Skill4");
+    }
 
     protected override void ExecuteSkill(Character character)
     {

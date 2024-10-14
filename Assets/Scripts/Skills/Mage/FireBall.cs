@@ -8,7 +8,10 @@ using UnityEngine;
 public class FireBall : Skill
 {
     private Mage mage;
-    public FireBall() : base("화염구", "화염구를 던집니다", 1, null, 0, 3f) { }
+    public FireBall() : base("화염구", "화염구를 던집니다", 1, null, 0, 3f) {
+
+        icon = Resources.Load<Sprite>("Icons/Mage_Skill1");
+    }
 
     private AudioClip SpellSoundClip = Resources.Load<AudioClip>("Sounds/fireballSpellSound");
 

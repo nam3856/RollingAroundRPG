@@ -7,16 +7,17 @@ public abstract class Skill
     public string Description { get; private set; }
     public int Cost { get; private set; }
     public List<Skill> Prerequisites { get; private set; }
-    public bool IsAcquired { get; private set; }
+    public bool IsAcquired;
     public int Point { get; private set; }
     public float Cooldown { get; private set; }
     private float lastUsedTime;
+    public Sprite icon;
 
     public void SetLastUsedTime(float time)
     {
         lastUsedTime = time;
     }
-    public Skill(string name, string description, int cost, List<Skill> prerequisites = null, int point = 1, float cooldown = 0.5f)
+    public Skill(string name, string description, int cost, List<Skill> prerequisites = null, int point = 1, float cooldown = 0.5f, Sprite icon = null)
     {
         Name = name;
         Description = description;
@@ -26,6 +27,7 @@ public abstract class Skill
         IsAcquired = false;
         Cooldown = cooldown;
         lastUsedTime = -cooldown;
+        this.icon = icon;
     }
     public void Acquire(Character character)
     {
@@ -94,7 +96,7 @@ public abstract class Skill
 public class CharacterClass
 {
     public string Name { get; private set; }
-    public List<Skill> Skills { get; private set; }
+    public List<Skill> Skills;
     public CharacterClass(string name, List<Skill> skills)
     {
         Name = name;

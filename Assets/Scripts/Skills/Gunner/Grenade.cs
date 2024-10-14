@@ -16,6 +16,8 @@ public class GrenadeToss : Skill
     {
         grenadeThrowSound = Resources.Load<AudioClip>("Sounds/grenadeThrow");
         grenadeExplodeSound = Resources.Load<AudioClip>("Sounds/grenadeExplode");
+
+        icon = Resources.Load<Sprite>("Icons/Gunner_Skill3");
     }
 
     protected override void ExecuteSkill(Character character)
