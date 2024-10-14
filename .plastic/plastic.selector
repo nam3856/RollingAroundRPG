@@ -1,0 +1,3 @@
+repository "Defense@kinggodmini@cloud"
+  path "/"
+    smartbranch "/main/temp"

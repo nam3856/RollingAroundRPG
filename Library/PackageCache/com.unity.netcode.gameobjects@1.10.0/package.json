@@ -1,0 +1,30 @@
+{
+  "name": "com.unity.netcode.gameobjects",
+  "displayName": "Netcode for GameObjects",
+  "description": "Netcode for GameObjects is a high-level netcode SDK that provides networking capabilities to GameObject/MonoBehaviour workflows within Unity and sits on top of underlying transport layer.",
+  "version": "1.10.0",
+  "unity": "2021.3",
+  "dependencies": {
+    "com.unity.nuget.mono-cecil": "1.10.1",
+    "com.unity.transport": "1.4.0"
+  },
+  "_upm": {
+    "changelog": "### Added\n\n- Added `NetworkBehaviour.OnNetworkPreSpawn` and `NetworkBehaviour.OnNetworkPostSpawn` methods that provide the ability to handle pre and post spawning actions during the `NetworkObject` spawn sequence. (#2906)\n- Added a client-side only `NetworkBehaviour.OnNetworkSessionSynchronized` convenience method that is invoked on all `NetworkBehaviour`s after a newly joined client has finished synchronizing with the network session in progress. (#2906)\n- Added `NetworkBehaviour.OnInSceneObjectsSpawned` convenience method that is invoked when all in-scene `NetworkObject`s have been spawned after a scene has been loaded or upon a host or server starting. (#2906)\n\n### Fixed\n\n- Fixed issue where the realtime network stats monitor was not able to display RPC traffic in release builds due to those stats being only available in development builds or the editor. (#2980)\n- Fixed issue where `NetworkManager.ScenesLoaded` was not being updated if `PostSynchronizationSceneUnloading` was set and any loaded scenes not used during synchronization were unloaded.(#2977)\n- Fixed issue where internal delta serialization could not have a byte serializer defined when serializing deltas for other types. Added `[GenerateSerializationForType(typeof(byte))]` to both the `NetworkVariable` and `AnticipatedNetworkVariable` classes to assure a byte serializer is defined. (#2953)\n- Fixed issue with the client count not being correct on the host or server side when a client disconnects itself from a session. (#2941)\n- Fixed issue with the host trying to send itself a message that it has connected when first starting up. (#2941)\n- Fixed issue where in-scene placed NetworkObjects could be destroyed if a client disconnects early and/or before approval. (#2923)\n- Fixed issue where `NetworkDeltaPosition` would \"jitter\" periodically if both unreliable delta state updates and half-floats were used together. (#2922)\n- Fixed issue where `NetworkRigidbody2D` would not properly change body type based on the instance's authority when spawned. (#2916)\n- Fixed issue where a `NetworkObject` component's associated `NetworkBehaviour` components would not be detected if scene loading is disabled in the editor and the currently loaded scene has in-scene placed `NetworkObject`s. (#2906)\n- Fixed issue where an in-scene placed `NetworkObject` with `NetworkTransform` that is also parented under a `GameObject` would not properly synchronize when the parent `GameObject` had a world space position other than 0,0,0. (#2895)\n\n### Changed"
+  },
+  "upmCi": {
+    "footprint": "f100032a819fdef7edacd4fdfa133b189f94ef7d"
+  },
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.netcode.gameobjects@1.10/manual/index.html",
+  "repository": {
+    "url": "https://github.com/Unity-Technologies/com.unity.netcode.gameobjects.git",
+    "type": "git",
+    "revision": "a342c8ddce87ae46a30dffbebb8f87ac364c0a87"
+  },
+  "samples": [
+    {
+      "displayName": "Bootstrap",
+      "description": "A lightweight sample to get started",
+      "path": "Samples~/Bootstrap"
+    }
+  ]
+}

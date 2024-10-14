@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Monster
+  - Obstacle
+  - Removable Obstacle
+  - Ignore Raycast
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Enemy
+  - Water
+  - UI
+  - Player
+  - Obstacle
+  - Pathfinding Obstacle
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 687382339
+    locked: 0
+  - name: Character
+    uniqueID: 631191443
+    locked: 0
+  - name: Obstacle
+    uniqueID: 2749009317
+    locked: 0
+  - name: UI
+    uniqueID: 259969185
+    locked: 0

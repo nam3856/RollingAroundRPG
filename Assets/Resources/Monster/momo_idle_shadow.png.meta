@@ -1,0 +1,509 @@
+fileFormatVersion: 2
+guid: 9b69a3e4c185da34cbf186aac227c2f2
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 36
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: momo_idle_shadow_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 5.578991, y: -15}
+        - {x: -5.4999914, y: -15}
+        - {x: -8, y: -13}
+        - {x: -8, y: -4}
+        - {x: -5.5, y: -2}
+        - {x: 5.5789833, y: -2}
+        - {x: 8, y: -4}
+        - {x: 8, y: -13}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e8d97c57ca41b2468e5b244e9a2e708
+      internalID: -1543091613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: momo_idle_shadow_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 5.452389, y: -15}
+        - {x: -5.317627, y: -15}
+        - {x: -8, y: -13}
+        - {x: -8, y: -5.6819305}
+        - {x: -6, y: -3}
+        - {x: 6, y: -3}
+        - {x: 8, y: -5.592003}
+        - {x: 8, y: -13}
+      tessellationDetail: 0
+      bones: []
+      spriteID: aedaab7d7419e3b4fa8a1227cad7a0a4
+      internalID: 1248569434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: momo_idle_shadow_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 6, y: -15}
+        - {x: -5.7719803, y: -15}
+        - {x: -9, y: -13}
+        - {x: -9, y: -9}
+        - {x: -8, y: -5}
+        - {x: -5.556671, y: -3.0000076}
+        - {x: 5.406662, y: -3}
+        - {x: 8, y: -5}
+        - {x: 9, y: -13}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82c66945dd08bef47b551ce14f1bc9ff
+      internalID: 1833470042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: momo_idle_shadow_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 5.578987, y: -15}
+        - {x: -5.4999924, y: -15}
+        - {x: -8, y: -13}
+        - {x: -8, y: -3}
+        - {x: -5.3218613, y: -1}
+        - {x: 6, y: -1}
+        - {x: 8.000008, y: -3.3470688}
+        - {x: 8, y: -13}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7706c1e5c780a56458061f071ea582f0
+      internalID: 1827562967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: momo_idle_shadow_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 5.317629, y: -15}
+        - {x: -5.452385, y: -15}
+        - {x: -8, y: -13}
+        - {x: -8, y: -5}
+        - {x: -4.7436485, y: -1.9999962}
+        - {x: 1.246067, y: -2}
+        - {x: 6, y: -4}
+        - {x: 6, y: -8}
+        - {x: 9, y: -12}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 89729c41f6a45694c8dec2f3139b9ed2
+      internalID: 866239242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: momo_idle_shadow_5
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 8, y: -13}
+        - {x: 6, y: -15}
+        - {x: -8, y: -15}
+        - {x: -8, y: -6}
+        - {x: -4.7436485, y: -3}
+        - {x: 1.0553932, y: -3}
+        - {x: 6, y: -5}
+        - {x: 6, y: -10}
+        - {x: 8, y: -10}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03ca70199da4a914a841a4e1bf8edbb3
+      internalID: -1730438040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: momo_idle_shadow_6
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 6.387268, y: -15}
+        - {x: -6.240532, y: -15}
+        - {x: -9, y: -13}
+        - {x: -9, y: -10}
+        - {x: -8, y: -6}
+        - {x: -4.7144623, y: -2.9999962}
+        - {x: 1.0776901, y: -3}
+        - {x: 6, y: -5}
+        - {x: 6, y: -10}
+        - {x: 9, y: -10}
+        - {x: 9, y: -13}
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe292493ece9389478e3340920581dcf
+      internalID: -310054860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: momo_idle_shadow_7
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 5.321869, y: -14.999996}
+        - {x: -6, y: -15}
+        - {x: -7.9999924, y: -12.196911}
+        - {x: -8, y: -4}
+        - {x: -4.4388275, y: -1}
+        - {x: 1, y: -1}
+        - {x: 4, y: -2}
+        - {x: 6, y: -4}
+        - {x: 6, y: -7}
+        - {x: 8.000008, y: -8.838203}
+        - {x: 8, y: -13}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 734b5303ff872934ca411b296bb71409
+      internalID: -793527970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: momo_idle_shadow_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 5.3176327, y: -15}
+        - {x: -4.781602, y: -15}
+        - {x: -8, y: -12}
+        - {x: -8, y: -3.803091}
+        - {x: -6, y: -1}
+        - {x: 5.3218536, y: -1}
+        - {x: 8, y: -3}
+        - {x: 8, y: -12}
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9581d2f5d0077647b2265896285c018
+      internalID: -2000450153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: momo_idle_shadow_9
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 4.9392586, y: -15}
+        - {x: -4.8730392, y: -15}
+        - {x: -8, y: -12}
+        - {x: -8, y: -4}
+        - {x: -6, y: -2}
+        - {x: 5.489319, y: -2}
+        - {x: 8, y: -4}
+        - {x: 8, y: -12}
+      tessellationDetail: 0
+      bones: []
+      spriteID: de7f2ef763d20444aa9f4db4aa36135f
+      internalID: 1290841327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: momo_idle_shadow_10
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 6.1741714, y: -15}
+        - {x: -5.7719803, y: -15}
+        - {x: -9, y: -13}
+        - {x: -9, y: -5}
+        - {x: -5.556671, y: -2.000001}
+        - {x: 5.48217, y: -2}
+        - {x: 9, y: -4}
+        - {x: 9, y: -12}
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1df544996aceed48a2f689b9d38e82f
+      internalID: -200259918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: momo_idle_shadow_11
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 5.1306534, y: -15}
+        - {x: -4.653961, y: -15}
+        - {x: -8, y: -12}
+        - {x: -8, y: -2.5920067}
+        - {x: -6, y: 0}
+        - {x: 4.975998, y: 0}
+        - {x: 8, y: -2}
+        - {x: 8, y: -12}
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9037088257fdd14f917a25afbe3c506
+      internalID: 593490464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      momo_idle_shadow_0: -1543091613
+      momo_idle_shadow_1: 1248569434
+      momo_idle_shadow_10: -200259918
+      momo_idle_shadow_11: 593490464
+      momo_idle_shadow_2: 1833470042
+      momo_idle_shadow_3: 1827562967
+      momo_idle_shadow_4: 866239242
+      momo_idle_shadow_5: -1730438040
+      momo_idle_shadow_6: -310054860
+      momo_idle_shadow_7: -793527970
+      momo_idle_shadow_8: -2000450153
+      momo_idle_shadow_9: 1290841327
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

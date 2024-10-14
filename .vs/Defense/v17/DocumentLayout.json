@@ -1,0 +1,485 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\nam38\\Defense\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|c:\\users\\nam38\\defense\\assets\\scripts\\savesystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\savesystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\character.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\character.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\playerscript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playerscript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\debugmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\debugmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\uimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\uimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A444640-B1F2-0C83-D852-F671C02E7C2F}|UniTask.csproj|C:\\Users\\nam38\\Defense\\assets\\plugins\\unitask\\runtime\\unitaskscheduler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4A444640-B1F2-0C83-D852-F671C02E7C2F}|UniTask.csproj|solutionrelative:assets\\plugins\\unitask\\runtime\\unitaskscheduler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\skills\\mage\\meteor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\mage\\meteor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\skills\\fireballscript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\fireballscript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\skills\\mage\\fireball.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\mage\\fireball.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\skills\\gunner\\snipeshotscope.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\gunner\\snipeshotscope.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\skills\\gunner\\snipeshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\gunner\\snipeshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\skills\\mage\\arcaneshield.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\mage\\arcaneshield.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\monster\\monsterattack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\monster\\monsterattack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\skills\\mage\\healingwave.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\mage\\healingwave.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\animationmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\animationmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AB107C58-5D7A-D57B-51F8-95B03516B2B9}|PhotonUnityNetworking.csproj|C:\\Users\\nam38\\Defense\\assets\\photon\\photonunitynetworking\\code\\photonview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AB107C58-5D7A-D57B-51F8-95B03516B2B9}|PhotonUnityNetworking.csproj|solutionrelative:assets\\photon\\photonunitynetworking\\code\\photonview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\skills\\mage\\teleport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\mage\\teleport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\skills\\skill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\skill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\skills\\gunner\\rapidfire.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\gunner\\rapidfire.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AB107C58-5D7A-D57B-51F8-95B03516B2B9}|PhotonUnityNetworking.csproj|C:\\Users\\nam38\\Defense\\assets\\photon\\photonunitynetworking\\code\\photonnetworkpart.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AB107C58-5D7A-D57B-51F8-95B03516B2B9}|PhotonUnityNetworking.csproj|solutionrelative:assets\\photon\\photonunitynetworking\\code\\photonnetworkpart.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\skills\\gunner\\grenade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\gunner\\grenade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\triggerhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\triggerhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\monster\\monstermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\monster\\monstermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\skills\\skilltreemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\skilltreemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\skills\\gunner\\roll.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\gunner\\roll.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\skills\\gunner\\basicshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\gunner\\basicshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|C:\\Users\\nam38\\Defense\\assets\\scripts\\monster\\monsterhealth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06F954D9-3FFA-E4E0-CD43-7C995C5845F3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\monster\\monsterhealth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\nam38\\Defense\\assets\\scripts\\fanbulletscript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:assets\\scripts\\fanbulletscript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\nam38\\Defense\\Assets\\Scripts\\BulletScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\BulletScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SaveSystem.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\SaveSystem.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\SaveSystem.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\SaveSystem.cs",
+              "RelativeToolTip": "Assets\\Scripts\\SaveSystem.cs",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAYwCMAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T12:25:10.101Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Meteor.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Mage\\Meteor.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\Mage\\Meteor.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Mage\\Meteor.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\Mage\\Meteor.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACAAAAA/AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-12T16:39:49.955Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UniTaskScheduler.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Plugins\\UniTask\\Runtime\\UniTaskScheduler.cs",
+              "RelativeDocumentMoniker": "Assets\\Plugins\\UniTask\\Runtime\\UniTaskScheduler.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Plugins\\UniTask\\Runtime\\UniTaskScheduler.cs",
+              "RelativeToolTip": "Assets\\Plugins\\UniTask\\Runtime\\UniTaskScheduler.cs",
+              "ViewState": "AQIAAEgAAAAAAAAAAAAYwFkAAAA/AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T12:01:45.746Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "FireballScript.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\FireballScript.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\FireballScript.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\FireballScript.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\FireballScript.cs",
+              "ViewState": "AQIAABEAAAAAAAAAAAAAwCAAAAA6AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T11:54:08.475Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Teleport.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Mage\\Teleport.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\Mage\\Teleport.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Mage\\Teleport.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\Mage\\Teleport.cs",
+              "ViewState": "AQIAADkAAAAAAAAAAAAowEcAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-12T16:40:58.56Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "SnipeShot.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Gunner\\SnipeShot.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\Gunner\\SnipeShot.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Gunner\\SnipeShot.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\Gunner\\SnipeShot.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAACbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-11T17:26:12.179Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Character.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Character.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Character.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Character.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Character.cs",
+              "ViewState": "AQIAAMABAAAAAAAAAAAYwNwBAAA5AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-09T08:19:50.928Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DebugManager.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\DebugManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\DebugManager.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\DebugManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\DebugManager.cs",
+              "ViewState": "AQIAABAAAAAAAAAAAAAQwCMAAAAuAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T07:29:13.801Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "PhotonView.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Photon\\PhotonUnityNetworking\\Code\\PhotonView.cs",
+              "RelativeDocumentMoniker": "Assets\\Photon\\PhotonUnityNetworking\\Code\\PhotonView.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Photon\\PhotonUnityNetworking\\Code\\PhotonView.cs",
+              "RelativeToolTip": "Assets\\Photon\\PhotonUnityNetworking\\Code\\PhotonView.cs",
+              "ViewState": "AQIAAAQCAAAAAAAAAAAYwBUCAABGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T07:27:40.816Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "PhotonNetworkPart.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Photon\\PhotonUnityNetworking\\Code\\PhotonNetworkPart.cs",
+              "RelativeDocumentMoniker": "Assets\\Photon\\PhotonUnityNetworking\\Code\\PhotonNetworkPart.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Photon\\PhotonUnityNetworking\\Code\\PhotonNetworkPart.cs",
+              "RelativeToolTip": "Assets\\Photon\\PhotonUnityNetworking\\Code\\PhotonNetworkPart.cs",
+              "ViewState": "AQIAAG8CAAAAAAAAAAAYwIACAADIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-12T18:13:31.32Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "MonsterAttack.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Monster\\MonsterAttack.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Monster\\MonsterAttack.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Monster\\MonsterAttack.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Monster\\MonsterAttack.cs",
+              "ViewState": "AQIAACEAAAAAAAAAAAAYwDMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-12T18:11:03.755Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ArcaneShield.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Mage\\ArcaneShield.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\Mage\\ArcaneShield.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Mage\\ArcaneShield.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\Mage\\ArcaneShield.cs",
+              "ViewState": "AQIAABMAAAAAAAAAAAAYwC4AAAALAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-12T18:01:11.603Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "FireBall.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Mage\\FireBall.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\Mage\\FireBall.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Mage\\FireBall.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\Mage\\FireBall.cs",
+              "ViewState": "AQIAABgAAAAAAAAAAAAYwC4AAAA3AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-12T16:09:23.721Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "AnimationManager.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\AnimationManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\AnimationManager.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\AnimationManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\AnimationManager.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAkAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-12T17:42:11.617Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "rapidFire.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Gunner\\rapidFire.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\Gunner\\rapidFire.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Gunner\\rapidFire.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\Gunner\\rapidFire.cs",
+              "ViewState": "AQIAADAAAAAAAAAAAAAYwD4AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-12T16:55:06.241Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PlayerScript.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\PlayerScript.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerScript.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\PlayerScript.cs",
+              "RelativeToolTip": "Assets\\Scripts\\PlayerScript.cs",
+              "ViewState": "AQIAADEAAAAAAAAAAAAAAEcAAAA2AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-11T18:32:58.081Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "HealingWave.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Mage\\HealingWave.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\Mage\\HealingWave.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Mage\\HealingWave.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\Mage\\HealingWave.cs",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAYwCAAAABmAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-12T16:24:58.838Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "FanBulletScript.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\FanBulletScript.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\FanBulletScript.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\FanBulletScript.cs",
+              "RelativeToolTip": "Assets\\Scripts\\FanBulletScript.cs",
+              "ViewState": "AQIAAHkAAAAAAAAAAAAkwIEAAAA0AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-11T18:09:55.8Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "BulletScript.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\BulletScript.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\BulletScript.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\BulletScript.cs",
+              "RelativeToolTip": "Assets\\Scripts\\BulletScript.cs",
+              "ViewState": "AQIAADAAAAAAAAAAAAAYwEUAAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-11T17:51:45.182Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UIManager.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\UIManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\UIManager.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\UIManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\UIManager.cs",
+              "ViewState": "AQIAADgAAAAAAAAAAAAQwEoAAAAxAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-11T16:55:15.884Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Skill.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Skill.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\Skill.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Skill.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\Skill.cs",
+              "ViewState": "AQIAAEAAAAAAAAAAAAAAwE8AAABPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-07T04:55:22.17Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "snipeshotscope.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Gunner\\snipeshotscope.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\Gunner\\snipeshotscope.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Gunner\\snipeshotscope.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\Gunner\\snipeshotscope.cs",
+              "ViewState": "AQIAAF4AAAAAAAAAAAAgwHkAAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-11T17:45:04.434Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "TriggerHandler.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\TriggerHandler.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\TriggerHandler.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\TriggerHandler.cs",
+              "RelativeToolTip": "Assets\\Scripts\\TriggerHandler.cs",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAkwCcAAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-09T15:18:30.939Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "MonsterHealth.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Monster\\MonsterHealth.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Monster\\MonsterHealth.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Monster\\MonsterHealth.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Monster\\MonsterHealth.cs",
+              "ViewState": "AQIAABkAAAAAAAAAAAAkwEcAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-11T17:45:39.128Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Grenade.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Gunner\\Grenade.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\Gunner\\Grenade.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Gunner\\Grenade.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\Gunner\\Grenade.cs",
+              "ViewState": "AQIAAA4AAAAAAAAAAAAAwBgAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-09T14:40:03.592Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "MonsterMovement.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Monster\\MonsterMovement.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Monster\\MonsterMovement.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Monster\\MonsterMovement.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Monster\\MonsterMovement.cs",
+              "ViewState": "AQIAALcAAAAAAAAAAAAowL0AAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-12T18:16:03.153Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "roll.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Gunner\\roll.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\Gunner\\roll.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Gunner\\roll.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\Gunner\\roll.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-11T17:25:58.071Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "basicShot.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Gunner\\basicShot.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\Gunner\\basicShot.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\Gunner\\basicShot.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\Gunner\\basicShot.cs",
+              "ViewState": "AQIAACUAAAAAAAAAAAAYwDsAAABBAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-11T17:25:36.963Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "SkillTreeManager.cs",
+              "DocumentMoniker": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\SkillTreeManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\SkillTreeManager.cs",
+              "ToolTip": "C:\\Users\\nam38\\Defense\\Assets\\Scripts\\Skills\\SkillTreeManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\SkillTreeManager.cs",
+              "ViewState": "AQIAACgAAAAAAAAAAAAQwDYAAAA0AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-07T05:07:11.651Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

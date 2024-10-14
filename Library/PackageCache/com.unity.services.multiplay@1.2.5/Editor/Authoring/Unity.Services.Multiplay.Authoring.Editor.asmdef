@@ -1,0 +1,37 @@
+{
+    "name": "Unity.Services.Multiplay.Authoring.Editor",
+    "rootNamespace": "Unity.Services.Multiplay.Authoring.Editor",
+    "references": [
+        "Unity.Services.Multiplay.Authoring",
+        "Unity.Services.Multiplay.Authoring.Core",
+        "Unity.Services.DeploymentApi",
+        "Unity.Services.Core.Editor",
+        "Unity.Services.Core.Environments.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "DEPLOYMENT_API_AVAILABLE",
+        "UNITY_2021_3_OR_NEWER",
+        "!MULTIPLAYER_INSTALLED"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.services.deployment.api",
+            "expression": "[1.0.0-pre.1,2.0.0)",
+            "define": "DEPLOYMENT_API_AVAILABLE"
+        },
+        {
+            "name": "com.unity.services.multiplayer",
+            "expression": "[0.0.0.1,2.0.0-exp.1)",
+            "define": "MULTIPLAYER_INSTALLED"
+        }
+    ],
+    "noEngineReferences": false
+}
