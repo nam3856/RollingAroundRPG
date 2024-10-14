@@ -35,8 +35,5 @@ public class powerStrike : Skill
         warrior.audioSource.PlayOneShot(impactSound);
         PhotonNetwork.Instantiate("FanBullet", warrior.transform.position, Quaternion.identity)
             .GetComponent<PhotonView>().RPC("SetPowerStrike", RpcTarget.All, attackDirection, warrior.attackDamage * 5, warrior.PV.ViewID);
-        
-        SetLastUsedTime(Time.time);
-
     }
 }

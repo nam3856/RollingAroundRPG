@@ -10,6 +10,7 @@ public class GrenadeScript : MonoBehaviourPunCallbacks
     public int damage;
     public int shooterActorNumber;
     public int attackerViewId = 0;
+    public Vector2 velocity = Vector2.zero;
 
     private Rigidbody2D rb;
     public BoxCollider2D boxCollider;
@@ -41,7 +42,7 @@ public class GrenadeScript : MonoBehaviourPunCallbacks
 
         if (photonView.IsMine)
         {
-            rb.velocity = dir * 6f;
+            rb.velocity = (Vector2)data[6];
             rb.angularVelocity = 300f;
         }
 

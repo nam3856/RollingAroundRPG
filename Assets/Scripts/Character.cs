@@ -716,7 +716,8 @@ public class Warrior : Character
         shieldBlockSkill = skills[4] as shieldBlock;  // 전사 방어 스킬
         //skillTreeManager.UseSkill(shieldBlockSkill, this);
 
-        skillTreeManager.UseSkill(skills[4], this);
+        if (skillTreeManager.UseSkill(skills[4], this, true)) Debug.Log("방패막기 사용");
+        else Debug.Log("방패막기 실패");
     }
 
     [PunRPC]
@@ -735,7 +736,7 @@ public class Warrior : Character
         RB.constraints = RigidbodyConstraints2D.FreezeRotation;
         //Debug.Log("Warrior: 방어 종료");
 
-        skills[4].SetLastUsedTime(Time.time);  // 방어 종료 시점에 쿨타임 시작
+        skills[4].StartCoolDown(this);  // 방어 종료 시점에 쿨타임 시작
         Debug.Log($"{PV.Owner.NickName}의 방패 막기 종료, 쿨타임 시작");
 
         PV.RPC("EndBlockingAnimation", RpcTarget.All);
@@ -853,6 +854,13 @@ public class Gunner : Character
     private BulletPool pool;
     private AudioClip reloadSound;
 
+    private bool isChargingGrenade = false;
+    private float grenadeChargeTime = 0f;
+    private float currentGrenadeForce = 2f;
+    private AudioClip[] grenadeSounds;
+    private float chargeSpeed = 2f;
+    private float maxChargeTime = 5f;
+
     public override void Start()
     {
         base.Start();
@@ -862,10 +870,98 @@ public class Gunner : Character
         pool = FindObjectOfType<BulletPool>();
         roll.OnRollStarted += HandleRollStart;
         roll.OnRollEnded += HandleRollEnd;
-        reloadSound = Resources.Load<AudioClip>("Sounds/reload");
+        currentMP = maxMP;
+        uiManager.SetMp((int)currentMP,(int)maxMP);
+        
         for (int i = 0; i < 5; i++)
         {
             skills.Add(skillTreeManager.CharacterClasses[1].Skills[i]);
+            Debug.Log($"Gunner Skill[{i}] = {skills[i]?.Name}");
+        }
+
+        reloadSound = Resources.Load<AudioClip>("Sounds/reload");
+        grenadeSounds = new AudioClip[2];
+        grenadeSounds[0] = Resources.Load<AudioClip>("Sounds/grenadeThrow");
+        grenadeSounds[1] = Resources.Load<AudioClip>("Sounds/grenadeExplode");
+    }
+
+    public void Update()
+    {
+        if (!PV.IsMine) return;
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            StartChargingGrenade();
+        }
+
+        if (Input.GetKey(KeyCode.E))
+        {
+            ChargeGrenade();
+        }
+
+        if (Input.GetKeyUp(KeyCode.E))
+        {
+            ReleaseGrenade();
+        }
+    }
+
+    void StartChargingGrenade()
+    {
+        if (isChargingGrenade)
+            return;
+
+        var grenadeToss = skills[2] as GrenadeToss;
+        if (grenadeToss == null)
+        {
+            Debug.LogError("GrenadeToss 스킬이 null입니다.");
+            return;
+        }
+
+        if (!grenadeToss.UseSkill(this, true))
+        {
+            Debug.LogWarning("GrenadeToss 스킬을 사용할 수 없습니다.");
+            return;
+        }
+
+        isChargingGrenade = true;
+        grenadeChargeTime = 0f;
+        currentGrenadeForce = 1f; // 기본 던지는 힘 초기화
+
+        // 충전 시작 사운드 재생
+        if (audioSource != null && grenadeSounds.Length > 0)
+        {
+            audioSource.PlayOneShot(grenadeSounds[0]);
+        }
+    }
+
+    void ChargeGrenade()
+    {
+        if (!isChargingGrenade)
+            return;
+
+        grenadeChargeTime += Time.deltaTime * chargeSpeed;
+        currentGrenadeForce += Time.deltaTime * chargeSpeed; // 던지는 힘 증가
+
+        Debug.Log($"수류탄 충전중: {grenadeChargeTime} {currentGrenadeForce}");
+        currentGrenadeForce = Mathf.Clamp(currentGrenadeForce, 1f, 8f); // 던지는 힘 제한
+    }
+
+    void ReleaseGrenade()
+    {
+        if (!isChargingGrenade)
+            return;
+
+        isChargingGrenade = false;
+
+        // 수류탄 발사
+        var grenadeToss = skills[2] as GrenadeToss;
+        if (grenadeToss != null)
+        {
+            grenadeToss.ThrowGrenade(this, currentGrenadeForce);
+        }
+        else
+        {
+            Debug.LogError("GrenadeToss 스킬이 null입니다.");
         }
     }
 
@@ -910,6 +1006,7 @@ public class Gunner : Character
 
     public override void StartSkill(int skillIdx)
     {
+        if (skillIdx == 2) return;
         base.StartSkill(skillIdx);
     }
 

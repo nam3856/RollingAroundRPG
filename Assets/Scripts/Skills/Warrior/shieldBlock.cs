@@ -45,7 +45,7 @@ public class shieldBlock : Skill
 
         if (isParrying) // ÆÐ¸µ »óÅÂ
         {
-            KnockbackEnemies(1.2f); // Àû ³Ë¹é Ã³¸®
+            KnockbackEnemies(0.6f); // Àû ³Ë¹é Ã³¸®
             damageTextPV.RPC("SetDamageText", RpcTarget.All, "Guard!");
             warrior.PV.RPC("ActivateGuardEffectObject", RpcTarget.All);
         }
@@ -55,7 +55,7 @@ public class shieldBlock : Skill
             damageTextPV.RPC("SetDamageText", RpcTarget.All, ((int)reducedDamage).ToString());
             warrior.SetCurrentHealth(curHealth - (int)reducedDamage);
 
-            KnockbackEnemies(1f); // ³Ë¹é
+            KnockbackEnemies(0.3f); // ³Ë¹é
         }
         else
         {

@@ -131,8 +131,8 @@ public class SkillTreeManager : MonoBehaviour
         
     }
 
-    public bool UseSkill(Skill skill, Character character)
+    public bool UseSkill(Skill skill, Character character, bool isToggle = false)
     {
-        return skill.UseSkill(character);
+        return skill.UseSkill(character, isToggle);
     }
 }

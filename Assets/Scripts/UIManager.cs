@@ -6,9 +6,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Unity.Mathematics;
+using Cysharp.Threading.Tasks;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance { get; private set; }
+
     public Image[] skillIcons;
     public Image[] cooldownOverlays;
     private string[] skillNames = new string[5];
@@ -43,12 +46,17 @@ public class UIManager : MonoBehaviour
     }
     private void Start()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         skillTreeManager = FindObjectOfType<SkillTreeManager>();
         InitializeCooldownTimers();
-        var skillCooldownManager = FindObjectOfType<SkillCooldownManager>();
 
-        skillCooldownManager.OnSkillUsed += HandleSkillUsed;
-        skillCooldownManager.OnSkillReady += HandleSkillReady;
+        var skillcooldownManager = FindObjectOfType<SkillCooldownManager>();
+        skillcooldownManager.OnSkillUsed += HandleSkillUsed;
+        skillcooldownManager.OnSkillReady += HandleSkillReady;
 
         // 아이콘들을 리소스에서 로드
         LoadSkillIcons();
@@ -82,14 +90,9 @@ public class UIManager : MonoBehaviour
     }
     private void OnDestroy()
     {
-        var skillCooldownManager = FindObjectOfType<SkillCooldownManager>();
 
-        // 이벤트 구독 해제
-        if (skillCooldownManager != null)
-        {
-            skillCooldownManager.OnSkillUsed -= HandleSkillUsed;
-            skillCooldownManager.OnSkillReady -= HandleSkillReady;
-        }
+        SkillCooldownManager.Instance.OnSkillUsed -= HandleSkillUsed;
+        SkillCooldownManager.Instance.OnSkillReady -= HandleSkillReady;
     }
 
     private void LoadSkillIcons()
@@ -122,7 +125,8 @@ public class UIManager : MonoBehaviour
     private void HandleSkillUsed(string skillName, float cooldown)
     {
         int index = GetSkillIconIndex(skillName);
-        StartCoroutine(CooldownOverlayRoutine(index, cooldown));
+
+        CooldownOverlayAsync(index, cooldown).Forget();
     }
 
     private void HandleSkillReady(string skillName)
@@ -131,7 +135,13 @@ public class UIManager : MonoBehaviour
         cooldownOverlays[index].fillAmount = 0;
     }
 
-    private IEnumerator CooldownOverlayRoutine(int skillIndex, float cooldown)
+    /// <summary>
+    /// 쓴 스킬의 쿨다운을 시각적으로 보여줍니다. 비동기
+    /// </summary>
+    /// <param name="skillIndex">스킬 번호</param>
+    /// <param name="cooldown">쿨타임</param>
+    /// <returns></returns>
+    private async UniTask CooldownOverlayAsync(int skillIndex, float cooldown)
     {
         float elapsedTime = 0f;
 
@@ -139,7 +149,7 @@ public class UIManager : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
             cooldownOverlays[skillIndex].fillAmount = 1 - (elapsedTime / cooldown);
-            yield return null;
+            await UniTask.Yield();
         }
 
         cooldownOverlays[skillIndex].fillAmount = 0;

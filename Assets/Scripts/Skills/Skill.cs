@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Skill : MonoBehaviour 
+public abstract class Skill
 {
     public string Name { get; private set; }
     public string Description { get; private set; }
@@ -11,8 +11,6 @@ public abstract class Skill : MonoBehaviour
     public int Point { get; private set; }
     public float Cooldown { get; private set; }
     private float lastUsedTime;
-    private UIManager ui;
-    private SkillCooldownManager cooldownManager;
 
     public void SetLastUsedTime(float time)
     {
@@ -28,8 +26,6 @@ public abstract class Skill : MonoBehaviour
         IsAcquired = false;
         Cooldown = cooldown;
         lastUsedTime = -cooldown;
-        ui = FindObjectOfType<UIManager>();
-        cooldownManager = FindObjectOfType<SkillCooldownManager>();
     }
     public void Acquire(Character character)
     {
@@ -46,12 +42,21 @@ public abstract class Skill : MonoBehaviour
     {
         return Cost <= character.GetCurrentMP();
     }
-    public bool UseSkill(Character character)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="isToggle">토글형 스킬일 경우 True</param>
+    /// <returns>스킬 사용 완료 여부</returns>
+    public bool UseSkill(Character character, bool isToggle = false)
     {
         if (IsAcquired && !IsOnCooldown() && IsEnoughMp(character))
         {
-            cooldownManager.UseSkill(this);
-            lastUsedTime = Time.time;
+            if (!isToggle)
+            {
+                SkillCooldownManager.Instance.UseSkill(this);
+                lastUsedTime = Time.time;
+            }
             character.AdjustCurrentMP(Cost);
             ExecuteSkill(character);
             UpdateSkillUI(character);
@@ -63,23 +68,25 @@ public abstract class Skill : MonoBehaviour
         }
     }
 
+    public void StartCoolDown(Character character)
+    {
+        SkillCooldownManager.Instance.UseSkill(this);
+        lastUsedTime = Time.time;
+        UpdateSkillUI(character);
+    }
+
     protected abstract void ExecuteSkill(Character character);
 
     public void UpdateSkillUI(Character character)
     {
-        if (ui == null)
-        {
-            ui = FindObjectOfType<UIManager>();
-        }
         if (IsAcquired && IsEnoughMp(character))
         {
-            ui.SetSkillIconToColor(Name);  // 배웠고 마나가 충분하면 컬러로 설정
+            UIManager.Instance.SetSkillIconToColor(Name);  // 배웠고 마나가 충분하면 컬러로 설정
         }
         else
         {
-            ui.SetSkillIconToGrayscale(Name);  // 배우지 않았거나 마나가 충분하지 않으면 흑백으로 설정
+            UIManager.Instance.SetSkillIconToGrayscale(Name);  // 배우지 않았거나 마나가 충분하지 않으면 흑백으로 설정
         }
-
     }
 
 }
