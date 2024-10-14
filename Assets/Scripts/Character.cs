@@ -48,7 +48,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     protected float attackTime = 0;
     protected bool isAttacking = false;
     protected bool isUsingSkill = false;
-    public bool isBlocking = false;
+    protected bool isBlocking = false;
     protected Transform levelTransform;
     protected Transform magicTransform;
     protected Animator levelAnimator;
@@ -526,9 +526,18 @@ public class Warrior : Character
     public AudioClip[] swordSounds;
 
     private int attackStep = 0;
-    public float comboResetTime;
-    public float comboDelay = 3f;
+    private float comboResetTime;
+    private float comboDelay = 3f;
 
+    public void SetIsBlocking(bool status)
+    {
+        isBlocking = status;
+    }
+
+    public bool GetIsBlocking()
+    {
+        return isBlocking;
+    }
     public override void Start()
     {
         base.Start();

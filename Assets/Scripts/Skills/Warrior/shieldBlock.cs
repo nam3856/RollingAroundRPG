@@ -14,7 +14,7 @@ public class shieldBlock : Skill
         if (character is Warrior){
             warrior = character as Warrior;
             isBlocking = true;
-            warrior.isBlocking = true;
+            warrior.SetIsBlocking(true);
             warrior.RB.velocity = Vector2.zero;
             warrior.RB.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
         }
@@ -47,7 +47,7 @@ public class shieldBlock : Skill
             damageTextPV.RPC("SetDamageText", RpcTarget.All, "Guard!");
             warrior.PV.RPC("ActivateGuardEffectObject", RpcTarget.All);
         }
-        else if (warrior.isBlocking) // 1초 이후에는 데미지 1/3만 받음
+        else if (warrior.GetIsBlocking()) // 1초 이후에는 데미지 1/3만 받음
         {
             float reducedDamage = damage / 3;
             damageTextPV.RPC("SetDamageText", RpcTarget.All, ((int)reducedDamage).ToString());
