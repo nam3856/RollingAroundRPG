@@ -48,7 +48,6 @@ public class rapidFire : Skill
                 bulletScript.SetDirectionAndDamage(new object[] { randomDirection, attackDamage, gunner.PV.OwnerActorNr, shooterCollider, false, gunner.PV.ViewID });
             });
         }
-        SetLastUsedTime(Time.time);
 
         UniTask.Void(async () =>
         {

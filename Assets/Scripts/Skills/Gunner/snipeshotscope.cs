@@ -128,9 +128,9 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
         DeactivateSnipeShot();
     }
 
-    private void DeactivateSnipeShot()
+    public void DeactivateSnipeShot()
     {
-
+        isSniping = false;
         character.RB.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         UniTask.Void(async () =>

@@ -26,6 +26,10 @@ public class UIManager : MonoBehaviour
     public Button ResetButton;
     public Transform SkillsContainer;
     public GameObject SkillButtonPrefab;
+    public GameObject chatting;
+
+    public GameObject chattingInput;
+    public GameObject skillBar;
     private List<SkillButton> skillButtons = new List<SkillButton>();
     private int characterIndex;
     public Character character;
@@ -54,10 +58,19 @@ public class UIManager : MonoBehaviour
             if (menuPanel.activeSelf)
             {
                 menuPanel.SetActive(false);
+
+                chatting.SetActive(true);
+                skillBar.SetActive(true);
+                chattingInput.SetActive(true);
             }
             else
             {
                 menuPanel.SetActive(true);
+                SkillTreePanel.SetActive(false);
+                chatting.SetActive(false);
+                skillBar.SetActive(false);
+
+                chattingInput.SetActive(false);
             }
         }
     }
@@ -66,14 +79,10 @@ public class UIManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         skillTreeManager = FindObjectOfType<SkillTreeManager>();
         InitializeCooldownTimers();
 
-        var skillcooldownManager = FindObjectOfType<SkillCooldownManager>();
-        skillcooldownManager.OnSkillUsed += HandleSkillUsed;
-        skillcooldownManager.OnSkillReady += HandleSkillReady;
 
         if (learnButton != null)
             learnButton.onClick.AddListener(OnLearnButtonClicked);
@@ -88,10 +97,58 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError("UIManager: ResetButton이 할당되지 않았습니다.");
         }
+
+        if (SkillEventManager.Instance != null)
+        {
+            SkillEventManager.Instance.OnSkillLearned += OnSkillLearned;
+            SkillEventManager.Instance.OnSkillsReset += OnSkillsReset;
+            SkillEventManager.Instance.OnSkillSelected += OnSkillSelected;
+
+            SkillEventManager.Instance.OnSkillUsed += HandleSkillUsed;
+            SkillEventManager.Instance.OnSkillReady += HandleSkillReady;
+        }
+
+        UpdateSkillPointsUI();
     }
-    public void SelectSkill(Skill skill)
+
+    private void OnSkillLearned(Skill skill)
+    {
+        Debug.Log($"OnSkillLearned 이벤트 수신: {skill.Name}");
+        PopulateSkills();
+        UpdateSkillPointsUI();
+        UpdateLearnButton();
+        SetSkillIconToColor(skill.Name);
+
+    }
+
+    /// <summary>
+    /// 스킬이 초기화되었을 때 호출됩니다.
+    /// </summary>
+    private void OnSkillsReset()
+    {
+        Debug.Log("OnSkillsReset 이벤트 수신");
+        PopulateSkills();
+        UpdateSkillPointsUI();
+        selectedSkill = null;
+        UpdateLearnButton();
+
+        foreach (var skill in skillTreeManager.PlayerClass.Skills)
+        {
+            if (skill.IsAcquired)
+            {
+                SetSkillIconToGrayscale(skill.Name);
+            }
+        }
+    }
+
+    public void UpdateSkillPointsUI()
+    {
+        skillPointText.text = $"현재 스킬 포인트 : {skillTreeManager.PlayerSkillPoints.ToString()}";
+    }
+    private void OnSkillSelected(Skill skill)
     {
         selectedSkill = skill;
+
         UpdateLearnButton();
     }
 
@@ -113,6 +170,7 @@ public class UIManager : MonoBehaviour
             learnButton.interactable = true;
         }
     }
+    
     void OnLearnButtonClicked()
     {
         if (selectedSkill == null)
@@ -129,17 +187,15 @@ public class UIManager : MonoBehaviour
 
         if (skillTreeManager.PlayerSkillPoints > 0)
         {
-            // 스킬을 획득하고 스킬 포인트를 소모
             skillTreeManager.AcquireSkill(selectedSkill, character);
-            PopulateSkills(); // UI 업데이트
-            skillPointText.text = "현재 스킬 포인트 : "+skillTreeManager.PlayerSkillPoints.ToString();
-            UpdateLearnButton(); // LearnButton 상태 업데이트
         }
         else
         {
             Debug.Log("스킬 포인트가 부족합니다.");
         }
     }
+
+
     private void OnResetButtonClicked()
     {
         ResetSkills();
@@ -147,7 +203,7 @@ public class UIManager : MonoBehaviour
 
     public void ResetSkills()
     {
-        skillTreeManager.ResetSkills();
+        skillTreeManager.ResetSkills(character);
         PopulateSkills();
         skillPointText.text = "현재 스킬 포인트 : " + skillTreeManager.PlayerSkillPoints.ToString();
     }
@@ -157,7 +213,7 @@ public class UIManager : MonoBehaviour
         SkillTreePanel.SetActive(false);
     }
 
-    void ToggleSkillTree()
+    public void ToggleSkillTree()
     {
         bool isActive = SkillTreePanel.activeSelf;
         SkillTreePanel.SetActive(!isActive);
@@ -236,9 +292,16 @@ public class UIManager : MonoBehaviour
     }
     private void OnDestroy()
     {
+        // 이벤트 구독 해제
+        if (SkillEventManager.Instance != null)
+        {
+            SkillEventManager.Instance.OnSkillLearned -= OnSkillLearned;
+            SkillEventManager.Instance.OnSkillsReset -= OnSkillsReset;
+            SkillEventManager.Instance.OnSkillSelected -= OnSkillSelected;
 
-        SkillCooldownManager.Instance.OnSkillUsed -= HandleSkillUsed;
-        SkillCooldownManager.Instance.OnSkillReady -= HandleSkillReady;
+            SkillEventManager.Instance.OnSkillUsed -= HandleSkillUsed;
+            SkillEventManager.Instance.OnSkillReady -= HandleSkillReady;
+        }
     }
 
     private void LoadSkillIcons()
@@ -268,15 +331,19 @@ public class UIManager : MonoBehaviour
         mageSkillIcons[4] = Resources.Load<Sprite>("Icons/Mage_Skill5");
     }
 
-    private void HandleSkillUsed(string skillName, float cooldown)
+    private void HandleSkillUsed(int viewID, string skillName, float cooldown)
     {
+        if (viewID != character.PV.ViewID)
+            return;
         int index = GetSkillIconIndex(skillName);
 
         CooldownOverlayAsync(index, cooldown).Forget();
     }
 
-    private void HandleSkillReady(string skillName)
+    private void HandleSkillReady(int viewID, string skillName)
     {
+        if (viewID != character.PV.ViewID)
+            return;
         int index = GetSkillIconIndex(skillName);
         cooldownOverlays[index].fillAmount = 0;
     }

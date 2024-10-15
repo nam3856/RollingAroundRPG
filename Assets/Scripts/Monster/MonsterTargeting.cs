@@ -40,10 +40,13 @@ public class MonsterTargeting : MonoBehaviourPunCallbacks
         {
             return;
         }
-
-        // 타겟 유지 코루틴 시작
-        Coroutine coroutine = StartCoroutine(RemovePlayerWithDelay(playerTransform));
-        removeCoroutines.Add(playerTransform, coroutine);
+        if(gameObject.activeInHierarchy)
+        {
+            // 타겟 유지 코루틴 시작
+            Coroutine coroutine = StartCoroutine(RemovePlayerWithDelay(playerTransform));
+            removeCoroutines.Add(playerTransform, coroutine);
+        }
+        
     }
 
     private IEnumerator RemovePlayerWithDelay(Transform playerTransform)

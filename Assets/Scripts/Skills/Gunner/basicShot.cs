@@ -9,7 +9,7 @@ public class basicShot : Skill
     private AudioClip shotSound = Resources.Load<AudioClip>("Sounds/shot");
     private AudioClip reloadSound = Resources.Load<AudioClip>("Sounds/reload");
 
-    public basicShot() : base("기본 사격", "총을 써서 전방의 적 1명에게 데미지를 줍니다.", 1, null, 1, 0.3f)
+    public basicShot() : base("기본 사격", "총을 써서 전방의 적 1명에게 데미지를 줍니다.", 1, null, 0, 0.3f)
     {
 
         icon = Resources.Load<Sprite>("Icons/Gunner_Skill1");

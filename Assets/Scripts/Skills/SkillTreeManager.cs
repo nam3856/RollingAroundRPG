@@ -6,7 +6,7 @@ using UnityEngine;
 public class SkillTreeManager : MonoBehaviour
 {
     public List<CharacterClass> CharacterClasses { get; private set; }
-    public int PlayerSkillPoints { get; private set; } = 15;
+    public int PlayerSkillPoints { get; private set; } = 0;
 
 
     private void Start()
@@ -107,6 +107,7 @@ public class SkillTreeManager : MonoBehaviour
         if (skill.IsAcquired) return false;
         if (CanAcquireSkill(skill))
         {
+            Debug.Log($"SkillTreeManager: 배울 수 있음. character.PV.IsMine? : {character.PV.IsMine}");
             if (character.PV.IsMine)
             {
                 PlayerSkillPoints -= skill.Point;
@@ -114,9 +115,18 @@ public class SkillTreeManager : MonoBehaviour
                 if (character != null && character.playerData != null)
                 {
                     character.playerData.LearnedSkills.Add(skill.Name);
+                    character.playerData.SkillPoint = PlayerSkillPoints;
                     SaveSystem.SavePlayerData(character.playerData);
                 }
                 Debug.Log($"{skill.Name} 스킬을 획득했습니다.");
+                if (SkillEventManager.Instance != null)
+                {
+                    SkillEventManager.Instance.SkillLearned(skill);
+                }
+            }
+            else
+            {
+                Debug.LogError($"Character.PV.IsMine이 False입니다. character: {character.PV.ViewID} {character.PV.name}");
             }
 
             return true;
@@ -131,22 +141,34 @@ public class SkillTreeManager : MonoBehaviour
     }
 
     public CharacterClass PlayerClass;
-    public void ResetSkills()
+    public void ResetSkills(Character character)
     {
         if (PlayerClass.Skills.Count > 0)
         {
             // 맨 처음 스킬만 남기고 나머지 스킬 초기화
             for (int i = 1; i < PlayerClass.Skills.Count; i++)
             {
-                PlayerClass.Skills[i].IsAcquired = false;
-                PlayerSkillPoints += PlayerClass.Skills[i].Point;
+                if(PlayerClass.Skills[i].IsAcquired)
+                {
+                    PlayerClass.Skills[i].IsAcquired = false;
+                    PlayerSkillPoints += PlayerClass.Skills[i].Point;
+                    character.playerData.LearnedSkills.Remove(PlayerClass.Skills[i].Name);
+                }
             }
-            
+            character.playerData.SkillPoint = PlayerSkillPoints;
+            SaveSystem.SavePlayerData(character.playerData);
             Debug.Log("모든 스킬이 초기화되었습니다.");
+            if (SkillEventManager.Instance != null)
+            {
+                SkillEventManager.Instance.SkillsReset();
+            }
         }
     }
 
-    
+    public void AddSkillPoint(int num)
+    {
+        PlayerSkillPoints += num;
+    }
 
     public void SetPlayerClass(CharacterClass characterClass)
     {
