@@ -5,6 +5,7 @@ using Photon.Pun;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System;
+using Photon.Pun.Demo.PunBasics;
 
 public class SnipeShotSkill : MonoBehaviourPunCallbacks
 {
@@ -119,7 +120,7 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
                 attackedPlayers.Add(monsterPV.ViewID);
                 if (monsterPV != null)
                 {
-                    monsterPV.RPC("TakeDamage", RpcTarget.All, snipeShotSkill.damage, GetComponent<Character>().PV.ViewID, true);
+                    monsterPV.RPC("TakeDamage", RpcTarget.All, new object[] { snipeShotSkill.damage, GetComponent<Character>().PV.ViewID, true});
                 }
             }
         }

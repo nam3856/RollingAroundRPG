@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using System.Collections;
 using UnityEngine.TextCore.Text;
+using UnityEditor.Animations;
 
 public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -77,7 +78,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     protected float attackTime = 0f;
     protected int arcaneShieldStack = 0;
 
-    protected UIManager uiManager;
+    public UIManager uiManager;
     public PlayerData playerData;
 
     private Vector3 curPos;
@@ -125,8 +126,10 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
         AN = GetComponent<Animator>();
         PV = GetComponent<PhotonView>();
         RB = GetComponent<Rigidbody2D>();
+        
         skillTreeManager = FindObjectOfType<SkillTreeManager>();
 
+        
         InitializeAudio();
         InitializeEffects();
         InitializeUI();
@@ -483,7 +486,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
         GameObject uiCanvas = GameObject.Find("Canvas");
         damageTextInstance.transform.SetParent(uiCanvas.transform, false);
 
-        damageTextPV.RPC("SetDamageText", RpcTarget.All, ((int)armoredDamage).ToString());
+        damageTextPV.RPC("SetDamageText", RpcTarget.All, ((int)armoredDamage).ToString(), false);
         currentHealth -= armoredDamage;
 
         if (PV.IsMine)
@@ -491,23 +494,11 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             uiManager.SetHp((int)currentHealth, (int)maxHealth);
         }
 
-        UpdateHealthBar();
+        HealthImage.fillAmount = currentHealth / maxHealth;
 
         if (currentHealth <= 0)
         {
             Die();
-        }
-    }
-
-    /// <summary>
-    /// 체력바를 업데이트합니다.
-    /// </summary>
-    [PunRPC]
-    protected void UpdateHealthBar()
-    {
-        if (HealthImage != null)
-        {
-            HealthImage.fillAmount = currentHealth / maxHealth;
         }
     }
 
@@ -584,7 +575,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             SaveSystem.SavePlayerData(playerData);
         }
 
-        UpdateHealthBar();
+        HealthImage.fillAmount = currentHealth / maxHealth;
     }
 
     #endregion

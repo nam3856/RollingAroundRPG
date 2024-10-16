@@ -9,7 +9,6 @@ public class FanBulletScript : MonoBehaviourPunCallbacks
 {
     public DebugLogger logger;
     public Collider2D attackTrigger;
-    public string targetTag = "Player";
     public PhotonView PV;
     Vector2 dir;
     private float attackRange = 0.65f;
@@ -67,9 +66,10 @@ public class FanBulletScript : MonoBehaviourPunCallbacks
     {
         double p = UnityEngine.Random.value;
         bool isCriticalHit = false;
+        int damage = attackDamage;
         if (p <= critical)
         {
-            attackDamage *= 2;
+            damage *= 2;
             isCriticalHit = true;
         }
         //Debug.Log(other.tag);
@@ -78,14 +78,12 @@ public class FanBulletScript : MonoBehaviourPunCallbacks
             if (other.CompareTag("Monster"))
             {
                 PhotonView monsterPV = other.GetComponent<PhotonView>();
-                if (attackedPlayers.Contains(monsterPV.ViewID)) return;
-
                 if (monsterPV != null)
                 {
-                    monsterPV.RPC("TakeDamage", RpcTarget.AllBuffered, attackDamage, playerNum, isCriticalHit);
-                    monsterPV.RPC("ApplyKnockback", RpcTarget.All, transform.position, knockbackForce);
-
+                    if (attackedPlayers.Contains(monsterPV.ViewID)) return;
                     attackedPlayers.Add(monsterPV.ViewID);
+                    monsterPV.RPC("TakeDamage", RpcTarget.AllBuffered, new object[] { damage, playerNum, isCriticalHit, transform.position, knockbackForce });
+                    monsterPV.RPC("ApplyKnockback", RpcTarget.All, transform.position, knockbackForce);
                 }
             }
         }
@@ -94,22 +92,15 @@ public class FanBulletScript : MonoBehaviourPunCallbacks
             if (other.CompareTag("Monster"))
             {
                 PhotonView monsterPV = other.GetComponent<PhotonView>();
-                if (attackedPlayers.Contains(monsterPV.ViewID)) return;
-
                 if (monsterPV != null)
                 {
+                    if (attackedPlayers.Contains(monsterPV.ViewID)) return;
+                    attackedPlayers.Add(monsterPV.ViewID);
                     Vector2 directionToPlayer = (other.transform.position - transform.position).normalized;
                     float angleToPlayer = Vector2.Angle(dir, directionToPlayer);
                     if (angleToPlayer <= attackAngle / 2)
                     {
-                        // 데미지와 넉백을 모든 클라이언트에서 적용
-                        monsterPV.RPC("TakeDamage", RpcTarget.AllBuffered, attackDamage, playerNum, isCriticalHit);
-
-                        if (monsterPV != null)
-                        {
-                            monsterPV.RPC("ApplyKnockback", RpcTarget.All, transform.position, knockbackForce);
-                            attackedPlayers.Add(monsterPV.ViewID);
-                        }
+                        monsterPV.RPC("TakeDamage", RpcTarget.AllBuffered, new object[] { attackDamage, playerNum, isCriticalHit, transform.position, knockbackForce });
                     }
                 }
             }

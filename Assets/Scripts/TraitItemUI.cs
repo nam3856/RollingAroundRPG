@@ -20,7 +20,7 @@ public class TraitItemUI : MonoBehaviour
         traitIcon.sprite = trait.Icon;
         traitName.text = trait.TraitName;
 
-        if (trait.IsStackTrait())
+        if (trait.IsCompletelyLearned())
         {
             traitIcon.color = Color.gray;
         }

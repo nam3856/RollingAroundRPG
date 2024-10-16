@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-
-
-
 public class TraitManager
 {
     public int traitPoints { get; private set; } = 0;
@@ -21,7 +17,7 @@ public class TraitManager
 
     public bool AddTrait(Trait trait)
     {
-        if (trait.IsStackTrait())
+        if (trait.IsCompletelyLearned())
         {
             Debug.LogWarning($"Trait '{trait.TraitName}' is already applied.");
             return false;

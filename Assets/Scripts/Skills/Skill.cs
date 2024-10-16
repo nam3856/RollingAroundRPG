@@ -86,11 +86,11 @@ public abstract class Skill
     {
         if (IsAcquired && IsEnoughMp(character))
         {
-            UIManager.Instance.SetSkillIconToColor(Name);  // 배웠고 마나가 충분하면 컬러로 설정
+            character.uiManager.SetSkillIconToColor(Name);  // 배웠고 마나가 충분하면 컬러로 설정
         }
         else
         {
-            UIManager.Instance.SetSkillIconToGrayscale(Name);  // 배우지 않았거나 마나가 충분하지 않으면 흑백으로 설정
+            character.uiManager.SetSkillIconToGrayscale(Name);  // 배우지 않았거나 마나가 충분하지 않으면 흑백으로 설정
         }
     }
 

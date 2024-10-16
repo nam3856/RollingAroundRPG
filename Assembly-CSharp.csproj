@@ -93,7 +93,6 @@
     <Compile Include="Assets\Scripts\Skills\Warrior\comboAttack.cs" />
     <Compile Include="Assets\Scripts\Skills\Gunner\snipeshotscope.cs" />
     <Compile Include="Assets\Scripts\Characters\Gunner.cs" />
-    <Compile Include="Assets\Scripts\TriggerHandler.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
     <Compile Include="Assets\Scripts\Skills\Gunner\basicShot.cs" />
@@ -110,6 +109,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\Characters\Mage.cs" />
     <Compile Include="Assets\Scripts\Traits.cs" />
+    <Compile Include="Assets\Scripts\Skills\GrenadeChildScript.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\IgnoreUiRaycastWhenInactive.cs" />
     <Compile Include="Assets\Scripts\UIManager.cs" />

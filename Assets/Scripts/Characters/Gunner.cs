@@ -305,16 +305,6 @@ public class Gunner : Character
     protected override void Die()
     {
         base.Die();
-        // 추가적인 사망 처리 로직을 여기에 추가
-    }
-
-    #endregion
-
-    #region Animation Handling
-
-    [PunRPC]
-    public override void Respawn()
-    {
         var snipeShotSkill = GetComponent<SnipeShotSkill>();
         if (snipeShotSkill != null)
         {
@@ -324,8 +314,17 @@ public class Gunner : Character
         {
             Debug.LogWarning("SnipeShotSkill 컴포넌트를 찾을 수 없습니다.");
         }
+    }
+
+    #endregion
+
+    #region Animation Handling
+
+    [PunRPC]
+    public override void Respawn()
+    {
+        
         base.Respawn();
-        AN.SetTrigger("gunner init");
     }
 
     #endregion
