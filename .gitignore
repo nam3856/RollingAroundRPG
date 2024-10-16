@@ -40,3 +40,4 @@ Library
 Logs
 Logs/shadercompiler-AssetImportWorker0.log
 *.suo
+*.log
