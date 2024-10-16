@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SkillEventManager : MonoBehaviour
@@ -11,6 +10,11 @@ public class SkillEventManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
@@ -35,6 +39,7 @@ public class SkillEventManager : MonoBehaviour
         OnSkillsReset?.Invoke();
     }
 
+    // 스킬 사용 시 발생하는 이벤트 (ViewID, 스킬 이름, 쿨타임)
     public event Action<int, string, float> OnSkillUsed;
     public void SkillUsed(Skill skill, int viewID)
     {

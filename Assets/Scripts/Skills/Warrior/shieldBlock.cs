@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class shieldBlock : Skill
 {
-    private bool isBlocking;
     private bool isParrying;
     private Warrior warrior;
     private int parryingTime = 500;

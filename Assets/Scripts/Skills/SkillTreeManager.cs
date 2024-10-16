@@ -11,7 +11,6 @@ public class SkillTreeManager : MonoBehaviour
 
     private void Start()
     {
-
         InitializeSkillTrees();
     }
 
@@ -107,7 +106,6 @@ public class SkillTreeManager : MonoBehaviour
         if (skill.IsAcquired) return false;
         if (CanAcquireSkill(skill))
         {
-            Debug.Log($"SkillTreeManager: 배울 수 있음. character.PV.IsMine? : {character.PV.IsMine}");
             if (character.PV.IsMine)
             {
                 PlayerSkillPoints -= skill.Point;
@@ -168,6 +166,7 @@ public class SkillTreeManager : MonoBehaviour
     public void AddSkillPoint(int num)
     {
         PlayerSkillPoints += num;
+
     }
 
     public void SetPlayerClass(CharacterClass characterClass)

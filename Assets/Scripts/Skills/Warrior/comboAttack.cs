@@ -21,9 +21,8 @@ public class comboAttack : Skill
         {
             warrior = character as Warrior;
         }
+        warrior.ResetAttackState(0.3f).Forget();
         warrior.PlayRandomSwordSound();
-        warrior.SetIsAttacking(true);
-        warrior.SetLastAttackTime(Time.time);
         // 공격 방향 가져오기
         Vector2 attackDirection = warrior.GetLastMoveDirection();
         warrior.PV.RPC("StartAttackingMotion", RpcTarget.All, attackDirection, 1);
@@ -33,7 +32,7 @@ public class comboAttack : Skill
         bullet.GetComponent<PhotonView>().RPC("DirRPC", RpcTarget.All, attackDirection, character.attackDamage * 2, character.PV.ViewID);
 
 
-        warrior.ResetAttackState(0.3f, true).Forget();
+        
     }
 
     

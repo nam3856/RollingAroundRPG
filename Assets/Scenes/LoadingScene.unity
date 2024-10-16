@@ -606,12 +606,17 @@ MonoBehaviour:
   loadingText: {fileID: 547149487}
   nickNameInput: {fileID: 1010381663}
   characterSelectPanel: {fileID: 1526395435}
-  warrior: {fileID: 389877343}
-  gunner: {fileID: 798112219}
-  mage: {fileID: 1841615240}
-  select: {fileID: 82308906}
-  error: {fileID: 1686923929}
-  nicknameI: {fileID: 1010381661}
+  warriorPrefab: {fileID: 389877343}
+  gunnerPrefab: {fileID: 798112219}
+  magePrefab: {fileID: 1841615240}
+  selectIndicator: {fileID: 82308906}
+  errorPanel: {fileID: 1686923929}
+  nicknameErrorIndicator: {fileID: 1010381661}
+  selectionForce: 1000
+  selectionPositions:
+  - {x: -236, y: -34, z: 0}
+  - {x: 0, y: -40, z: 0}
+  - {x: 240, y: -40, z: 0}
 --- !u!1 &372987015
 GameObject:
   m_ObjectHideFlags: 0
@@ -2045,7 +2050,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 28
-  m_CharacterLimit: 0
+  m_CharacterLimit: 6
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []

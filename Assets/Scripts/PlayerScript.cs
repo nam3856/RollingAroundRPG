@@ -19,6 +19,7 @@ public class PlayerData
     public List<string> InventoryItems;
     public Vector3 LastPosition;
     public int currentCMRangeId;
+    public int SkillPoint;
 }
 public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
@@ -45,8 +46,10 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
     public static event Action<PlayerScript> OnPlayerRespawned;
 
     private CinemachineVirtualCamera mainCamera;
+    UIManager uIManager;
+    SkillTreeManager skillTreeManager;
 
-    
+
     void Start()
     {
         mainCamera = FindObjectOfType<CinemachineVirtualCamera>();
@@ -70,7 +73,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                     EquippedItems = new List<string>(),
                     InventoryItems = new List<string>(),
                     LastPosition = transform.position,
-                    currentCMRangeId = 0
+                    currentCMRangeId = 0,
+                    SkillPoint = 0
 };
                 SaveSystem.SavePlayerData(playerData);
             }
@@ -89,8 +93,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
     }
     void SetCharacter(int index)
     {
-        UIManager uIManager = FindObjectOfType<UIManager>();
-        SkillTreeManager skillTreeManager = FindObjectOfType<SkillTreeManager>();
+        uIManager = FindObjectOfType<UIManager>();
+        skillTreeManager = FindObjectOfType<SkillTreeManager>();
 
         switch (index)
         {
@@ -101,8 +105,6 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                 {
                     uIManager.InitializeSkillsForClass("Warrior");
                     skillTreeManager.SetPlayerClass(skillTreeManager.CharacterClasses[0]);
-
-                    AcquireSkillAsync(skillTreeManager, 0).Forget();// 전사 기본 공격
                 }
 
 
@@ -117,32 +119,30 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                     character.gameObject.AddComponent<SnipeShotSkill>();
                     skillTreeManager.SetPlayerClass(skillTreeManager.CharacterClasses[1]);
 
-                    AcquireSkillAsync(skillTreeManager, 1).Forget();// 거너 기본 공격
                 }
                 AN.SetTrigger("gunner init");
                 break;
             case 2:
                 // 법사
-                Debug.Log(2);
                 character = gameObject.AddComponent<Mage>();
                 if (PV.IsMine)
                 {
                     uIManager.InitializeSkillsForClass("Mage");
                     skillTreeManager.SetPlayerClass(skillTreeManager.CharacterClasses[2]);
 
-                    AcquireSkillAsync(skillTreeManager, 2).Forget();//법사 염구
                 }
                 AN.SetTrigger("mage init");
                 break;
         }
-        uIManager.character = character;
+
+        character.OnPhotonViewInitialized += HandlePhotonViewInitialized;
         AddToPhotonObservedComponents(character);
     }
 
-    public async UniTask AcquireSkillAsync(SkillTreeManager skillTreeManager,int idx)
+    private void HandlePhotonViewInitialized(Character character)
     {
-        await UniTask.Delay(100);
-        skillTreeManager.AcquireSkill(skillTreeManager.CharacterClasses[idx].Skills[0], character);
+        uIManager.character = character;
+        skillTreeManager.AcquireSkill(skillTreeManager.PlayerClass.Skills[0], character);
     }
 
     private void OnApplicationQuit()
@@ -151,6 +151,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
         {
             playerData.NickName = NickNameText.text;
             playerData.LastPosition = transform.position;
+            playerData.Experience = character.experience;
             SaveSystem.SavePlayerData(playerData);
         }
     }
@@ -166,7 +167,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
 
     void Update()
     {
-        if (PV.IsMine)
+        if (PV.IsMine && character.PV != null)
         {
             HandleInput();
         }
@@ -298,6 +299,13 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
     {
         object[] instantiationData = info.photonView.InstantiationData;
         characterIndex = (int)instantiationData[0];
+    }
+    private void OnDestroy()
+    {
+        if (character != null)
+        {
+            character.OnPhotonViewInitialized -= HandlePhotonViewInitialized;
+        }
     }
 }
 

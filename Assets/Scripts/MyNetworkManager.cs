@@ -18,10 +18,9 @@ public class MyNetworkManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        
         RespawnPanel.SetActive(false);
-        selected = DataHolder.selected;
-        PhotonNetwork.LocalPlayer.NickName = DataHolder.nickName;
+        selected = DataHolder.SelectedCharacterIndex;
+        PhotonNetwork.LocalPlayer.NickName = DataHolder.NickName;
         ChatManager.SetNicknameAndConnect(PhotonNetwork.LocalPlayer.NickName);
         /*
         if (SaveSystem.PlayerDataExists())

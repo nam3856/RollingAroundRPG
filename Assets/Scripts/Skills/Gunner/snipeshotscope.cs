@@ -13,7 +13,7 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
     public float zoomSpeed = 10f;
     public float overlayFadeSpeed = 5f;
     public float zoomInOrthoSize = 3.5f;
-    public bool isSniping { get; private set; } = false;
+    public bool IsSniping = false;
     private Transform originalFollow;
     private Transform originalLookAt;
     private AudioClip snipeSound;
@@ -46,7 +46,7 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if (isSniping && photonView.IsMine)
+        if (IsSniping && photonView.IsMine && !character.isDead)
         {
             HandleSniperMovement();
             if (Input.GetKeyDown(KeyCode.R))
@@ -83,7 +83,7 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
         }
         sniperCamera.m_Lens.OrthographicSize = zoomInOrthoSize;
         Debug.Log("저격준비 완료");
-        isSniping = true;
+        IsSniping = true;
         sniperOverlay.alpha = 1;
 
     }
@@ -98,7 +98,7 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
 
     private void Shoot()
     {
-        isSniping = false;
+        IsSniping = false;
         // 화면 중앙의 스크린 좌표를 월드 좌표로 변환
         Vector2 screenCenter = new Vector2(Screen.width / 2, Screen.height / 2);
         Vector2 worldPoint = Camera.main.ScreenToWorldPoint(screenCenter);
@@ -123,14 +123,14 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
                 }
             }
         }
-        snipeShotSkill?.SetLastUsedTime(Time.time);
+        snipeShotSkill?.StartCoolDown(character);
 
         DeactivateSnipeShot();
     }
 
     public void DeactivateSnipeShot()
     {
-        isSniping = false;
+        IsSniping = false;
         character.RB.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         UniTask.Void(async () =>

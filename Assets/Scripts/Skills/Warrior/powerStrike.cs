@@ -21,7 +21,7 @@ public class powerStrike : Skill
             warrior = character as Warrior;
         }
         
-        warrior.ResetAttackState(0.6f, true).Forget();
+        warrior.ResetAttackState(0.6f).Forget();
 
         PowerStrikeAsync(warrior).Forget();
     }

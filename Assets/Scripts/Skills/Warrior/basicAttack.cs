@@ -19,21 +19,14 @@ public class basicAttack : Skill
         {
             warrior = character as Warrior;
         }
+        warrior.ResetAttackState(0.3f).Forget();
         warrior.PlayRandomSwordSound();
-        warrior.SetIsAttacking(true);
-        warrior.SetLastAttackTime(Time.time);
-        warrior.RB.velocity = Vector2.zero;
 
         Vector2 attackDirection = warrior.GetLastMoveDirection();
 
         warrior.PV.RPC("StartAttackingMotion", RpcTarget.All, attackDirection, 0);
         PhotonNetwork.Instantiate("FanBullet", warrior.transform.position, Quaternion.identity)
             .GetComponent<PhotonView>().RPC("DirRPC", RpcTarget.All, attackDirection, warrior.attackDamage, warrior.PV.ViewID);
-
-
-        SetLastUsedTime(Time.time); // ÄðÅ¸ÀÓ °»½Å
-
-        warrior.ResetAttackState(0.3f, true).Forget();
     }
 
 
