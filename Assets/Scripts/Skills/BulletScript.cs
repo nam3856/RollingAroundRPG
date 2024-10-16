@@ -78,7 +78,7 @@ public class BulletScript : MonoBehaviourPunCallbacks
                     damage *= 2;
                     isCriticalHit = true;
                 }
-                targetPhotonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage, attackerViewId, isCriticalHit);
+                targetPhotonView.RPC("TakeDamage", RpcTarget.All, new object[] { damage, attackerViewId, isCriticalHit });
                 // ÃÑ¾Ë ÆÄ±« µ¿±âÈ­
                 StartCoroutine(DelayedDestroyBullet(0.05f));
             }

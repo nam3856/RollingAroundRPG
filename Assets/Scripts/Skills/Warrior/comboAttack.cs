@@ -26,6 +26,15 @@ public class comboAttack : Skill
         warrior.PlayRandomSwordSound();
         // 공격 방향 가져오기
         Vector2 attackDirection = warrior.GetLastMoveDirection();
+        if (Mathf.Abs(attackDirection.x) > Mathf.Abs(attackDirection.y))
+        {
+            attackDirection = new Vector2(Mathf.Sign(attackDirection.x), 0);
+        }
+        else
+        {
+            attackDirection = new Vector2(0, Mathf.Sign(attackDirection.y));
+        }
+
         warrior.PV.RPC("StartAttackingMotion", RpcTarget.All, attackDirection, 1);
         // 부채꼴 공격 생성
         GameObject bullet = PhotonNetwork.Instantiate("FanBullet", warrior.transform.position, Quaternion.identity);

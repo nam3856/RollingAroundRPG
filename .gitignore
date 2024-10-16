@@ -38,3 +38,5 @@ Assets/AssetStore/
 Assets/StreamingAssets/
 Library
 Logs
+Logs/shadercompiler-AssetImportWorker0.log
+*.suo

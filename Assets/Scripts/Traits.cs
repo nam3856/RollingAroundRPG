@@ -51,7 +51,7 @@ public abstract class Trait
     public int stackCount;
     public int maxStack;
 
-    public virtual bool IsStackTrait()
+    public virtual bool IsCompletelyLearned()
     {
         return maxStack<=stackCount;
     }
@@ -87,7 +87,7 @@ public class IncreaseAttackTrait : Trait
     public override void Apply(Character character)
     {
         stackCount++;
-        character.additionalAttackDamage = character.basicAttackDamage * AttackMultiplier * stackCount;
+        character.additionalAttackDamage = character.basicAttackDamage * AttackMultiplier * stackCount / 10;
         character.attackDamage = character.basicAttackDamage + character.additionalAttackDamage;
     }
 

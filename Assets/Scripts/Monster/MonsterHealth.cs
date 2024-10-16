@@ -12,15 +12,19 @@ public class MonsterHealth : MonoBehaviourPunCallbacks
 
     public GameObject damageTextPrefab;
     public Transform canvasTransform;
-
+    PhotonView PV;
     private void Start()
     {
         currentHealth = maxHealth;
+        PV = GetComponent<PhotonView>();
     }
 
     [PunRPC]
-    public void TakeDamage(int damage, int attackerViewID, bool isCritical)
+    public void TakeDamage(object[] data)
     {
+        int damage = (int)data[0];
+        int attackerViewID = (int)data[1];
+        bool isCritical = (bool)data[2];
         GameObject damageTextInstance = PhotonNetwork.Instantiate("DamageText", canvasTransform.position, Quaternion.identity);
         //GameObject damageTextInstance = Instantiate(damageTextPrefab, canvasTransform);
         DamageText damageTextScript = damageTextInstance.GetComponent<DamageText>();
@@ -41,7 +45,13 @@ public class MonsterHealth : MonoBehaviourPunCallbacks
             if (PhotonNetwork.IsMasterClient)
             {
                 GiveExperienceToAttackers();
-
+            }
+        }
+        else
+        {
+            if (data.Length>3)
+            {
+                PV.RPC("ApplyKnockback", RpcTarget.All, (Vector3)data[3], (float)data[4]);
             }
         }
     }

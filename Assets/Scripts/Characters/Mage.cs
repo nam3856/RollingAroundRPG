@@ -47,17 +47,12 @@ public class Mage : Character
     {
         magicTransform.gameObject.SetActive(true);
         magicAnimator.SetTrigger("Fireball");
-        if (attackDirection.x > 0) AN.SetTrigger("mage attack right");
-        else if (attackDirection.x < 0) AN.SetTrigger("mage attack left");
-        else if (attackDirection.y > 0) AN.SetTrigger("mage attack up");
-        else if (attackDirection.y < 0) AN.SetTrigger("mage attack down");
-
+        base.StartAttackingMotion(attackDirection, motionNum);
     }
 
     [PunRPC]
     public override void Respawn()
     {
         base.Respawn();
-        AN.SetTrigger("mage init");
     }
 }

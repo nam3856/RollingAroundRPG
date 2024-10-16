@@ -79,16 +79,6 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        // Initialize Singleton
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
 
         // Initialize Skill Icons Arrays
         warriorSkillIcons = new Sprite[5];
@@ -102,12 +92,19 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         skillTreeManager = FindObjectOfType<SkillTreeManager>();
+
         InitializeCooldownTimers();
         LoadSkillIcons();
         InitializeUI();
         if (SkillEventManager.Instance != null)
         {
             SubscribeToSkillEvents();
+        }
+        if (character != null)
+        {
+            traitManager = character.traitManager;
+            traitManager.OnTraitAdded += HandleTraitAdded;
+            traitManager.OnTraitRemoved += HandleTraitRemoved;
         }
     }
 
@@ -134,9 +131,20 @@ public class UIManager : MonoBehaviour
             ResetButton.onClick.AddListener(OnResetButtonClicked);
         else
             Debug.LogError("UIManager: ResetButton이 할당되지 않았습니다.");
+
+        if (applyTraitButton != null)
+            applyTraitButton.onClick.AddListener(OnApplyTrait);
+        else
+            Debug.LogError("UIManager: ApplyTraitButton이 할당되지 않았습니다.");
+
+        if(resetTraitButton != null)
+            resetTraitButton.onClick.AddListener(OnResetTrait);
+        else
+            Debug.LogError("UIManager: ResetTraitButton이 할당되지 않았습니다.");
+
     }
 
-    public void InitiallizeTraitUI()
+    public void InitializeTraitUI()
     {
         traitManager = character.traitManager;
         availableTraitPoints = character.GetTraitPoints();
@@ -153,15 +161,6 @@ public class UIManager : MonoBehaviour
 
         UpdateTraitPointsUI();
         PopulateTraitList();
-
-        traitManager.OnTraitAdded += HandleTraitAdded;
-        traitManager.OnTraitRemoved += HandleTraitRemoved;
-        if(applyTraitButton != null)
-            applyTraitButton.onClick.AddListener(OnApplyTrait);
-        else
-            Debug.LogError("UIManager: ApplyButton이 할당되지 않았습니다.");
-        resetTraitButton.onClick.AddListener(OnResetTrait);
-
     }
     private void InitializeCooldownTimers()
     {
@@ -283,9 +282,8 @@ public class UIManager : MonoBehaviour
         {
             SkillTreePanel.SetActive(false);
             //InventoryPanel.SetActive(false);
-            InitiallizeTraitUI();
+            InitializeTraitUI();
             allTraits = TraitRepository.Instance.GetAllTraits();
-            PopulateTraitList();
         }
     }
 
@@ -655,7 +653,7 @@ public class UIManager : MonoBehaviour
         selectedTraitIcon.gameObject.SetActive(true);
         availableTraitPoints = character.GetTraitPoints();
 
-        if (availableTraitPoints >= trait.Cost && !selectedTrait.IsStackTrait()) 
+        if (availableTraitPoints >= trait.Cost && !selectedTrait.IsCompletelyLearned()) 
         {
             applyTraitButton.interactable = true;
         }

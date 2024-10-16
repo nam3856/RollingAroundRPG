@@ -99,7 +99,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
     {
         uIManager = FindObjectOfType<UIManager>();
         skillTreeManager = FindObjectOfType<SkillTreeManager>();
-
+        RuntimeAnimatorController controller;
         switch (index)
         {
             case 0:
@@ -111,8 +111,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                     skillTreeManager.SetPlayerClass(skillTreeManager.CharacterClasses[0]);
                 }
 
-
-                AN.SetTrigger("warrior init");
+                controller = Resources.Load<RuntimeAnimatorController>("Animation/Warrior");
+                AN.runtimeAnimatorController = controller;
                 break;
             case 1:
                 // 거너
@@ -124,7 +124,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                     skillTreeManager.SetPlayerClass(skillTreeManager.CharacterClasses[1]);
 
                 }
-                AN.SetTrigger("gunner init");
+                controller = Resources.Load<RuntimeAnimatorController>("Animation/Gunner");
+                AN.runtimeAnimatorController = controller;
                 break;
             case 2:
                 // 법사
@@ -135,7 +136,9 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                     skillTreeManager.SetPlayerClass(skillTreeManager.CharacterClasses[2]);
 
                 }
-                AN.SetTrigger("mage init");
+
+                controller = Resources.Load<RuntimeAnimatorController>("Animation/Mage");
+                AN.runtimeAnimatorController = controller;
                 break;
         }
 

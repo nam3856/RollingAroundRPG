@@ -310,7 +310,7 @@ public class Warrior : Character
         {
             DisplayDamage((int)armoredDamage);
             currentHealth -= armoredDamage;
-            PV.RPC("UpdateHealthBar", RpcTarget.All);
+            HealthImage.fillAmount = currentHealth / maxHealth;
         }
 
         if (PV.IsMine)
@@ -333,7 +333,7 @@ public class Warrior : Character
         GameObject uiCanvas = GameObject.Find("Canvas");
         damageTextInstance.transform.SetParent(uiCanvas.transform, false);
 
-        damageTextPV.RPC("SetDamageText", RpcTarget.All, damage.ToString());
+        damageTextPV.RPC("SetDamageText", RpcTarget.All, damage.ToString(), false);
     }
 
     protected override void Die()
@@ -349,7 +349,6 @@ public class Warrior : Character
     public override void Respawn()
     {
         base.Respawn();
-        AN.SetTrigger("warrior init");
         isBlocking = false;
         isRushing = false;
     }
@@ -369,14 +368,27 @@ public class Warrior : Character
 
     private void TriggerAttackAnimation(Vector2 direction, string attackType)
     {
+        Debug.Log(direction);
         if (direction.x > 0)
+        {
             AN.SetTrigger($"{attackType} right");
+            Debug.Log($"{attackType} right");
+        }
         else if (direction.x < 0)
+        {
             AN.SetTrigger($"{attackType} left");
+            Debug.Log($"{attackType} left");
+        }
         else if (direction.y > 0)
+        {
             AN.SetTrigger($"{attackType} up");
+            Debug.Log($"{attackType} up");
+        }
         else if (direction.y < 0)
+        {
             AN.SetTrigger($"{attackType} down");
+            Debug.Log($"{attackType} down");
+        }
     }
 
     #endregion
