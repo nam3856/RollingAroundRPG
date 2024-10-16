@@ -39,6 +39,7 @@ public class Warrior : Character
     {
         base.Start();
         InitializeWarrior();
+        LoadCharacterData_FollowUp();
     }
 
     public override void OnDestroy()
@@ -53,7 +54,8 @@ public class Warrior : Character
 
     private void InitializeWarrior()
     {
-        attackDamage = 3;
+        attackDamage = 3f;
+        basicAttackDamage = attackDamage;
         LoadSwordSounds();
         SubscribeToRushEvents();
         InitializeSkills();
@@ -297,20 +299,23 @@ public class Warrior : Character
             audioSource.PlayOneShot(receivedArcaneShieldSound);
             magicAnimator.SetTrigger("Arcane Shield");
         }
+
+        float armoredDamage = (float)Math.Ceiling(damage - damage * armor * 0.1);
+
         if (IsBlocking)
         {
-            shieldBlockSkill.OnReceiveDamage(damage, attackDirection);
+            shieldBlockSkill.OnReceiveDamage(armoredDamage, attackDirection);
         }
         else
         {
-            DisplayDamage(damage);
-            currentHealth -= damage;
+            DisplayDamage((int)armoredDamage);
+            currentHealth -= armoredDamage;
             PV.RPC("UpdateHealthBar", RpcTarget.All);
         }
 
         if (PV.IsMine)
         {
-            uiManager.SetHp((int)currentHealth, (int)maxHealth, this);
+            uiManager.SetHp((int)currentHealth, (int)maxHealth);
         }
 
         if (currentHealth <= 0)

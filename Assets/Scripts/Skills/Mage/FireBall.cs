@@ -1,8 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
+using System;
 using UnityEngine;
 
 public class FireBall : Skill
@@ -27,7 +25,7 @@ public class FireBall : Skill
 
             await UniTask.Delay(500);
 
-            int attackDamage = character.attackDamage;
+            int attackDamage = (int)Math.Ceiling(character.attackDamage);
             Vector3 bulletPosition = character.transform.position;
 
             // 발사 방향에 따라 총알 위치 조정
@@ -45,7 +43,7 @@ public class FireBall : Skill
             GameObject fireball = PhotonNetwork.Instantiate("Fireball", bulletPosition, Quaternion.identity);
             FireballScript fireballScript = fireball.GetComponent<FireballScript>();
             Collider2D shooterCollider = character.GetComponent<Collider2D>();
-            fireballScript.SetDirectionAndDamage(new object[] { attackDirection, attackDamage, character.PV.OwnerActorNr, shooterCollider, true, character.PV.ViewID });
+            fireballScript.SetDirectionAndDamage(new object[] { attackDirection, attackDamage, character.PV.OwnerActorNr, shooterCollider, true, character.PV.ViewID, critical });
 
 
             // 스킬 쿨타임 설정

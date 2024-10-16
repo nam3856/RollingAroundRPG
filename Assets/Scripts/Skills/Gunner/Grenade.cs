@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,7 +23,7 @@ public class GrenadeToss : Skill
 
     protected override void ExecuteSkill(Character character)
     {
-        attackDamage = character.attackDamage * 3;
+        attackDamage = (int)Math.Ceiling(character.attackDamage * 3);
     }
 
     public void ThrowGrenade(Character character, float throwForce)
@@ -39,7 +40,7 @@ public class GrenadeToss : Skill
         GameObject grenade = PhotonNetwork.Instantiate("grenade", spawnPosition, Quaternion.identity);
         GrenadeScript grenadeScript = grenade.GetComponent<GrenadeScript>();
         Collider2D shooterCollider = character.GetComponent<Collider2D>();
-        grenadeScript.SetDirectionAndDamage(new object[] { attackDirection, attackDamage, character.PV.OwnerActorNr, shooterCollider, true, character.PV.ViewID, throwVelocity });
+        grenadeScript.SetDirectionAndDamage(new object[] { attackDirection, attackDamage, character.PV.OwnerActorNr, shooterCollider, true, character.PV.ViewID, throwVelocity, critical });
 
         StartCoolDown(character);
 

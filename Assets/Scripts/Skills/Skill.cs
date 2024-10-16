@@ -15,6 +15,7 @@ public abstract class Skill
     public float Cooldown { get; private set; }
     private float lastUsedTime;
     public Sprite icon;
+    protected double critical;
 
     public void SetLastUsedTime(float time)
     {
@@ -61,6 +62,7 @@ public abstract class Skill
             {
                 CooldownAsync(this, character).Forget();
             }
+            critical = character.criticalProbability;
             character.AdjustCurrentMP(Cost);
             ExecuteSkill(character);
             UpdateSkillUI(character);

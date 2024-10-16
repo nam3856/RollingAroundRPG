@@ -17,6 +17,7 @@ public class GrenadeScript : MonoBehaviourPunCallbacks
     public CircleCollider2D circleCollider;
     public PhotonView targetPhotonView;
     public HashSet<int> attackedPlayers = new HashSet<int>();
+    public double critical;
 
     private void Awake()
     {
@@ -52,6 +53,7 @@ public class GrenadeScript : MonoBehaviourPunCallbacks
         }
 
         attackerViewId = (int)data[5];
+        critical = (double)data[7];
         circleCollider.enabled = false;
         boxCollider.enabled = true;
         StartCoroutine(ExplodeGrenade());

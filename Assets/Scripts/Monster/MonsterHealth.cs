@@ -19,7 +19,7 @@ public class MonsterHealth : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void TakeDamage(int damage, int attackerViewID)
+    public void TakeDamage(int damage, int attackerViewID, bool isCritical)
     {
         GameObject damageTextInstance = PhotonNetwork.Instantiate("DamageText", canvasTransform.position, Quaternion.identity);
         //GameObject damageTextInstance = Instantiate(damageTextPrefab, canvasTransform);
@@ -29,7 +29,7 @@ public class MonsterHealth : MonoBehaviourPunCallbacks
         GameObject uiCanvas = GameObject.Find("Canvas");
         damageTextInstance.transform.SetParent(uiCanvas.transform, false);
 
-        damageTextPV.RPC("SetDamageText", RpcTarget.All, damage.ToString());
+        damageTextPV.RPC("SetDamageText", RpcTarget.All, damage.ToString(), isCritical);
 
         if (!attackers.Contains(attackerViewID))
         {

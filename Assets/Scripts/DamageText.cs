@@ -22,9 +22,15 @@ public class DamageText : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void SetDamageText(string damage)
+    public void SetDamageText(string damage, bool isCritical)
     {
         damageText.text = damage;
+        if (isCritical)
+        {
+            damageText.text += "!";
+            originalColor = Color.red;
+            damageText.color = originalColor;
+        }
     }
 
     [PunRPC]

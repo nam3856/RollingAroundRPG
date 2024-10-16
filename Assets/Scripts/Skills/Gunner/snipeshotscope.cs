@@ -119,7 +119,7 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
                 attackedPlayers.Add(monsterPV.ViewID);
                 if (monsterPV != null)
                 {
-                    monsterPV.RPC("TakeDamage", RpcTarget.All, 999, GetComponent<Character>().PV.ViewID);
+                    monsterPV.RPC("TakeDamage", RpcTarget.All, snipeShotSkill.damage, GetComponent<Character>().PV.ViewID, true);
                 }
             }
         }

@@ -18,11 +18,18 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     protected float currentHealth;
 
     [Header("Combat")]
-    public int attackDamage = 1;
+    public float attackDamage = 1;
+    public float basicAttackDamage;
+    public float additionalAttackDamage = 0;
+    public float armor = 0;
     public int experience = 0;
     public int level = 1;
     public List<int> levelPerExperience;
-    protected List<Skill> skills = new List<Skill>();
+    protected List<Skill> skills = new();
+    protected int traitPoints = 0;
+    public List<Trait> Traits { get; protected set; } = new List<Trait>();
+    public double criticalProbability = 0f;
+
 
     [Header("Components")]
     public PhotonView PV;
@@ -33,6 +40,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     public SkillTreeManager skillTreeManager;
     public PlayerScript player;
     public Transform canvasTransform;
+    public TraitManager traitManager;
 
     [Header("Layers")]
     public LayerMask enemyLayer;
@@ -209,9 +217,10 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     private void InitializeLocalPlayer()
     {
+        uiManager.character = this;
+        traitManager = new TraitManager(this);
         LoadCharacterData();
         SetupCamera();
-
         uiManager.UpdateSkillPointsUI();
         RecoveryHpMpAsync().Forget();
     }
@@ -262,7 +271,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             currentHealth = maxHealth;
             currentMP = maxMP;
 
-            uiManager.SetHp((int)currentHealth, (int)maxHealth, this);
+            uiManager.SetHp((int)currentHealth, (int)maxHealth);
             uiManager.SetMp((int)currentMP, (int)maxMP);
 
             foreach (var skillName in playerData.LearnedSkills)
@@ -273,8 +282,11 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
                     skill.Acquire(this);
                 }
             }
+
             skillTreeManager.AddSkillPoint(playerData.SkillPoint);
             experience = playerData.Experience;
+            traitPoints = playerData.TraitPoint;
+            uiManager.UpdateTraitPointsUI();
 
             if (level > 0)
             {
@@ -290,6 +302,22 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    /// <summary>
+    /// Character Init이 끝난 후 로드
+    /// </summary>
+    protected void LoadCharacterData_FollowUp()
+    {
+        if (playerData != null)
+        {
+            foreach (var traitName in playerData.LearnedTraits)
+            {
+                var trait = traitManager.SearchTraitByName(traitName);
+
+                Traits.Add(trait);
+                trait.Apply(this);
+            }
+        }
+    }
     #endregion
 
     #region Photon Callbacks
@@ -348,7 +376,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
 
             if (PV.IsMine)
             {
-                uiManager.SetHp((int)currentHealth, (int)maxHealth, this);
+                uiManager.SetHp((int)currentHealth, (int)maxHealth);
                 uiManager.SetMp((int)currentMP, (int)maxMP);
             }
 
@@ -399,6 +427,35 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
 
     #endregion
 
+    #region Trait Management
+    public void AddTrait(Trait trait)
+    {
+        Traits.Add(trait);
+        trait.Apply(this);
+        traitPoints -= trait.Cost;
+        playerData.TraitPoint = traitPoints;
+    }
+
+    public void RemoveTrait(Trait trait)
+    {
+        if (Traits.Contains(trait))
+        {
+            trait.Remove(this);
+            Traits.Remove(trait);
+            playerData.LearnedTraits.Remove(trait.TraitName);
+            traitPoints += trait.Cost;
+
+            playerData.TraitPoint = traitPoints;
+        }
+    }
+
+    public int GetTraitPoints()
+    {
+        return traitPoints;
+    }
+
+    #endregion
+
     #region Damage Handling
 
     /// <summary>
@@ -417,6 +474,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             audioSource.PlayOneShot(receivedArcaneShieldSound);
             magicAnimator.SetTrigger("Arcane Shield");
         }
+        float armoredDamage = (float)Math.Ceiling(damage - damage * armor * 0.1);
 
         GameObject damageTextInstance = PhotonNetwork.Instantiate("DamageText", canvasTransform.position, Quaternion.identity);
         DamageText damageTextScript = damageTextInstance.GetComponent<DamageText>();
@@ -425,12 +483,12 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
         GameObject uiCanvas = GameObject.Find("Canvas");
         damageTextInstance.transform.SetParent(uiCanvas.transform, false);
 
-        damageTextPV.RPC("SetDamageText", RpcTarget.All, damage.ToString());
-        currentHealth -= damage;
+        damageTextPV.RPC("SetDamageText", RpcTarget.All, ((int)armoredDamage).ToString());
+        currentHealth -= armoredDamage;
 
         if (PV.IsMine)
         {
-            uiManager.SetHp((int)currentHealth, (int)maxHealth, this);
+            uiManager.SetHp((int)currentHealth, (int)maxHealth);
         }
 
         UpdateHealthBar();
@@ -462,7 +520,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
 
         isDead = true;
         currentHealth = 0;
-        uiManager.SetHp((int)currentHealth, (int)maxHealth, this);
+        uiManager.SetHp((int)currentHealth, (int)maxHealth);
         PhotonNetwork.Instantiate("Death", transform.position, Quaternion.identity);
         GameObject.Find("UI").transform.Find("RespawnPanel").gameObject.SetActive(true);
         isAttacking = false;
@@ -502,20 +560,26 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
         maxMP = CalculateMaxMP(level);
         currentHealth = maxHealth;
         currentMP = maxMP;
-        skillTreeManager.AddSkillPoint(3);
-        uiManager.UpdateSkillPointsUI();
+
+        traitPoints++;
+        uiManager.UpdateTraitPointsUI();
+
         if (PV.IsMine)
         {
-            uiManager.SetHp((int)currentHealth, (int)maxHealth, this);
+            uiManager.SetHp((int)currentHealth, (int)maxHealth);
             uiManager.SetMp((int)currentMP, (int)maxMP);
             uiManager.SetExp(experience, levelPerExperience[level - 1]);
             uiManager.SetLevel(level);
+
+            skillTreeManager.AddSkillPoint(3);
+            uiManager.UpdateSkillPointsUI();
 
             // 데이터 저장
             playerData.Level = level;
             playerData.Experience = experience;
             playerData.LastPosition = transform.position;
             playerData.SkillPoint = skillTreeManager.PlayerSkillPoints;
+            playerData.TraitPoint = traitPoints;
 
             SaveSystem.SavePlayerData(playerData);
         }

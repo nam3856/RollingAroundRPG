@@ -44,6 +44,8 @@ public class Gunner : Character
     {
         base.Start();
         InitializeGunner();
+
+        LoadCharacterData_FollowUp();
     }
 
     public override void OnDestroy()
@@ -68,7 +70,7 @@ public class Gunner : Character
         AttackDuration = 0.2f;
         AttackCooldown = 0.05f;
         attackDamage = 4;
-
+        basicAttackDamage = attackDamage;
         pool = FindObjectOfType<BulletPool>();
         SubscribeToRollEvents();
 
@@ -252,7 +254,7 @@ public class Gunner : Character
 
             if (PV.IsMine)
             {
-                uiManager.SetHp((int)currentHealth, (int)maxHealth, this);
+                uiManager.SetHp((int)currentHealth, (int)maxHealth);
                 uiManager.SetMp((int)currentMP, (int)maxMP);
             }
 

@@ -143,11 +143,11 @@ public class MonsterScript : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, bool isCritical)
     {
         GameObject damageTextInstance = Instantiate(damageTextPrefab, canvasTransform);
         DamageText damageTextScript = damageTextInstance.GetComponent<DamageText>();
-        damageTextScript.SetDamageText(damage.ToString());
+        damageTextScript.SetDamageText(damage.ToString(),isCritical);
         currentHealth -= damage;
         if (currentHealth <= 0)
         {

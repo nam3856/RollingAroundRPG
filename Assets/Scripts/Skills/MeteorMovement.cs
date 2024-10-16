@@ -6,15 +6,16 @@ public class MeteorMovement : MonoBehaviourPun
 {
     public Transform target;
     public float speed = 5f;
-    private int damage = 999;
+    private int damage = 20;
     private int attackerViewID;
     private bool isMoving = false;
+    private double critical;
 
-    public void Initialize(Transform targetTransform, int attackerID)
+    public void Initialize(Transform targetTransform, int attackerID, double critical)
     {
         target = targetTransform;
         attackerViewID = attackerID;
-
+        this.critical = critical;
         // 이동 코루틴 시작
         if (photonView.IsMine)
         {
@@ -47,11 +48,19 @@ public class MeteorMovement : MonoBehaviourPun
 
         if (collision.CompareTag("Monster") && collision.transform == target)
         {
-            // 데미지 적용
+            
             PhotonView monsterPV = collision.GetComponent<PhotonView>();
             if (monsterPV != null)
             {
-                monsterPV.RPC("TakeDamage", RpcTarget.All, damage, attackerViewID);
+                double p = UnityEngine.Random.value;
+                bool isCriticalHit = false;
+                if (p <= critical)
+                {
+                    damage *= 2;
+                    isCriticalHit = true;
+                }
+
+                monsterPV.RPC("TakeDamage", RpcTarget.All, damage, attackerViewID, isCriticalHit);
             }
 
             // 이동 중지 및 Meteor 파괴

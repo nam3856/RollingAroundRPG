@@ -40,6 +40,19 @@ public class UIManager : MonoBehaviour
     [Header("References")]
     public Character character;
 
+    [Header("Trait UI Elements")]
+    public GameObject traitPanel;
+    public Transform traitListContent;
+    public GameObject traitItemPrefab;
+    public Image selectedTraitIcon;
+    public TMP_Text selectedTraitName;
+    public TMP_Text selectedTraitDescription;
+    public TMP_Text selectedTraitCost;
+    public Button applyTraitButton;
+    public Button resetTraitButton;
+    public TMP_Text traitPointsText;
+    public List<Trait> allTraits;
+
     #endregion
 
     #region Private Fields
@@ -55,6 +68,10 @@ public class UIManager : MonoBehaviour
 
     private float[] skillCooldowns = new float[5];
     private float[] skillLastUsedTimes = new float[5];
+
+    private Trait selectedTrait;
+    private TraitManager traitManager;
+    private int availableTraitPoints;
 
     #endregion
 
@@ -77,6 +94,9 @@ public class UIManager : MonoBehaviour
         warriorSkillIcons = new Sprite[5];
         gunnerSkillIcons = new Sprite[5];
         mageSkillIcons = new Sprite[5];
+
+        selectedTraitIcon.gameObject.SetActive(false);
+
     }
 
     private void Start()
@@ -85,13 +105,10 @@ public class UIManager : MonoBehaviour
         InitializeCooldownTimers();
         LoadSkillIcons();
         InitializeUI();
-
         if (SkillEventManager.Instance != null)
         {
             SubscribeToSkillEvents();
         }
-
-        UpdateSkillPointsUI();
     }
 
     private void Update()
@@ -119,6 +136,33 @@ public class UIManager : MonoBehaviour
             Debug.LogError("UIManager: ResetButton이 할당되지 않았습니다.");
     }
 
+    public void InitiallizeTraitUI()
+    {
+        traitManager = character.traitManager;
+        availableTraitPoints = character.GetTraitPoints();
+
+        if (TraitRepository.Instance != null)
+        {
+            allTraits = TraitRepository.Instance.GetAllTraits();
+        }
+        else
+        {
+            Debug.LogError("TraitRepository 인스턴스가 존재하지 않습니다!");
+            allTraits = new List<Trait>();
+        }
+
+        UpdateTraitPointsUI();
+        PopulateTraitList();
+
+        traitManager.OnTraitAdded += HandleTraitAdded;
+        traitManager.OnTraitRemoved += HandleTraitRemoved;
+        if(applyTraitButton != null)
+            applyTraitButton.onClick.AddListener(OnApplyTrait);
+        else
+            Debug.LogError("UIManager: ApplyButton이 할당되지 않았습니다.");
+        resetTraitButton.onClick.AddListener(OnResetTrait);
+
+    }
     private void InitializeCooldownTimers()
     {
         for (int i = 0; i < skillNames.Length; i++)
@@ -213,7 +257,6 @@ public class UIManager : MonoBehaviour
         else
         {
             menuPanel.SetActive(true);
-            SkillTreePanel.SetActive(false);
             chatting.SetActive(false);
             skillBar.SetActive(false);
             chattingInput.SetActive(false);
@@ -222,12 +265,28 @@ public class UIManager : MonoBehaviour
 
     private void ToggleInventoryWindow()
     {
-        throw new NotImplementedException();
+        bool isActive = true;//InventoryPanel.activeSelf;
+        //InventoryPanel.SetActive(!isActive);
+        if (isActive)
+        {
+            SkillTreePanel.SetActive(false);
+            traitPanel.SetActive(false);
+
+        }
     }
 
     private void ToggleTraitWindow()
     {
-        throw new NotImplementedException();
+        bool isActive = traitPanel.activeSelf;
+        traitPanel.SetActive(!isActive);
+        if (!isActive)
+        {
+            SkillTreePanel.SetActive(false);
+            //InventoryPanel.SetActive(false);
+            InitiallizeTraitUI();
+            allTraits = TraitRepository.Instance.GetAllTraits();
+            PopulateTraitList();
+        }
     }
 
     public void ToggleSkillTree()
@@ -237,6 +296,8 @@ public class UIManager : MonoBehaviour
 
         if (!isActive)
         {
+            //InventoryPanel.SetActive(false);
+            traitPanel.SetActive(false);
             PopulateSkills();
         }
     }
@@ -322,10 +383,11 @@ public class UIManager : MonoBehaviour
 
     public void UpdateTraitPointsUI()
     {
-        skillPointText.text = $"현재 특성 포인트 : {skillTreeManager.PlayerSkillPoints}";
+        availableTraitPoints = character.GetTraitPoints();
+        traitPointsText.text = $"현재 특성 포인트 : {availableTraitPoints}";
     }
 
-    public void SetHp(int currentHp, int maxHp, Character character)
+    public void SetHp(int currentHp, int maxHp)
     {
         hp.fillAmount = (float)currentHp / maxHp;
         hpText.text = $"{currentHp}/{maxHp}";
@@ -562,6 +624,100 @@ public class UIManager : MonoBehaviour
     }
 
 
-    
+
+    #endregion
+
+    #region Trait Management
+    void PopulateTraitList()
+    {
+        foreach (Transform child in traitListContent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (Trait trait in allTraits)
+        {
+            GameObject traitItem = Instantiate(traitItemPrefab, traitListContent);
+            TraitItemUI itemUI = traitItem.GetComponent<TraitItemUI>();
+            itemUI.Setup(trait, OnTraitSelected);
+        }
+    }
+
+    void OnTraitSelected(Trait trait)
+    {
+        selectedTrait = trait;
+        selectedTraitIcon.sprite = trait.Icon;
+        selectedTraitName.text = trait.TraitName;
+        selectedTraitDescription.text = trait.Description;
+        if (selectedTrait.maxStack > 1) selectedTraitDescription.text += $"\n {trait.stackCount} / {trait.maxStack}";
+        selectedTraitCost.text = $"{trait.Cost} 포인트 필요";
+
+        selectedTraitIcon.gameObject.SetActive(true);
+        availableTraitPoints = character.GetTraitPoints();
+
+        if (availableTraitPoints >= trait.Cost && !selectedTrait.IsStackTrait()) 
+        {
+            applyTraitButton.interactable = true;
+        }
+        else
+        {
+            selectedTraitCost.text = $"획득한 특성";
+            applyTraitButton.interactable = false;
+        }
+    }
+    void OnResetTrait()
+    {
+        traitManager.ClearTraits();
+        PopulateTraitList();
+    }
+    void OnApplyTrait()
+    {
+        if (selectedTrait == null)
+        {
+            Debug.LogError("selectedTrait is null");
+            return;
+        }
+
+
+        if (availableTraitPoints < selectedTrait.Cost)
+        {
+            Debug.LogWarning("Trait 포인트가 부족합니다.");
+            return;
+        }
+
+        // Trait 적용
+        bool success = traitManager.AddTrait(selectedTrait);
+        if (success)
+        {
+            availableTraitPoints -= selectedTrait.Cost;
+            UpdateTraitPointsUI();
+
+            // UI 업데이트
+            selectedTrait = null;
+            selectedTraitIcon.sprite = null;
+            selectedTraitName.text = "특성 배우기 완료";
+            selectedTraitDescription.text = "";
+            selectedTraitCost.text = "";
+            applyTraitButton.interactable = false;
+
+            selectedTraitIcon.gameObject.SetActive(false);
+            PopulateTraitList();
+        }
+        else
+        { 
+        }
+    }
+
+    void HandleTraitAdded()
+    {
+        availableTraitPoints = character.GetTraitPoints();
+        UpdateTraitPointsUI();
+    }
+
+    void HandleTraitRemoved()
+    {
+        availableTraitPoints = character.GetTraitPoints();
+        UpdateTraitPointsUI();
+    }
     #endregion
 }

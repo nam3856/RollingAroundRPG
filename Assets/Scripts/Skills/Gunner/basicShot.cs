@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class basicShot : Skill
@@ -20,7 +19,7 @@ public class basicShot : Skill
         character.ResetAttackState(0.3f, true).Forget();
 
         Vector2 attackDirection = character.GetLastMoveDirection();
-        int attackDamage = character.attackDamage;
+        int attackDamage = (int)Math.Ceiling(character.attackDamage);
         Vector3 bulletPosition = character.transform.position;
 
         // 발사 방향에 따라 총알 위치 조정
@@ -41,7 +40,7 @@ public class basicShot : Skill
         GameObject bullet = PhotonNetwork.Instantiate("Bullet", bulletPosition, Quaternion.identity);
         BulletScript bulletScript = bullet.GetComponent<BulletScript>();
         Collider2D shooterCollider = character.GetComponent<Collider2D>();
-        bulletScript.SetDirectionAndDamage(new object[] { attackDirection, attackDamage, character.PV.OwnerActorNr, shooterCollider, true, character.PV.ViewID });
+        bulletScript.SetDirectionAndDamage(new object[] { attackDirection, attackDamage, character.PV.OwnerActorNr, shooterCollider, true, character.PV.ViewID, critical });
 
         // 캐릭터의 공격 모션 동기화
         character.PV.RPC("StartAttackingMotion", RpcTarget.All, attackDirection, 0);

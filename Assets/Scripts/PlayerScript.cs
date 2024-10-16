@@ -17,9 +17,11 @@ public class PlayerData
     public List<string> LearnedSkills;
     public List<string> EquippedItems;
     public List<string> InventoryItems;
+    public List<string> LearnedTraits;
     public Vector3 LastPosition;
     public int currentCMRangeId;
     public int SkillPoint;
+    public int TraitPoint;
 }
 public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
@@ -72,9 +74,11 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                     LearnedSkills = new List<string>(),
                     EquippedItems = new List<string>(),
                     InventoryItems = new List<string>(),
+                    LearnedTraits = new List<string>(),
                     LastPosition = transform.position,
                     currentCMRangeId = 0,
-                    SkillPoint = 0
+                    SkillPoint = 0,
+                    TraitPoint = 0
 };
                 SaveSystem.SavePlayerData(playerData);
             }

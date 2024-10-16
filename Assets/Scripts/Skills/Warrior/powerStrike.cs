@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
-using Photon.Realtime;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,7 +27,7 @@ public class powerStrike : Skill
     private async UniTask PowerStrikeAsync(Warrior warrior)
     {
         warrior.audioSource.PlayOneShot(chargingSound);
-
+        int damage = (int)Math.Ceiling(warrior.attackDamage * 5);
         Vector2 attackDirection = warrior.GetLastMoveDirection();
         warrior.PV.RPC("StartPowerStrikeMotion", RpcTarget.All, attackDirection);
 
@@ -36,6 +35,6 @@ public class powerStrike : Skill
 
         warrior.audioSource.PlayOneShot(impactSound);
         PhotonNetwork.Instantiate("FanBullet", warrior.transform.position, Quaternion.identity)
-            .GetComponent<PhotonView>().RPC("SetPowerStrike", RpcTarget.All, attackDirection, warrior.attackDamage * 5, warrior.PV.ViewID);
+            .GetComponent<PhotonView>().RPC("SetPowerStrike", RpcTarget.All, attackDirection, damage, warrior.PV.ViewID, critical);
     }
 }

@@ -1,8 +1,8 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 
 public class comboAttack : Skill
 {
@@ -21,6 +21,7 @@ public class comboAttack : Skill
         {
             warrior = character as Warrior;
         }
+        int damage = (int)Math.Ceiling(warrior.attackDamage * 2);
         warrior.ResetAttackState(0.3f).Forget();
         warrior.PlayRandomSwordSound();
         // 공격 방향 가져오기
@@ -29,10 +30,7 @@ public class comboAttack : Skill
         // 부채꼴 공격 생성
         GameObject bullet = PhotonNetwork.Instantiate("FanBullet", warrior.transform.position, Quaternion.identity);
         FanBulletScript bulletScript = bullet.GetComponent<FanBulletScript>();
-        bullet.GetComponent<PhotonView>().RPC("DirRPC", RpcTarget.All, attackDirection, character.attackDamage * 2, character.PV.ViewID);
-
-
-        
+        bullet.GetComponent<PhotonView>().RPC("DirRPC", RpcTarget.All, attackDirection, damage, character.PV.ViewID, critical);
     }
 
     

@@ -109,6 +109,7 @@
     <Compile Include="Assets\Scripts\Skills\GrenadeScript.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\Characters\Mage.cs" />
+    <Compile Include="Assets\Scripts\Traits.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\IgnoreUiRaycastWhenInactive.cs" />
     <Compile Include="Assets\Scripts\UIManager.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Assets\Photon\PhotonChat\Demos\Common\TextButtonTransition.cs" />
     <Compile Include="Assets\Scripts\Skills\Warrior\basicAttack.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
+    <Compile Include="Assets\Scripts\TraitItemUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

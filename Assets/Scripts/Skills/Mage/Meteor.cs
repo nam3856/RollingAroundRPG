@@ -34,7 +34,7 @@ public class Meteor : Skill
             MeteorMovement meteorMovement = meteor.GetComponent<MeteorMovement>();
             if (meteorMovement != null)
             {
-                meteorMovement.Initialize(collider.transform, character.PV.ViewID);
+                meteorMovement.Initialize(collider.transform, character.PV.ViewID, critical);
             }
 
             effectedMonsters.Add(monsterPV.ViewID);

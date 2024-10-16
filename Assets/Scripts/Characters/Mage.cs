@@ -11,10 +11,14 @@ public class Mage : Character
         AttackDuration = 0.5f;
         attackDamage = 10;
 
+        basicAttackDamage = attackDamage;
         for (int i = 0; i < 5; i++)
         {
             skills.Add(skillTreeManager.CharacterClasses[2].Skills[i]);
         }
+
+
+        LoadCharacterData_FollowUp();
     }
 
     protected override int CalculateMaxHealth(int level)

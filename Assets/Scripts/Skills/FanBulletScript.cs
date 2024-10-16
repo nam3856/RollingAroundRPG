@@ -24,12 +24,12 @@ public class FanBulletScript : MonoBehaviourPunCallbacks
     private Vector2 horizontalOffset = new Vector2(1.22f, 0.002f);
     private Vector2 horizontalSize = new Vector2(2.36f, 1.1f);
     private Vector2 verticalSize = new Vector2(2.36f, 1.7f);
-
+    double critical;
     private Vector2 verticalOffset = new Vector2(1.2f, -0.02f);
     public int playerNum;
 
     [PunRPC]
-    void DirRPC(Vector2 dir, int damage, int actorNum)
+    void DirRPC(Vector2 dir, int damage, int actorNum, double critical)
     {
         this.dir = dir;
         isPowerStrike = false;
@@ -38,6 +38,8 @@ public class FanBulletScript : MonoBehaviourPunCallbacks
 
         playerNum = actorNum;
         attackDamage = damage;
+
+        this.critical = critical;
     }
 
     private void Start()
@@ -45,7 +47,7 @@ public class FanBulletScript : MonoBehaviourPunCallbacks
         Destroy(gameObject, 0.3f);
     }
     [PunRPC]
-    void SetPowerStrike(Vector2 dir, int damage, int actorNum)
+    void SetPowerStrike(Vector2 dir, int damage, int actorNum, double critical)
     {
         basicAndComboRange.enabled = false;
         powerStrikeRange.enabled = true;
@@ -57,11 +59,19 @@ public class FanBulletScript : MonoBehaviourPunCallbacks
         AdjustColliderSize();
         knockbackForce = 0.8f;
         playerNum = actorNum;
+        this.critical = critical;
     }
 
 
     private void OnTriggerEnter2D(UnityEngine.Collider2D other)
     {
+        double p = UnityEngine.Random.value;
+        bool isCriticalHit = false;
+        if (p <= critical)
+        {
+            attackDamage *= 2;
+            isCriticalHit = true;
+        }
         //Debug.Log(other.tag);
         if (isPowerStrike)
         {
@@ -72,7 +82,7 @@ public class FanBulletScript : MonoBehaviourPunCallbacks
 
                 if (monsterPV != null)
                 {
-                    monsterPV.RPC("TakeDamage", RpcTarget.AllBuffered, attackDamage, playerNum);
+                    monsterPV.RPC("TakeDamage", RpcTarget.AllBuffered, attackDamage, playerNum, isCriticalHit);
                     monsterPV.RPC("ApplyKnockback", RpcTarget.All, transform.position, knockbackForce);
 
                     attackedPlayers.Add(monsterPV.ViewID);
@@ -93,7 +103,7 @@ public class FanBulletScript : MonoBehaviourPunCallbacks
                     if (angleToPlayer <= attackAngle / 2)
                     {
                         // 데미지와 넉백을 모든 클라이언트에서 적용
-                        monsterPV.RPC("TakeDamage", RpcTarget.AllBuffered, attackDamage, playerNum);
+                        monsterPV.RPC("TakeDamage", RpcTarget.AllBuffered, attackDamage, playerNum, isCriticalHit);
 
                         if (monsterPV != null)
                         {

@@ -1,9 +1,7 @@
-using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using UnityEngine;
 using Cysharp.Threading.Tasks;
+using Photon.Pun;
+using System;
+using UnityEngine;
 
 public class basicAttack : Skill
 {
@@ -22,11 +20,12 @@ public class basicAttack : Skill
         warrior.ResetAttackState(0.3f).Forget();
         warrior.PlayRandomSwordSound();
 
+        int damage = (int)Math.Ceiling(warrior.attackDamage);
         Vector2 attackDirection = warrior.GetLastMoveDirection();
 
         warrior.PV.RPC("StartAttackingMotion", RpcTarget.All, attackDirection, 0);
         PhotonNetwork.Instantiate("FanBullet", warrior.transform.position, Quaternion.identity)
-            .GetComponent<PhotonView>().RPC("DirRPC", RpcTarget.All, attackDirection, warrior.attackDamage, warrior.PV.ViewID);
+            .GetComponent<PhotonView>().RPC("DirRPC", RpcTarget.All, attackDirection, damage, warrior.PV.ViewID, critical);
     }
 
 

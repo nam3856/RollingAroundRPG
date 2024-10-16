@@ -14,6 +14,7 @@ public class FireballScript : MonoBehaviourPunCallbacks
     public BoxCollider2D boxCollider;
     public PhotonView targetPhotonView;
     private HashSet<int> attackedPlayers = new HashSet<int>();
+    double critical;
 
     private void Awake()
     {
@@ -49,6 +50,8 @@ public class FireballScript : MonoBehaviourPunCallbacks
         }
 
         attackerViewId = (int)data[5];
+
+        critical = (double)data[6];
         boxCollider.enabled = true;
         StartCoroutine(DelayedDestroyBullet());
     }
@@ -72,13 +75,17 @@ public class FireballScript : MonoBehaviourPunCallbacks
         if (col.CompareTag("Monster"))
         {
             attackedPlayers.Add(targetPhotonView.ViewID);
+            
             if (targetPhotonView != null)
             {
-                Debug.LogError(shooterActorNumber + "가 쏜 염구에 몬스터 충돌");
-                // 몬스터의 체력 감소 처리
-                targetPhotonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage, attackerViewId);
-                // 총알 파괴 동기화
-                //DestroyBullet();
+                double p = UnityEngine.Random.value;
+                bool isCriticalHit = false;
+                if (p <= critical)
+                {
+                    damage *= 2;
+                    isCriticalHit = true;
+                }
+                targetPhotonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage, attackerViewId, isCriticalHit);
             }
         }
     }
