@@ -210,5 +210,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IconImage: {fileID: 3895052163149373074}
-  LearnButton: {fileID: 0}
   SkillDescriptionText: {fileID: 0}
+  tooltip: {fileID: -1724998978104046028, guid: 37ee4592025681c48a304ec46f088d4b, type: 3}

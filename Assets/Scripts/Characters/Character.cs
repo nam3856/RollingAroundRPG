@@ -1,12 +1,10 @@
+using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Cysharp.Threading.Tasks;
-using System.Collections;
-using UnityEngine.TextCore.Text;
-using UnityEditor.Animations;
 
 public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -450,6 +448,15 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
 
             playerData.TraitPoint = traitPoints;
         }
+    }
+
+    public virtual void Restore(bool isHealth, float amount)
+    {
+        if (isHealth) currentHealth += amount;
+        else currentMP += amount;
+
+        if(currentHealth>= maxHealth) currentHealth = maxHealth;
+        if(currentMP>= maxMP) currentMP = maxMP;
     }
 
     public int GetTraitPoints()

@@ -24,11 +24,11 @@ public class basicAttack : Skill
         Vector2 attackDirection = warrior.GetLastMoveDirection();
         if (Mathf.Abs(attackDirection.x) > Mathf.Abs(attackDirection.y))
         {
-            attackDirection = new Vector2(Mathf.Sign(attackDirection.x), 0);
+            attackDirection = new Vector2(Mathf.Sign(attackDirection.x)/10f, 0);
         }
         else
         {
-            attackDirection = new Vector2(0, Mathf.Sign(attackDirection.y));
+            attackDirection = new Vector2(0, Mathf.Sign(attackDirection.y) / 10f);
         }
 
         warrior.PV.RPC("StartAttackingMotion", RpcTarget.All, attackDirection, 0);

@@ -70,6 +70,7 @@
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\AppSettingsExtensions.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
     <Compile Include="Assets\Scripts\BulletPool.cs" />
+    <Compile Include="Assets\Scripts\Item\DraggableItem.cs" />
     <Compile Include="Assets\Scripts\Skills\Mage\ArcaneShield.cs" />
     <Compile Include="Assets\Scripts\ObstacleManager.cs" />
     <Compile Include="Assets\Scripts\Portal.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
     <Compile Include="Assets\Scripts\Skills\SkillTreeManager.cs" />
     <Compile Include="Assets\Scripts\Skills\BulletScript.cs" />
+    <Compile Include="Assets\Scripts\Item\BaseItem.cs" />
     <Compile Include="Assets\Scripts\Skills\Mage\FireBall.cs" />
     <Compile Include="Assets\Scripts\Skills\Gunner\SnipeShot.cs" />
     <Compile Include="Assets\Scripts\GraphScanner.cs" />
@@ -106,16 +108,19 @@
     <Compile Include="Assets\Scripts\Skills\Gunner\roll.cs" />
     <Compile Include="Assets\Scripts\ChatManager.cs" />
     <Compile Include="Assets\Scripts\Skills\GrenadeScript.cs" />
+    <Compile Include="Assets\Scripts\Item\DroppableSlot.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\Characters\Mage.cs" />
     <Compile Include="Assets\Scripts\Traits.cs" />
     <Compile Include="Assets\Scripts\Skills\GrenadeChildScript.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
+    <Compile Include="Assets\Scripts\Item\ConsumableItem.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\IgnoreUiRaycastWhenInactive.cs" />
     <Compile Include="Assets\Scripts\UIManager.cs" />
     <Compile Include="Assets\Scripts\Skills\Warrior\shieldBlock.cs" />
     <Compile Include="Assets\Photon\PhotonRealtime\Demos\DemoLoadBalancing\ConnectAndJoinRandomLb.cs" />
     <Compile Include="Assets\Scripts\DamageText.cs" />
+    <Compile Include="Assets\Scripts\Item\InventorySlot.cs" />
     <Compile Include="Assets\Scripts\Skills\Skill.cs" />
     <Compile Include="Assets\Scripts\TitleManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
@@ -126,7 +131,9 @@
     <Compile Include="Assets\Scripts\Skills\Gunner\rapidFire.cs" />
     <Compile Include="Assets\Scripts\AnimationManager.cs" />
     <Compile Include="Assets\Scripts\DeathManager.cs" />
+    <Compile Include="Assets\Tooltip.cs" />
     <Compile Include="Assets\Scripts\PlayerManager.cs" />
+    <Compile Include="Assets\Scripts\Item\EquipmentItem.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
     <Compile Include="Assets\Scripts\Skills\Mage\HealingWave.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />

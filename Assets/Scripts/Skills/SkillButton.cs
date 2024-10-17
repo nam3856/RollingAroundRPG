@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class SkillButton : MonoBehaviour, IPointerClickHandler
+public class SkillButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public Skill SkillData { get; private set; }
     public Image IconImage;
@@ -14,6 +14,7 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
     private Character character;
 
     private UIManager UIManager;
+    private Tooltip tooltip;
 
     private void Awake()
     {
@@ -25,12 +26,14 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
 
     }
 
+
     public void Initialize(Skill skill, SkillTreeManager manager, Character characterInstance)
     {
         SkillData = skill;
         skillTreeManager = manager;
         character = characterInstance;
-
+        UIManager uI = FindObjectOfType<UIManager>();
+        tooltip = uI.tooltip;
         if (IconImage != null)
             IconImage.sprite = SkillData.icon;
 
@@ -68,5 +71,25 @@ public class SkillButton : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (SkillData != null && tooltip != null)
+        {
+            string title = SkillData.Name;
+            string description = SkillData.Description;
+            string costAndCooldown = $"마나 {SkillData.Cost} 소모\n쿨타임: {SkillData.Cooldown}초";
+
+            tooltip.ShowTooltip(title, description, costAndCooldown);
+        }
+    }
+
+    // 마우스 호버 종료 시 툴팁 숨기기
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (tooltip != null)
+        {
+            tooltip.HideTooltip();
+        }
+    }
+
 }

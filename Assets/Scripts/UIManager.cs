@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Cysharp.Threading.Tasks;
+using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour
 {
@@ -39,6 +40,7 @@ public class UIManager : MonoBehaviour
 
     [Header("References")]
     public Character character;
+    public Tooltip tooltip;
 
     [Header("Trait UI Elements")]
     public GameObject traitPanel;
@@ -52,6 +54,18 @@ public class UIManager : MonoBehaviour
     public Button resetTraitButton;
     public TMP_Text traitPointsText;
     public List<Trait> allTraits;
+
+    [Header("Inventory UI Elements")]
+    public GameObject InventoryPanel;
+    public Transform inventoryContent;
+    public GameObject inventorySlotPrefab;
+    public GameObject dragImagePrefab;
+
+    [Header("Equipment UI Elements")]
+    public GameObject EquipmentPanel;
+    public Transform equipmentPanel;
+    public GameObject equipmentSlotPrefab;
+
 
     #endregion
 
@@ -73,6 +87,9 @@ public class UIManager : MonoBehaviour
     private TraitManager traitManager;
     private int availableTraitPoints;
 
+    private List<InventorySlot> inventorySlots = new List<InventorySlot>();
+    private Dictionary<EquipmentSlot, InventorySlot> equipmentSlots = new Dictionary<EquipmentSlot, InventorySlot>();
+
     #endregion
 
     #region Unity Callbacks
@@ -86,7 +103,6 @@ public class UIManager : MonoBehaviour
         mageSkillIcons = new Sprite[5];
 
         selectedTraitIcon.gameObject.SetActive(false);
-
     }
 
     private void Start()
@@ -106,6 +122,11 @@ public class UIManager : MonoBehaviour
             traitManager.OnTraitAdded += HandleTraitAdded;
             traitManager.OnTraitRemoved += HandleTraitRemoved;
         }
+
+        InitializeInventory();
+        InitializeEquipmentSlots();
+
+        
     }
 
     private void Update()
@@ -144,6 +165,62 @@ public class UIManager : MonoBehaviour
 
     }
 
+    private void InitializeInventory()
+    {
+        // 인벤토리 슬롯 생성
+        for (int i = 0; i < 20; i++) // 예: 20개 슬롯
+        {
+            GameObject slotObj = Instantiate(inventorySlotPrefab, inventoryContent);
+            InventorySlot slot = slotObj.GetComponent<InventorySlot>();
+            if (slot != null)
+            {
+                inventorySlots.Add(slot);
+                slot.SetItem(null);
+                // DraggableItem 설정
+                DraggableItem draggable = slotObj.GetComponent<DraggableItem>();
+                if (draggable != null)
+                {
+                    draggable.SetOnDragEndAction(OnInventoryItemDragEnd);
+                }
+                else
+                {
+                    Debug.LogError("InventorySlotPrefab에 DraggableItem 스크립트가 없습니다.");
+                }
+            }
+            else
+            {
+                Debug.LogError("InventorySlotPrefab에 InventorySlot 컴포넌트가 없습니다.");
+            }
+        }
+
+        BaseItem testItem = Resources.Load<BaseItem>("Item/HealthPotion");
+        AddItemToInventory(testItem);
+        BaseItem testItem2 = Resources.Load<BaseItem>("Item/3LevelDduk");
+        AddItemToInventory(testItem2);
+    }
+
+    private void InitializeEquipmentSlots()
+    {
+        // 장비 슬롯 생성 및 초기화
+        foreach (EquipmentSlot slotType in Enum.GetValues(typeof(EquipmentSlot)))
+        {
+            GameObject slotObj = Instantiate(equipmentSlotPrefab, equipmentPanel);
+            DroppableSlot droppable = slotObj.GetComponent<DroppableSlot>();
+            InventorySlot inventorySlot = slotObj.GetComponent<InventorySlot>();
+
+            if (droppable != null && inventorySlot != null)
+            {
+                droppable.slotType = slotType;
+                droppable.iconImage = inventorySlot.iconImage;
+
+                equipmentSlots.Add(slotType, inventorySlot);
+            }
+            else
+            {
+                Debug.LogError("EquipmentSlotPrefab에 DroppableSlot 또는 InventorySlot 컴포넌트가 없습니다.");
+            }
+        }
+    }
     public void InitializeTraitUI()
     {
         traitManager = character.traitManager;
@@ -264,13 +341,14 @@ public class UIManager : MonoBehaviour
 
     private void ToggleInventoryWindow()
     {
-        bool isActive = true;//InventoryPanel.activeSelf;
-        //InventoryPanel.SetActive(!isActive);
-        if (isActive)
+        bool isActive = InventoryPanel.activeSelf;
+        InventoryPanel.SetActive(!isActive);
+        EquipmentPanel.SetActive(!isActive);
+        if (!isActive)
         {
+            tooltip.HideTooltip();
             SkillTreePanel.SetActive(false);
             traitPanel.SetActive(false);
-
         }
     }
 
@@ -280,8 +358,10 @@ public class UIManager : MonoBehaviour
         traitPanel.SetActive(!isActive);
         if (!isActive)
         {
+            tooltip.HideTooltip();
             SkillTreePanel.SetActive(false);
-            //InventoryPanel.SetActive(false);
+            InventoryPanel.SetActive(false);
+            EquipmentPanel.SetActive(false);
             InitializeTraitUI();
             allTraits = TraitRepository.Instance.GetAllTraits();
         }
@@ -294,7 +374,9 @@ public class UIManager : MonoBehaviour
 
         if (!isActive)
         {
-            //InventoryPanel.SetActive(false);
+            tooltip.HideTooltip();
+            InventoryPanel.SetActive(false);
+            EquipmentPanel.SetActive(false);
             traitPanel.SetActive(false);
             PopulateSkills();
         }
@@ -717,5 +799,168 @@ public class UIManager : MonoBehaviour
         availableTraitPoints = character.GetTraitPoints();
         UpdateTraitPointsUI();
     }
+    #endregion
+
+    #region Drag and Drop Handling
+
+    private void OnInventoryItemDragEnd(BaseItem item, Vector3 dropPosition)
+    {
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = dropPosition
+        };
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        foreach (RaycastResult result in results)
+        {
+            DroppableSlot droppable = result.gameObject.GetComponent<DroppableSlot>();
+            if (droppable != null)
+            {
+                // 드롭된 슬롯이 장비 슬롯인 경우
+                DraggableItem draggable = GetDraggableItemFromItem(item);
+                if (draggable != null)
+                {
+                    droppable.OnDrop(pointerData);
+                    return;
+                }
+            }
+
+            InventorySlot inventorySlot = result.gameObject.GetComponent<InventorySlot>();
+            if (inventorySlot != null && inventorySlot != GetInventorySlotFromItem(item))
+            {
+                // 드롭된 슬롯이 다른 인벤토리 슬롯인 경우
+                SwapItems(GetInventorySlotFromItem(item), inventorySlot);
+                return;
+            }
+        }
+
+        // 드롭된 위치가 유효하지 않다면 원래 위치로 복귀
+        Debug.Log("드롭된 위치가 유효하지 않습니다.");
+    }
+
+    private DraggableItem GetDraggableItemFromItem(BaseItem item)
+    {
+        foreach (InventorySlot slot in inventorySlots)
+        {
+            if (slot.item == item)
+            {
+                return slot.GetComponent<DraggableItem>();
+            }
+        }
+        return null;
+    }
+
+    private InventorySlot GetInventorySlotFromItem(BaseItem item)
+    {
+        foreach (InventorySlot slot in inventorySlots)
+        {
+            if (slot.item == item)
+            {
+                return slot;
+            }
+        }
+        return null;
+    }
+
+    private void SwapItems(InventorySlot fromSlot, InventorySlot toSlot)
+    {
+        BaseItem tempItem = toSlot.item;
+        int tempQuantity = toSlot.quantity;
+
+        toSlot.SetItem(fromSlot.item, fromSlot.quantity);
+        fromSlot.SetItem(tempItem, tempQuantity);
+        Debug.Log($"아이템 교환: {fromSlot.item?.itemName} <-> {toSlot.item?.itemName}");
+    }
+
+    #endregion
+
+    #region Inventory Management
+
+    // 인벤토리에 아이템 추가
+    public void AddItemToInventory(BaseItem item)
+    {
+        // 동일한 아이템이 있는지 확인하여 수량 증가
+        foreach (InventorySlot slot in inventorySlots)
+        {
+            if (slot.item != null && slot.item.id == item.id && item is ConsumableItem)
+            {
+                slot.AddQuantity(1);
+                return;
+            }
+        }
+
+        // 동일한 아이템이 없으면 새로운 슬롯에 추가
+        foreach (InventorySlot slot in inventorySlots)
+        {
+            if (slot.item == null)
+            {
+                slot.SetItem(item, 1);
+                break;
+            }
+        }
+    }
+
+    // 인벤토리에서 아이템 제거
+    public void RemoveItemFromInventory(BaseItem item)
+    {
+        foreach (InventorySlot slot in inventorySlots)
+        {
+            if (slot.item == item)
+            {
+                slot.ClearSlot();
+                break;
+            }
+        }
+    }
+
+    #endregion
+
+    #region Equipment Management
+
+    // 장비 슬롯에 아이템 장착
+    public void EquipItem(EquipmentItem equipment)
+    {
+        if (equipmentSlots.TryGetValue(equipment.slot, out InventorySlot slot))
+        {
+            // 기존 장비 아이템이 있다면 인벤토리로 반환
+            if (slot.item != null)
+            {
+                AddItemToInventory(slot.item);
+            }
+
+            // 새 장비 아이템 장착
+            slot.SetItem(equipment);
+            RemoveItemFromInventory(equipment);
+            Debug.Log($"장비 아이템 장착: {equipment.itemName}");
+        }
+        else
+        {
+            Debug.LogError($"해당 장비 슬롯을 찾을 수 없습니다: {equipment.slot}");
+        }
+    }
+
+    // 장비 슬롯에서 아이템 해제
+    public void UnequipItem(EquipmentSlot slotType)
+    {
+        if (equipmentSlots.TryGetValue(slotType, out InventorySlot slot))
+        {
+            if (slot.item != null)
+            {
+                AddItemToInventory(slot.item);
+                slot.ClearSlot();
+                Debug.Log($"장비 아이템 해제: {slot.item.itemName}");
+            }
+            else
+            {
+                Debug.LogWarning($"해당 슬롯에 장착된 아이템이 없습니다: {slotType}");
+            }
+        }
+        else
+        {
+            Debug.LogError($"해당 장비 슬롯을 찾을 수 없습니다: {slotType}");
+        }
+    }
+
     #endregion
 }

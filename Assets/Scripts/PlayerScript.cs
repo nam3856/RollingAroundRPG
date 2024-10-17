@@ -142,9 +142,44 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                 break;
         }
 
+        SynchronizeAllParameters(GetComponent<PhotonAnimatorView>(), AN);
         character.OnPhotonViewInitialized += HandlePhotonViewInitialized;
         AddToPhotonObservedComponents(character);
     }
+
+    void SynchronizeAllParameters(PhotonAnimatorView view, Animator animator)
+    {
+        // 기존의 동기화 파라미터를 초기화
+        view.GetSynchronizedParameters().Clear();
+
+        // Animator의 모든 파라미터 가져오기
+        var parameters = animator.parameters;
+
+        foreach (var param in parameters)
+        {
+            PhotonAnimatorView.ParameterType paramType;
+            switch (param.type)
+            {
+                case AnimatorControllerParameterType.Bool:
+                    paramType = PhotonAnimatorView.ParameterType.Bool;
+                    break;
+                case AnimatorControllerParameterType.Float:
+                    paramType = PhotonAnimatorView.ParameterType.Float;
+                    break;
+                case AnimatorControllerParameterType.Int:
+                    paramType = PhotonAnimatorView.ParameterType.Int;
+                    break;
+                case AnimatorControllerParameterType.Trigger:
+                    paramType = PhotonAnimatorView.ParameterType.Trigger;
+                    break;
+                default:
+                    continue;
+            }
+
+            view.SetParameterSynchronized(param.name, paramType, PhotonAnimatorView.SynchronizeType.Discrete);
+        }
+    }
+
 
     private void HandlePhotonViewInitialized(Character character)
     {

@@ -82,7 +82,7 @@ public class FanBulletScript : MonoBehaviourPunCallbacks
                 {
                     if (attackedPlayers.Contains(monsterPV.ViewID)) return;
                     attackedPlayers.Add(monsterPV.ViewID);
-                    monsterPV.RPC("TakeDamage", RpcTarget.AllBuffered, new object[] { damage, playerNum, isCriticalHit, transform.position, knockbackForce });
+                    monsterPV.RPC("TakeDamage", RpcTarget.All, new object[] { damage, playerNum, isCriticalHit, transform.position, knockbackForce });
                     monsterPV.RPC("ApplyKnockback", RpcTarget.All, transform.position, knockbackForce);
                 }
             }
@@ -100,7 +100,7 @@ public class FanBulletScript : MonoBehaviourPunCallbacks
                     float angleToPlayer = Vector2.Angle(dir, directionToPlayer);
                     if (angleToPlayer <= attackAngle / 2)
                     {
-                        monsterPV.RPC("TakeDamage", RpcTarget.AllBuffered, new object[] { attackDamage, playerNum, isCriticalHit, transform.position, knockbackForce });
+                        monsterPV.RPC("TakeDamage", RpcTarget.All, new object[] { attackDamage, playerNum, isCriticalHit, transform.position, knockbackForce });
                     }
                 }
             }
