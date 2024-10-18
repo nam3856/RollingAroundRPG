@@ -100,7 +100,7 @@ public class FanBulletScript : MonoBehaviourPunCallbacks
                     float angleToPlayer = Vector2.Angle(dir, directionToPlayer);
                     if (angleToPlayer <= attackAngle / 2)
                     {
-                        monsterPV.RPC("TakeDamage", RpcTarget.All, new object[] { attackDamage, playerNum, isCriticalHit, transform.position, knockbackForce });
+                        monsterPV.RPC("TakeDamage", RpcTarget.All, new object[] { damage, playerNum, isCriticalHit, transform.position, knockbackForce });
                     }
                 }
             }
