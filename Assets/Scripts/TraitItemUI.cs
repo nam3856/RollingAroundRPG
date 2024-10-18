@@ -1,9 +1,8 @@
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Events;
 using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using static UnityEditor.Progress;
+using UnityEngine.UI;
 
 public class TraitItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {

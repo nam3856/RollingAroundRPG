@@ -102,14 +102,14 @@ public class Warrior : Character
         }
     }
 
-    protected override int CalculateMaxHealth(int level)
+    protected override float CalculateMaxHealth(int level)
     {
-        return 100 + (level - 1) * 10;
+        return 100 + (level - 1) * 10 + additionalHealth;
     }
 
-    protected override int CalculateMaxMP(int level)
+    protected override float CalculateMaxMP(int level)
     {
-        return 50 + (level - 1);
+        return 50 + (level - 1) + additionalMP;
     }
     #endregion
 
@@ -300,7 +300,7 @@ public class Warrior : Character
             magicAnimator.SetTrigger("Arcane Shield");
         }
 
-        float armoredDamage = (float)Math.Ceiling(damage - damage * armor * 0.1);
+        float armoredDamage = (float)Math.Ceiling(damage - damage * (additionalArmor + armor) * 0.01);
 
         if (IsBlocking)
         {

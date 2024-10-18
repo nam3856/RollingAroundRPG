@@ -38,12 +38,7 @@ public class BulletScript : MonoBehaviourPunCallbacks
 
         if (photonView.IsMine)
         {
-            if ((bool)data[4] == false)
-            {
-                rb.velocity = dir * 3f;
-            }
-            else rb.velocity = dir * 7f;
-
+            rb.velocity = dir * 7f;
         }
 
         if (data[3] != null)

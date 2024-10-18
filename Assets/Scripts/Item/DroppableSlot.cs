@@ -3,12 +3,16 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
+using TMPro;
 
 public class DroppableSlot : MonoBehaviour, IDropHandler
 {
     public EquipmentSlot slotType; // 해당 슬롯의 유형 (장비 슬롯일 경우)
     public Image iconImage; // 슬롯에 표시될 아이콘
     public Image highlightImage;
+    public TMP_Text typeText;
+    private EquipmentItem currentItem;
+    
 
     private void Awake()
     {
@@ -16,6 +20,7 @@ public class DroppableSlot : MonoBehaviour, IDropHandler
         {
             highlightImage.gameObject.SetActive(false);
         }
+        iconImage.color = Color.clear;
     }
     // 슬롯에 아이템을 드롭할 때 호출
     public void OnDrop(PointerEventData eventData)
@@ -25,13 +30,13 @@ public class DroppableSlot : MonoBehaviour, IDropHandler
         {
             BaseItem droppedItem = draggable.item;
 
-            // 드롭된 아이템이 장비 아이템이고, 슬롯 유형에 맞는지 확인
             if (droppedItem is EquipmentItem equipment)
             {
                 if (equipment.slot == slotType)
                 {
                     UIManager uI = FindObjectOfType<UIManager>();
                     uI.EquipItem(equipment);
+                    draggable.item = null;
                 }
                 else
                 {
@@ -44,6 +49,7 @@ public class DroppableSlot : MonoBehaviour, IDropHandler
             }
         }
     }
+
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -61,21 +67,17 @@ public class DroppableSlot : MonoBehaviour, IDropHandler
         }
     }
 
-    private void EquipItem(EquipmentItem equipment, DraggableItem draggable)
+
+    public void UnEquipItem()
     {
-        // 기존에 장착된 아이템이 있다면 언착용
-        if (iconImage.sprite != null)
+        if(currentItem is EquipmentItem equipment && currentItem != null) 
         {
-            // 기존 장비 아이템을 인벤토리로 반환하거나 다른 로직 구현 가능
-            Debug.Log($"기존 장비 아이템 언착용: {iconImage.sprite.name}");
+            UIManager uI = FindObjectOfType<UIManager>();
+            equipment.Unequip(uI.character);
+            iconImage.sprite = null;
+            iconImage.color = Color.clear;
+            currentItem = null;
         }
-
-        // 새로운 장비 아이템 장착
-        iconImage.sprite = equipment.icon;
-        Debug.Log($"장비 아이템 장착: {equipment.itemName}");
-
-        // 드래그한 아이템 슬롯 비우기 또는 인벤토리 업데이트
-        draggable.item = null;
-        draggable.GetComponent<Image>().sprite = null;
+        
     }
 }

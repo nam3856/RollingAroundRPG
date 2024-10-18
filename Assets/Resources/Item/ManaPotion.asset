@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 511e2cc7d8fcb33498622454ef2c7575, type: 3}
   m_Name: ManaPotion
   m_EditorClassIdentifier: 
-  itemName: bb
-  icon: {fileID: 21300000, guid: 5fce9686ee092ee4083e109a0e8f3f5e, type: 3}
-  id: 4
+  itemName: "\uB9C8\uB098\uD3EC\uC158"
+  itemDescription: "\uB0A0\uAC1C\uB97C \uB2EC\uC544\uC918\uC694"
+  icon: {fileID: 21300000, guid: 9cc0dd3dd40c82e43b767ff92b8c13a8, type: 3}
+  id: 5
   isHealth: 0
   restoreAmount: 50

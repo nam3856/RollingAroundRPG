@@ -32,10 +32,10 @@ public class TraitRepository : MonoBehaviour
         Sprite speedIcon = Resources.Load<Sprite>("Icons/Speed");
         Sprite armorIcon = Resources.Load<Sprite>("Icons/Armor");
         // Trait 인스턴스 생성 및 추가
-        allTraits.Add(new IncreaseAttackTrait("공격력 증가", "공격력을 10% 증가시킵니다.", attackIcon, 1, 5, 1.1f));
+        allTraits.Add(new IncreaseAttackTrait("공격력 증가", "공격력을 1 증가시킵니다.", attackIcon, 1, 5));
         allTraits.Add(new IncreaseSpeedTrait("이동속도 증가", "이동속도를 10% 증가시킵니다.", speedIcon, 0, 5, 1.1f));
         allTraits.Add(new IncreaseArmorTrait("방어력 증가", "방어력을 10% 증가시킵니다.", armorIcon, 0, 5, 1.1f));
-        allTraits.Add(new CriticalTrait("치명타 확률", "치명타 확률을 20% 증가시킵니다.", armorIcon, 0, 1));
+        allTraits.Add(new CriticalTrait("치명타 확률 20% 증가", "치명타 확률을 20% 증가시킵니다.", armorIcon, 0, 1));
     }
 
     // 모든 Trait을 반환하는 메서드
@@ -78,23 +78,22 @@ public class IncreaseAttackTrait : Trait
 {
     public float AttackMultiplier { get; private set; }
 
-    public IncreaseAttackTrait(string name, string description, Sprite icon, int cost, int stackCount, float multiplier)
+    public IncreaseAttackTrait(string name, string description, Sprite icon, int cost, int stackCount)
         : base(name, description, icon, cost, stackCount)
     {
-        AttackMultiplier = multiplier;
     }
 
     public override void Apply(Character character)
     {
         stackCount++;
-        character.additionalAttackDamage = character.basicAttackDamage * AttackMultiplier * stackCount / 10;
+        character.additionalAttackDamage++;
         character.attackDamage = character.basicAttackDamage + character.additionalAttackDamage;
     }
 
     public override void Remove(Character character)
     {
-        character.additionalAttackDamage = 0;
-        character.attackDamage = character.basicAttackDamage;
+        character.additionalAttackDamage -= stackCount;
+        character.attackDamage = character.basicAttackDamage + character.additionalAttackDamage;
         stackCount = 0;
     }
 }

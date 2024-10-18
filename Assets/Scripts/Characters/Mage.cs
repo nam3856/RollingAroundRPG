@@ -21,14 +21,14 @@ public class Mage : Character
         LoadCharacterData_FollowUp();
     }
 
-    protected override int CalculateMaxHealth(int level)
+    protected override float CalculateMaxHealth(int level)
     {
-        return 60 + (level - 1) * 6;
+        return 60 + (level - 1) * 6 + additionalHealth;
     }
 
-    protected override int CalculateMaxMP(int level)
+    protected override float CalculateMaxMP(int level)
     {
-        return 100 + (level - 1) * 10;
+        return 100 + (level - 1) * 10 + additionalMP;
     }
 
     public override void StartSkill(int skillIdx)

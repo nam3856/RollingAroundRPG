@@ -194,9 +194,20 @@ public class UIManager : MonoBehaviour
         }
 
         BaseItem testItem = Resources.Load<BaseItem>("Item/HealthPotion");
-        AddItemToInventory(testItem);
+        BaseItem mana = Resources.Load<BaseItem>("Item/ManaPotion");
+        for (int i = 0; i < 20; i++)
+        {
+            AddItemToInventory(testItem);
+            AddItemToInventory(mana);
+        }
         BaseItem testItem2 = Resources.Load<BaseItem>("Item/3LevelDduk");
         AddItemToInventory(testItem2);
+        BaseItem testItem3 = Resources.Load<BaseItem>("Item/CrazyWeapon");
+        AddItemToInventory(testItem3);
+        BaseItem testItem4 = Resources.Load<BaseItem>("Item/1LevelDduk");
+        AddItemToInventory(testItem4);
+        BaseItem testItem5 = Resources.Load<BaseItem>("Item/basicWeapon");
+        AddItemToInventory(testItem5);
     }
 
     private void InitializeEquipmentSlots()
@@ -211,6 +222,7 @@ public class UIManager : MonoBehaviour
             if (droppable != null && inventorySlot != null)
             {
                 droppable.slotType = slotType;
+                droppable.typeText.text = slotType.ToString();
                 droppable.iconImage = inventorySlot.iconImage;
 
                 equipmentSlots.Add(slotType, inventorySlot);
@@ -805,10 +817,16 @@ public class UIManager : MonoBehaviour
 
     private void OnInventoryItemDragEnd(BaseItem item, Vector3 dropPosition)
     {
+
+        // 드래그한 아이템의 DraggableItem 컴포넌트를 가져옴
+        DraggableItem draggable = GetDraggableItemFromItem(item);
+
         PointerEventData pointerData = new PointerEventData(EventSystem.current)
         {
-            position = dropPosition
+            position = dropPosition,
+            pointerDrag = draggable != null ? draggable.gameObject : null // pointerDrag 설정
         };
+
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerData, results);
 
@@ -818,25 +836,19 @@ public class UIManager : MonoBehaviour
             if (droppable != null)
             {
                 // 드롭된 슬롯이 장비 슬롯인 경우
-                DraggableItem draggable = GetDraggableItemFromItem(item);
-                if (draggable != null)
-                {
-                    droppable.OnDrop(pointerData);
-                    return;
-                }
+                droppable.OnDrop(pointerData);
+                return;
             }
 
             InventorySlot inventorySlot = result.gameObject.GetComponent<InventorySlot>();
-            if (inventorySlot != null && inventorySlot != GetInventorySlotFromItem(item))
+            if (inventorySlot != null)
             {
                 // 드롭된 슬롯이 다른 인벤토리 슬롯인 경우
                 SwapItems(GetInventorySlotFromItem(item), inventorySlot);
                 return;
             }
-        }
 
-        // 드롭된 위치가 유효하지 않다면 원래 위치로 복귀
-        Debug.Log("드롭된 위치가 유효하지 않습니다.");
+        }
     }
 
     private DraggableItem GetDraggableItemFromItem(BaseItem item)
@@ -878,9 +890,9 @@ public class UIManager : MonoBehaviour
     #region Inventory Management
 
     // 인벤토리에 아이템 추가
+
     public void AddItemToInventory(BaseItem item)
     {
-        // 동일한 아이템이 있는지 확인하여 수량 증가
         foreach (InventorySlot slot in inventorySlots)
         {
             if (slot.item != null && slot.item.id == item.id && item is ConsumableItem)
@@ -888,11 +900,6 @@ public class UIManager : MonoBehaviour
                 slot.AddQuantity(1);
                 return;
             }
-        }
-
-        // 동일한 아이템이 없으면 새로운 슬롯에 추가
-        foreach (InventorySlot slot in inventorySlots)
-        {
             if (slot.item == null)
             {
                 slot.SetItem(item, 1);
@@ -926,12 +933,17 @@ public class UIManager : MonoBehaviour
             // 기존 장비 아이템이 있다면 인벤토리로 반환
             if (slot.item != null)
             {
+                EquipmentItem a = slot.item as EquipmentItem;
+                a.Unequip(character);
                 AddItemToInventory(slot.item);
             }
 
-            // 새 장비 아이템 장착
+            equipment.Equip(character);
             slot.SetItem(equipment);
+
+            // 인벤토리에서 아이템 제거
             RemoveItemFromInventory(equipment);
+
             Debug.Log($"장비 아이템 장착: {equipment.itemName}");
         }
         else
@@ -940,27 +952,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // 장비 슬롯에서 아이템 해제
-    public void UnequipItem(EquipmentSlot slotType)
-    {
-        if (equipmentSlots.TryGetValue(slotType, out InventorySlot slot))
-        {
-            if (slot.item != null)
-            {
-                AddItemToInventory(slot.item);
-                slot.ClearSlot();
-                Debug.Log($"장비 아이템 해제: {slot.item.itemName}");
-            }
-            else
-            {
-                Debug.LogWarning($"해당 슬롯에 장착된 아이템이 없습니다: {slotType}");
-            }
-        }
-        else
-        {
-            Debug.LogError($"해당 장비 슬롯을 찾을 수 없습니다: {slotType}");
-        }
-    }
+
 
     #endregion
 }

@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Photon.Pun;
-using Unity.VisualScripting;
 using System;
+using UnityEngine;
 
 public class ObstacleManager : MonoBehaviourPun
 {

@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 77a74d3f42186814a9ac1af6049209ca, type: 3}
-  m_Name: 2LevelDduk
+  m_Name: BasicWeapon
   m_EditorClassIdentifier: 
-  itemName: "2\uB819\uB69D"
-  itemDescription: 
-  icon: {fileID: 21300000, guid: 97a1208dac455864aa9e4f54b5fa6874, type: 3}
-  id: 1
-  slot: 0
-  attackBonus: 0
+  itemName: "\uB9C9\uB300\uAE30"
+  itemDescription: "\uC774\uAC8C \uBB34\uAE30\uB0D0?"
+  icon: {fileID: 21300000, guid: 95af913ad30be9c4c943e3cd1bb65be6, type: 3}
+  id: 6
+  slot: 3
+  attackBonus: 1
   defenseBonus: 0
   hpBonus: 0
   mpBonus: 0

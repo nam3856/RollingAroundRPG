@@ -12,15 +12,20 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
 
     [Header("Health and Mana")]
     public float maxHealth = 100;
+    protected float additionalHealth = 0;
     protected float maxMP = 100;
+    protected float additionalMP = 0;
     protected float currentMP = 100;
     protected float currentHealth;
+    protected float manaRecoveryPer = 1;
+    protected float healthRecoveryPer = 1;
 
     [Header("Combat")]
     public float attackDamage = 1;
     public float basicAttackDamage;
     public float additionalAttackDamage = 0;
     public float armor = 0;
+    public float additionalArmor = 0;
     public int experience = 0;
     public int level = 1;
     public List<int> levelPerExperience;
@@ -76,6 +81,8 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     protected float attackTime = 0f;
     protected int arcaneShieldStack = 0;
 
+    protected List<EquipmentItem> equipedItems; 
+
     public UIManager uiManager;
     public PlayerData playerData;
 
@@ -126,7 +133,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
         RB = GetComponent<Rigidbody2D>();
         
         skillTreeManager = FindObjectOfType<SkillTreeManager>();
-
+        equipedItems = new List<EquipmentItem>();
         
         InitializeAudio();
         InitializeEffects();
@@ -340,6 +347,8 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             stream.SendNext(maxHealth);
             stream.SendNext(HealthImage.fillAmount);   // 체력바 채우기량 동기화
             stream.SendNext(isDead);                   // 사망 상태 동기화
+            stream.SendNext(healthRecoveryPer);
+            stream.SendNext(manaRecoveryPer);
         }
         else
         {
@@ -353,6 +362,8 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             maxHealth = (float)stream.ReceiveNext();
             HealthImage.fillAmount = (float)stream.ReceiveNext(); // 체력바 채우기량 수신
             isDead = (bool)stream.ReceiveNext();         // 사망 상태 수신
+            healthRecoveryPer = (float)stream.ReceiveNext();
+            manaRecoveryPer = (float)stream.ReceiveNext();
         }
     }
 
@@ -367,10 +378,10 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     {
         while (!isDead)
         {
-            currentHealth += maxHealth / 400;
+            currentHealth += maxHealth / 400 * healthRecoveryPer;
             if (currentHealth > maxHealth) currentHealth = maxHealth;
 
-            currentMP += maxMP / 300;
+            currentMP += maxMP / 300 * manaRecoveryPer;
             if (currentMP > maxMP) currentMP = maxMP;
 
             HealthImage.fillAmount = currentHealth / maxHealth;
@@ -450,20 +461,72 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    public virtual void Restore(bool isHealth, float amount)
-    {
-        if (isHealth) currentHealth += amount;
-        else currentMP += amount;
-
-        if(currentHealth>= maxHealth) currentHealth = maxHealth;
-        if(currentMP>= maxMP) currentMP = maxMP;
-    }
+    
 
     public int GetTraitPoints()
     {
         return traitPoints;
     }
 
+    #endregion
+
+    #region Item Handling
+    public virtual void Restore(bool isHealth, float amount)
+    {
+        if (isHealth) currentHealth += amount;
+        else currentMP += amount;
+
+        if (currentHealth >= maxHealth) currentHealth = maxHealth;
+        if (currentMP >= maxMP) currentMP = maxMP;
+    }
+
+    /// <summary>
+    /// 장비 착용/해제시 능력치 적용
+    /// </summary>
+    /// <param name="armorBonus">방어력</param>
+    /// <param name="attackBonus">공격력</param>
+    /// <param name="hp">최대체력</param>
+    /// <param name="mp">최대마나</param>
+    /// <param name="hpr">체력회복량</param>
+    /// <param name="mpr">마나회복량</param>
+    /// <param name="trait">특성</param>
+    /// <param name="isApplying">true=착용 false=해제</param>
+    public void ApplyEquipment(float armorBonus, float attackBonus,float hp = 0, float mp = 0, float hpr = 1, float mpr = 1,string traitName = "", bool isApplying = true)
+    {
+        if (isApplying)
+        {
+            additionalArmor += armorBonus;
+            additionalAttackDamage += attackBonus;
+            additionalHealth += hp;
+            additionalMP += mp;
+            healthRecoveryPer *= hpr;
+            manaRecoveryPer *= mpr;
+            Trait trait = traitManager.SearchTraitByName(traitName);
+            if (trait != null)
+            {
+                AddTrait(trait);
+            }
+            maxHealth = CalculateMaxHealth(level);
+            maxMP = CalculateMaxMP(level);
+            attackDamage = basicAttackDamage + additionalAttackDamage;
+        }
+        else
+        {
+            additionalArmor -= armorBonus;
+            additionalAttackDamage -= attackBonus;
+            additionalHealth -= hp;
+            additionalMP -= mp;
+            healthRecoveryPer /= hpr;
+            manaRecoveryPer /= mpr;
+            Trait trait = traitManager.SearchTraitByName(traitName);
+            if (trait != null)
+            {
+                RemoveTrait(trait);
+            }
+
+            attackDamage = basicAttackDamage + additionalAttackDamage;
+        }
+    }
     #endregion
 
     #region Damage Handling
@@ -484,7 +547,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             audioSource.PlayOneShot(receivedArcaneShieldSound);
             magicAnimator.SetTrigger("Arcane Shield");
         }
-        float armoredDamage = (float)Math.Ceiling(damage - damage * armor * 0.1);
+        float armoredDamage = (float)Math.Ceiling(damage - damage * (additionalArmor+armor) * 0.01);
 
         GameObject damageTextInstance = PhotonNetwork.Instantiate("DamageText", canvasTransform.position, Quaternion.identity);
         DamageText damageTextScript = damageTextInstance.GetComponent<DamageText>();
@@ -777,6 +840,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     #endregion
+
     #region Save and Load
 
     #endregion
@@ -788,14 +852,14 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     /// </summary>
     /// <param name="level">현재 레벨</param>
     /// <returns>최대 체력</returns>
-    protected abstract int CalculateMaxHealth(int level);
+    protected abstract float CalculateMaxHealth(int level);
 
     /// <summary>
     /// 최대 마나를 계산합니다.
     /// </summary>
     /// <param name="level">현재 레벨</param>
     /// <returns>최대 마나</returns>
-    protected abstract int CalculateMaxMP(int level);
+    protected abstract float CalculateMaxMP(int level);
 
     #endregion
 }

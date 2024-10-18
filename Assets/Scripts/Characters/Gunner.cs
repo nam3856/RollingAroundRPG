@@ -264,14 +264,14 @@ public class Gunner : Character
         }
     }
 
-    protected override int CalculateMaxMP(int level)
+    protected override float CalculateMaxMP(int level)
     {
-        return 9;
+        return 9 + additionalMP;
     }
 
-    protected override int CalculateMaxHealth(int level)
+    protected override float CalculateMaxHealth(int level)
     {
-        return 80 + (level - 1) * 8;
+        return 80 + (level - 1) * 8 + additionalHealth;
     }
 
     #endregion

@@ -52,7 +52,6 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             Debug.LogError("DraggableItem: DragImage 프리팹이 할당되지 않았습니다.");
         }
 
-        Debug.Log($"드래그 시작: {item?.itemName}");
     }
 
     // 드래그 중일 때 호출
@@ -80,25 +79,8 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             Destroy(dragImageInstance); // 드래그 이미지 삭제
         }
-
-        // 드롭된 위치가 유효하지 않다면 원래 위치로 복귀
-        if (!IsPointerOverUIElement())
-        {
-            rectTransform.position = originalPosition;
-            Debug.Log($"드래그 취소: {item?.itemName}");
-        }
-        else
-        {
-            // 드롭된 위치에 따른 추가 로직 구현 가능
-            onDragEnd?.Invoke(item, rectTransform.position);
-            Debug.Log($"드래그 종료: {item?.itemName}");
-        }
-    }
-
-    // 현재 포인터가 UI 요소 위에 있는지 확인
-    private bool IsPointerOverUIElement()
-    {
-        return EventSystem.current.IsPointerOverGameObject();
+        Debug.Log("DraggableItem.cs : 이벤트 호출");
+        onDragEnd?.Invoke(item, eventData.position);
     }
 
     // 드래그 종료 시 호출할 액션 설정

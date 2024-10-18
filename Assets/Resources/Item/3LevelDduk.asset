@@ -17,5 +17,10 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 8dcec66ec1e38da47bc369aafc867bd2, type: 3}
   id: 2
   slot: 0
-  attackBonus: 999
+  attackBonus: 0
   defenseBonus: 999
+  hpBonus: 1000
+  mpBonus: 1000
+  hpRecoveryBonus: 100
+  mpRecoveryBonus: 100
+  traitName: 

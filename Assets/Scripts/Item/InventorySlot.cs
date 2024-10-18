@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,36 +12,42 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
     private Tooltip tooltip;
 
     public int quantity = 1;
-    public DraggableItem draggableItem;
+    private DraggableItem draggableItem;
 
     private void Awake()
     {
-        if(draggableItem != null)
-        {
-            Debug.LogWarning($"{gameObject}: draggableItem is null");
-        }
+        draggableItem = GetComponent<DraggableItem>();
     }
+
     // 슬롯에 아이템을 설정하는 메서드
     public void SetItem(BaseItem newItem, int newQuantity = 1)
     {
         item = newItem;
         quantity = newQuantity;
-        UIManager uI = FindObjectOfType<UIManager>();
-        tooltip = uI.tooltip;
 
-        if (draggableItem != null)
+        if (draggableItem == null)
         {
-            draggableItem.item = newItem;
+            draggableItem = GetComponent<DraggableItem>();
         }
 
         if (item != null)
         {
+            UIManager uI = FindObjectOfType<UIManager>();
+            tooltip = uI.tooltip;
+            if (draggableItem != null)
+            {
+                draggableItem.item = newItem;
+            }
             iconImage.sprite = item.icon;
             iconImage.color = Color.white;
             quantityText.text = quantity > 1 ? quantity.ToString() : "";
         }
         else
         {
+            if (draggableItem != null)
+            {
+                draggableItem.item = null;
+            }
             iconImage.sprite = null;
             iconImage.color = Color.clear;
             quantityText.text = "";
@@ -55,7 +62,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("InventorySlot clicked");
+        if (item == null) return;
         if (item is ConsumableItem consumable)
         {
             UIManager uI = FindObjectOfType<UIManager>();
@@ -69,7 +76,10 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             {
                 SetItem(item, quantity);
             }
-            Debug.Log($"소비 아이템 사용: {consumable.itemName}, 남은 수량: {quantity}");
+        }
+        else if(TryGetComponent<DroppableSlot>(out DroppableSlot equipment))
+        {
+            equipment.UnEquipItem();
         }
         tooltip.HideTooltip();
     }
@@ -89,7 +99,13 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             }
             else if (item is EquipmentItem equipment)
             {
-                description += $"공격 보너스: {equipment.attackBonus}\n방어 보너스: {equipment.defenseBonus}";
+                description += equipment.attackBonus > 0 ? $"공격력 증가: {equipment.attackBonus}\n" : "";
+                description += equipment.defenseBonus > 0 ? $"방어력 증가: {equipment.defenseBonus}\n" : "";
+                description += equipment.hpBonus > 0 ? $"최대 체력 증가: {equipment.hpBonus}\n" : "";
+                description += equipment.mpBonus > 0 ? $"최대 마나 증가: {equipment.mpBonus}\n" : "";
+                description += equipment.hpRecoveryBonus > 1 ? $"체력 회복량 증가: {equipment.hpRecoveryBonus*100}%\n" : "";
+                description += equipment.mpRecoveryBonus > 1 ? $"마나 회복량 증가: {equipment.mpRecoveryBonus * 100}%\n" : "";
+                description += equipment.traitName !="" ? $"(고유) {equipment.traitName}" : "";
             }
 
             tooltip.ShowTooltip(title, description);
