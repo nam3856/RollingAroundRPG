@@ -2,6 +2,8 @@ using UnityEngine;
 using Photon.Pun;
 using Pathfinding;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using System;
 
 public class MonsterHealth : MonoBehaviourPunCallbacks
 {
@@ -12,7 +14,10 @@ public class MonsterHealth : MonoBehaviourPunCallbacks
 
     public GameObject damageTextPrefab;
     public Transform canvasTransform;
+    public bool isDead = false;
     PhotonView PV;
+
+    float lastHitTime = 0;
     private void Start()
     {
         currentHealth = maxHealth;
@@ -22,9 +27,15 @@ public class MonsterHealth : MonoBehaviourPunCallbacks
     [PunRPC]
     public void TakeDamage(object[] data)
     {
+        if(isDead) return;
         int damage = (int)data[0];
         int attackerViewID = (int)data[1];
         bool isCritical = (bool)data[2];
+        if (lastHitTime + 0.5f <Time.time)
+        {
+            GetComponent<Animator>().SetTrigger("hit");
+        }
+        lastHitTime = Time.time;
         GameObject damageTextInstance = PhotonNetwork.Instantiate("DamageText", canvasTransform.position, Quaternion.identity);
         //GameObject damageTextInstance = Instantiate(damageTextPrefab, canvasTransform);
         DamageText damageTextScript = damageTextInstance.GetComponent<DamageText>();
@@ -42,6 +53,10 @@ public class MonsterHealth : MonoBehaviourPunCallbacks
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
+            isDead = true;
+            GetComponent<CircleCollider2D>().enabled = false;
+            GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX|RigidbodyConstraints2D.FreezePositionY|RigidbodyConstraints2D.FreezeRotation;
+            GetComponent<Animator>().SetTrigger("die");
             if (PhotonNetwork.IsMasterClient)
             {
                 GiveExperienceToAttackers();
@@ -58,6 +73,7 @@ public class MonsterHealth : MonoBehaviourPunCallbacks
 
     private void GiveExperienceToAttackers()
     {
+
         foreach (int attackerViewID in attackers)
         {
             PhotonView attackerPV = PhotonView.Find(attackerViewID);
@@ -80,7 +96,12 @@ public class MonsterHealth : MonoBehaviourPunCallbacks
             }
         }
 
-        PhotonNetwork.Destroy(gameObject);
+        UniTask.Void(async () =>
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(0.7f));
+            PhotonNetwork.Destroy(gameObject);
+        });
+        
     }
 
 }

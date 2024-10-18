@@ -1,15 +1,24 @@
 using UnityEngine;
 using Photon.Pun;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 public class MonsterAttack : MonoBehaviourPunCallbacks
 {
     public int damage = 10;
-    public float attackCooldown = 1f;
 
     private List<PhotonView> playersInRange = new List<PhotonView>();
     private Dictionary<PhotonView, float> lastAttackTimes = new Dictionary<PhotonView, float>();
+    private PhotonView PV;
+    MonsterHealth health;
+    public float attackCooldown = 1.0f;
 
+    void Start()
+    {
+        PV = GetComponentInParent<PhotonView>();
+        health = GetComponentInParent<MonsterHealth>();
+        PlayerScript.OnPlayerDied += HandlePlayerDied;
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -18,9 +27,18 @@ public class MonsterAttack : MonoBehaviourPunCallbacks
             if (playerPV != null && !playersInRange.Contains(playerPV))
             {
                 playersInRange.Add(playerPV);
-                lastAttackTimes[playerPV] = 0f; // 마지막 공격 시간을 초기화
+                if (!lastAttackTimes.ContainsKey(playerPV))
+                {
+                    lastAttackTimes[playerPV] = Time.time - attackCooldown;
+                }
+                Attack(playerPV).Forget();
             }
         }
+    }
+    private void OnDestroy()
+    {
+        // OnPlayerDied 이벤트에서 구독 해제
+        PlayerScript.OnPlayerDied -= HandlePlayerDied;
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -31,32 +49,41 @@ public class MonsterAttack : MonoBehaviourPunCallbacks
             if (playerPV != null)
             {
                 playersInRange.Remove(playerPV);
-                lastAttackTimes.Remove(playerPV);
             }
         }
     }
 
-    private void Update()
+    private void HandlePlayerDied(PlayerScript player)
     {
-        if (!PhotonNetwork.IsMasterClient) return;
-
-        foreach (var playerPV in playersInRange)
+        PhotonView playerPV = player.GetComponent<PhotonView>();
+        if (playerPV != null && playersInRange.Contains(playerPV))
         {
-            if (playerPV != null && playerPV.Owner != null && playerPV.gameObject != null && playerPV.gameObject.activeInHierarchy)
-            {
-                float lastAttackTime;
-                if (!lastAttackTimes.TryGetValue(playerPV, out lastAttackTime))
-                {
-                    lastAttackTime = 0f;
-                }
+            playersInRange.Remove(playerPV);
+        }
+    }
 
-                if (Time.time > lastAttackTime + attackCooldown)
+    private async UniTaskVoid Attack(PhotonView playerPV)
+    {
+        while (!health.isDead && playersInRange.Contains(playerPV))
+        {
+            if (Time.time >= lastAttackTimes[playerPV] + attackCooldown)
+            {
+                PV.RPC("TriggerAttackAnimation", RpcTarget.All);
+
+                if (playerPV != null && playerPV.Owner != null && playerPV.gameObject != null && playerPV.gameObject.activeInHierarchy)
                 {
                     Vector2 attackDirection = (playerPV.transform.position - transform.position).normalized;
-                    playerPV.RPC("ReceiveDamage", RpcTarget.All, Random.Range(damage-damage/3,damage+damage/3), attackDirection);
+                    playerPV.RPC("ReceiveDamage", RpcTarget.All, Random.Range(damage - damage / 3, damage + damage / 3), attackDirection);
                     lastAttackTimes[playerPV] = Time.time;
                 }
+
+                await UniTask.Delay((int)(attackCooldown * 1000));
+            }
+            else
+            {
+                await UniTask.Yield();
             }
         }
     }
+
 }

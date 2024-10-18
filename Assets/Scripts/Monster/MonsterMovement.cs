@@ -20,7 +20,7 @@ public class MonsterMovement : MonoBehaviourPunCallbacks
 
     private Animator animator;
     public MonsterTargeting monsterTargeting;
-
+    public MonsterHealth health;
 
     private void Awake()
     {
@@ -32,6 +32,7 @@ public class MonsterMovement : MonoBehaviourPunCallbacks
         {
             monsterTargeting = GetComponentInParent<MonsterTargeting>();
         }
+        health = GetComponentInParent<MonsterHealth>();
     }
 
     public void SetTarget(Transform targetTransform)
@@ -59,7 +60,7 @@ public class MonsterMovement : MonoBehaviourPunCallbacks
 
     void UpdatePathToInitialPosition()
     {
-
+        if(health.isDead) CancelInvoke("UpdatePathToInitialPosition");
         if (seeker.IsDone())
         {
             float distanceToInitialPosition = Vector2.Distance(rb.position, initialPosition);
@@ -83,6 +84,7 @@ public class MonsterMovement : MonoBehaviourPunCallbacks
 
     void UpdatePath()
     {
+        if (health.isDead) CancelInvoke("UpdatePath");
         if (target == null || !PhotonNetwork.IsMasterClient) return;
         if (!target.gameObject.activeInHierarchy || target==null)
         {
@@ -108,6 +110,7 @@ public class MonsterMovement : MonoBehaviourPunCallbacks
 
     public void ForceUpdatePath()
     {
+        if (health.isDead) return;
         if (seeker.IsDone())
         {
             seeker.StartPath(rb.position, target.position, OnPathComplete);
@@ -126,7 +129,7 @@ public class MonsterMovement : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
-        if (!PhotonNetwork.IsMasterClient || path == null) return;
+        if (!PhotonNetwork.IsMasterClient || path == null || health.isDead) return;
 
         if (currentWaypoint >= path.vectorPath.Count)
         {
@@ -166,46 +169,32 @@ public class MonsterMovement : MonoBehaviourPunCallbacks
 
         Vector2 velocity = rb.velocity;
 
+        animator.SetFloat("moveX", velocity.x);
+        animator.SetFloat("moveY", velocity.y);
         if (Mathf.Abs(velocity.x) > Mathf.Abs(velocity.y))
         {
-            // X축 이동이 더 클 때
+            //animator.SetFloat("moveY", 0f);
+            //animator.SetFloat("moveX", velocity.x);
             if (velocity.x > 0)
             {
-                // 오른쪽으로 이동
-                animator.SetBool("move hori", true);
-                animator.SetBool("move down", false);
-                animator.SetBool("move up", false);
                 GetComponent<SpriteRenderer>().flipX = true; // 오른쪽으로 이동 시 스프라이트 뒤집음
             }
             else
             {
-                // 왼쪽으로 이동
-                animator.SetBool("move hori", true);
-                animator.SetBool("move down", false);
-                animator.SetBool("move up", false);
                 GetComponent<SpriteRenderer>().flipX = false;  // 왼쪽으로 이동 시 스프라이트 원상태 유지
             }
         }
         else
         {
-            // Y축 이동이 더 클 때
-            if (velocity.y > 0)
-            {
-                // 위로 이동
-                animator.SetBool("move hori", false);
-                animator.SetBool("move down", false);
-                animator.SetBool("move up", true);
-            }
-            else
-            {
-                // 아래로 이동
-                animator.SetBool("move hori", false);
-                animator.SetBool("move up", false);
-                animator.SetBool("move down", true);
-            }
+            //animator.SetFloat("moveY", velocity.y);
+            //animator.SetFloat("moveX", 0f);
         }
     }
-
+    [PunRPC]
+    private void TriggerAttackAnimation()
+    {
+        GetComponent<Animator>().SetTrigger("attack");
+    }
 
     [PunRPC]
     public void ApplyKnockback(Vector3 sourcePosition, float force)
