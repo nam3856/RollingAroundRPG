@@ -442,9 +442,6 @@ public class UIManager : MonoBehaviour
 
     private void HandleSkillUsed(int viewID, string skillName, float cooldown)
     {
-        if (viewID != character.PV.ViewID)
-            return;
-
         int index = GetSkillIconIndex(skillName);
         if (index >= 0)
         {
@@ -454,9 +451,6 @@ public class UIManager : MonoBehaviour
 
     private void HandleSkillReady(int viewID, string skillName)
     {
-        if (viewID != character.PV.ViewID)
-            return;
-
         int index = GetSkillIconIndex(skillName);
         if (index >= 0)
         {
