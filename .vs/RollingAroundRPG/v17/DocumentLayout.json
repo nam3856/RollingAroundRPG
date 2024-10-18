@@ -3,24 +3,56 @@
   "WorkspaceRootPath": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|d:\\users\\nam38\\documents\\github\\rollingaroundrpg\\assets\\scripts\\skills\\bulletscript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\bulletscript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|d:\\users\\nam38\\documents\\github\\rollingaroundrpg\\assets\\scripts\\monster\\monsterattack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\monster\\monsterattack.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|d:\\users\\nam38\\documents\\github\\rollingaroundrpg\\assets\\scripts\\monster\\monsterhealth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\monster\\monsterhealth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8953D6E9-A3A8-7A8D-9E09-B14E158A05C0}|AstarPathfindingProject.csproj|d:\\users\\nam38\\documents\\github\\rollingaroundrpg\\assets\\astarpathfindingproject\\core\\astarpath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8953D6E9-A3A8-7A8D-9E09-B14E158A05C0}|AstarPathfindingProject.csproj|solutionrelative:assets\\astarpathfindingproject\\core\\astarpath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|d:\\users\\nam38\\documents\\github\\rollingaroundrpg\\assets\\scripts\\monster\\monstermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\monster\\monstermovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|d:\\users\\nam38\\documents\\github\\rollingaroundrpg\\assets\\scripts\\skills\\fanbulletscript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\fanbulletscript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\assets\\scripts\\uimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\uimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|d:\\users\\nam38\\documents\\github\\rollingaroundrpg\\assets\\scripts\\item\\draggableitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\assets\\scripts\\characters\\character.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\characters\\character.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\assets\\scripts\\characters\\mage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\characters\\mage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|d:\\users\\nam38\\documents\\github\\rollingaroundrpg\\assets\\scripts\\skills\\bulletscript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\bulletscript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|d:\\users\\nam38\\documents\\github\\rollingaroundrpg\\assets\\scripts\\skills\\skilleventmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\skilleventmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|d:\\users\\nam38\\documents\\github\\rollingaroundrpg\\assets\\scripts\\skills\\skill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\skills\\skill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\assets\\scripts\\item\\draggableitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\item\\draggableitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\assets\\scripts\\item\\droppableslot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\item\\droppableslot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\assets\\scripts\\characters\\character.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\characters\\character.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\assets\\scripts\\item\\inventoryslot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -55,10 +87,6 @@
       "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\characters\\gunner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\assets\\scripts\\characters\\mage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\characters\\mage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\assets\\scripts\\item\\consumableitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A9A34BA2-941B-FE90-8C08-F25F658F52B3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\item\\consumableitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -70,36 +98,141 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AstarPath.cs",
+              "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\AstarPathfindingProject\\Core\\AstarPath.cs",
+              "RelativeDocumentMoniker": "Assets\\AstarPathfindingProject\\Core\\AstarPath.cs",
+              "ToolTip": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\AstarPathfindingProject\\Core\\AstarPath.cs",
+              "RelativeToolTip": "Assets\\AstarPathfindingProject\\Core\\AstarPath.cs",
+              "ViewState": "AQIAADMDAAAAAAAAAAAYwEMDAAALAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-18T18:51:32.269Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MonsterHealth.cs",
+              "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Monster\\MonsterHealth.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Monster\\MonsterHealth.cs",
+              "ToolTip": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Monster\\MonsterHealth.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Monster\\MonsterHealth.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-18T18:39:46.915Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "MonsterAttack.cs",
+              "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Monster\\MonsterAttack.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Monster\\MonsterAttack.cs",
+              "ToolTip": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Monster\\MonsterAttack.cs*",
+              "RelativeToolTip": "Assets\\Scripts\\Monster\\MonsterAttack.cs*",
+              "ViewState": "AQIAACQAAAAAAAAAAAAYwC4AAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-18T18:21:11.53Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "FanBulletScript.cs",
+              "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Skills\\FanBulletScript.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\FanBulletScript.cs",
+              "ToolTip": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Skills\\FanBulletScript.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\FanBulletScript.cs",
+              "ViewState": "AQIAAEkAAAAAAAAAAAAkwFwAAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-18T18:18:03.383Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MonsterMovement.cs",
+              "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Monster\\MonsterMovement.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Monster\\MonsterMovement.cs",
+              "ToolTip": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Monster\\MonsterMovement.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Monster\\MonsterMovement.cs",
+              "ViewState": "AQIAAKkAAAAAAAAAAAASwIUAAAA1AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-18T18:03:04.247Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UIManager.cs",
+              "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\UIManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\UIManager.cs",
+              "ToolTip": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\UIManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\UIManager.cs",
+              "ViewState": "AQIAAJ8BAAAAAAAAAAAswCEBAABCAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-16T19:03:05.037Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Skill.cs",
+              "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Skills\\Skill.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\Skill.cs",
+              "ToolTip": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Skills\\Skill.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\Skill.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-18T17:10:33.49Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "SkillEventManager.cs",
+              "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Skills\\SkillEventManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\SkillEventManager.cs",
+              "ToolTip": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Skills\\SkillEventManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Skills\\SkillEventManager.cs",
+              "ViewState": "AQIAACAAAAAAAAAAAAAwwC0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-18T17:07:44.665Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "BulletScript.cs",
               "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Skills\\BulletScript.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Skills\\BulletScript.cs",
               "ToolTip": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Skills\\BulletScript.cs",
               "RelativeToolTip": "Assets\\Scripts\\Skills\\BulletScript.cs",
-              "ViewState": "AQIAABMAAAAAAAAAAAAQwCgAAAAjAAAA",
+              "ViewState": "AQIAABMAAAAAAAAAAAAQwBkAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-18T00:29:16.741Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 7,
               "Title": "Mage.cs",
               "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Characters\\Mage.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Characters\\Mage.cs",
               "ToolTip": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Characters\\Mage.cs",
               "RelativeToolTip": "Assets\\Scripts\\Characters\\Mage.cs",
-              "ViewState": "AQIAAAIAAAAAAAAAAAAwwB4AAAA1AAAA",
+              "ViewState": "AQIAABsAAAAAAAAAAAAYwBEAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-17T22:45:59.693Z"
+              "WhenOpened": "2024-10-17T22:45:59.693Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 20,
               "Title": "Gunner.cs",
               "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Characters\\Gunner.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Characters\\Gunner.cs",
@@ -111,7 +244,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 16,
               "Title": "Warrior.cs",
               "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Characters\\Warrior.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Characters\\Warrior.cs",
@@ -123,7 +256,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 17,
               "Title": "Traits.cs",
               "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Traits.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Traits.cs",
@@ -135,7 +268,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 18,
               "Title": "EquipmentItem.cs",
               "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Item\\EquipmentItem.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Item\\EquipmentItem.cs",
@@ -147,7 +280,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 21,
               "Title": "ConsumableItem.cs",
               "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Item\\ConsumableItem.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Item\\ConsumableItem.cs",
@@ -159,7 +292,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 12,
               "Title": "DroppableSlot.cs",
               "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Item\\DroppableSlot.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Item\\DroppableSlot.cs",
@@ -167,12 +300,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Item\\DroppableSlot.cs",
               "ViewState": "AQIAADQAAAAAAAAAAAAcwFMAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-17T09:09:27.2Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-17T09:09:27.2Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 19,
               "Title": "ObstacleManager.cs",
               "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\ObstacleManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\ObstacleManager.cs",
@@ -184,7 +316,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 13,
               "Title": "InventorySlot.cs",
               "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Item\\InventorySlot.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Item\\InventorySlot.cs",
@@ -196,7 +328,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 14,
               "Title": "TraitItemUI.cs",
               "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\TraitItemUI.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\TraitItemUI.cs",
@@ -208,7 +340,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 11,
               "Title": "DraggableItem.cs",
               "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Item\\DraggableItem.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Item\\DraggableItem.cs",
@@ -216,37 +348,24 @@
               "RelativeToolTip": "Assets\\Scripts\\Item\\DraggableItem.cs",
               "ViewState": "AQIAAEgAAAAAAAAAAAAQwFgAAAAKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-17T09:08:24.874Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-17T09:08:24.874Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "Character.cs",
               "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Characters\\Character.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Characters\\Character.cs",
               "ToolTip": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\Characters\\Character.cs",
               "RelativeToolTip": "Assets\\Scripts\\Characters\\Character.cs",
-              "ViewState": "AQIAAPYBAAAAAAAAAADwv/0BAAAqAAAA",
+              "ViewState": "AQIAAD8CAAAAAAAAAAAwwP0BAAAqAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-17T11:33:16.9Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "UIManager.cs",
-              "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\UIManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\UIManager.cs",
-              "ToolTip": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\UIManager.cs",
-              "RelativeToolTip": "Assets\\Scripts\\UIManager.cs",
-              "ViewState": "AQIAAEADAAAAAAAAAAAowEcDAAAXAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-16T19:03:05.037Z",
+              "WhenOpened": "2024-10-17T11:33:16.9Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 15,
               "Title": "TraitManager.cs",
               "DocumentMoniker": "D:\\Users\\nam38\\Documents\\GitHub\\RollingAroundRPG\\Assets\\Scripts\\TraitManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\TraitManager.cs",
