@@ -15,6 +15,8 @@ public class MonsterHealth : MonoBehaviourPunCallbacks
     public GameObject damageTextPrefab;
     public Transform canvasTransform;
     public bool isDead = false;
+
+
     PhotonView PV;
 
     float lastHitTime = 0;

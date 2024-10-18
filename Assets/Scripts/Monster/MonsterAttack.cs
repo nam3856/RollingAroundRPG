@@ -10,13 +10,13 @@ public class MonsterAttack : MonoBehaviourPunCallbacks
     private List<PhotonView> playersInRange = new List<PhotonView>();
     private Dictionary<PhotonView, float> lastAttackTimes = new Dictionary<PhotonView, float>();
     private PhotonView PV;
-    MonsterHealth health;
+    MonsterBase health;
     public float attackCooldown = 1.0f;
 
     void Start()
     {
         PV = GetComponentInParent<PhotonView>();
-        health = GetComponentInParent<MonsterHealth>();
+        health = GetComponentInParent<MonsterBase>();
         PlayerScript.OnPlayerDied += HandlePlayerDied;
     }
     private void OnTriggerEnter2D(Collider2D other)

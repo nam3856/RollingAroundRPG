@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 public class PlayerDetector : MonoBehaviourPunCallbacks
 {
-    public MonsterTargeting monsterTargeting;
+    public MonsterBase monsterTargeting;
 
     private void Start()
     {
         if (monsterTargeting == null)
         {
-            monsterTargeting = GetComponentInParent<MonsterTargeting>();
+            monsterTargeting = GetComponentInParent<MonsterBase>();
         }
     }
 
