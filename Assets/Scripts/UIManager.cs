@@ -88,7 +88,7 @@ public class UIManager : MonoBehaviour
     private int availableTraitPoints;
 
     private List<InventorySlot> inventorySlots = new List<InventorySlot>();
-    private Dictionary<EquipmentSlot, InventorySlot> equipmentSlots = new Dictionary<EquipmentSlot, InventorySlot>();
+    private Dictionary<EquipmentSlot, DroppableSlot> equipmentSlots = new Dictionary<EquipmentSlot, DroppableSlot>();
 
     #endregion
 
@@ -219,13 +219,23 @@ public class UIManager : MonoBehaviour
             DroppableSlot droppable = slotObj.GetComponent<DroppableSlot>();
             InventorySlot inventorySlot = slotObj.GetComponent<InventorySlot>();
 
+
+            DraggableItem draggable = slotObj.GetComponent<DraggableItem>();
+            if (draggable != null)
+            {
+                draggable.SetOnDragEndAction(OnInventoryItemDragEnd);
+            }
+
             if (droppable != null && inventorySlot != null)
             {
-                droppable.slotType = slotType;
+                droppable.itemSlotType = slotType;
                 droppable.typeText.text = slotType.ToString();
                 droppable.iconImage = inventorySlot.iconImage;
+                droppable.inventorySlot = inventorySlot;
 
-                equipmentSlots.Add(slotType, inventorySlot);
+                inventorySlot.slotType = SlotType.Equipment;
+
+                equipmentSlots.Add(slotType, droppable);
             }
             else
             {
@@ -811,8 +821,6 @@ public class UIManager : MonoBehaviour
 
     private void OnInventoryItemDragEnd(BaseItem item, Vector3 dropPosition)
     {
-
-        // 드래그한 아이템의 DraggableItem 컴포넌트를 가져옴
         DraggableItem draggable = GetDraggableItemFromItem(item);
 
         PointerEventData pointerData = new PointerEventData(EventSystem.current)
@@ -834,12 +842,29 @@ public class UIManager : MonoBehaviour
                 return;
             }
 
+            // 드롭된 슬롯이 인벤토리 슬롯인지 확인
             InventorySlot inventorySlot = result.gameObject.GetComponent<InventorySlot>();
             if (inventorySlot != null)
             {
-                // 드롭된 슬롯이 다른 인벤토리 슬롯인 경우
-                SwapItems(GetInventorySlotFromItem(item), inventorySlot);
-                return;
+                // 드래그한 아이템의 원래 슬롯이 장비 슬롯인지 확인
+                if (draggable.originalSlot is DroppableSlot equipmentSlot)
+                {
+                    // 인벤토리 슬롯의 아이템이 같은 부위의 장비 아이템인지 확인
+                    if (inventorySlot.item is EquipmentItem targetEquipment && targetEquipment.slot == equipmentSlot.itemSlotType)
+                    {
+                        EquipItem(targetEquipment);
+                    }
+                    else
+                    {
+                        equipmentSlot.UnEquipItem();
+                    }
+                    return;
+                }
+                else if (draggable.originalSlot is InventorySlot sourceInventorySlot)
+                {
+                    SwapItems(sourceInventorySlot, inventorySlot);
+                    return;
+                }
             }
 
         }
@@ -854,6 +879,14 @@ public class UIManager : MonoBehaviour
                 return slot.GetComponent<DraggableItem>();
             }
         }
+
+        foreach (var slotUI in equipmentSlots.Values)
+        {
+            if (slotUI.inventorySlot.item == item)
+            {
+                return slotUI.inventorySlot.GetComponent<DraggableItem>();
+            }
+        }
         return null;
     }
 
@@ -865,6 +898,15 @@ public class UIManager : MonoBehaviour
             {
                 return slot;
             }
+        }
+        return null;
+    }
+
+    public DroppableSlot GetDroppableSlot(EquipmentSlot slotType)
+    {
+        if (equipmentSlots.TryGetValue(slotType, out DroppableSlot slotUI))
+        {
+            return slotUI;
         }
         return null;
     }
@@ -922,8 +964,10 @@ public class UIManager : MonoBehaviour
     // 장비 슬롯에 아이템 장착
     public void EquipItem(EquipmentItem equipment)
     {
-        if (equipmentSlots.TryGetValue(equipment.slot, out InventorySlot slot))
+        if (equipmentSlots.TryGetValue(equipment.slot, out DroppableSlot slotUI))
         {
+            InventorySlot slot = slotUI.inventorySlot;
+
             // 기존 장비 아이템이 있다면 인벤토리로 반환
             if (slot.item != null)
             {

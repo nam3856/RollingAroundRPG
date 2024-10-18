@@ -300,7 +300,7 @@ public class Warrior : Character
             magicAnimator.SetTrigger("Arcane Shield");
         }
 
-        float armoredDamage = (float)Math.Ceiling(damage - damage * (additionalArmor + armor) * 0.01);
+        float armoredDamage = (float)Math.Ceiling(damage * 1 / (1 + (additionalArmor + armor) * 0.01));
 
         if (IsBlocking)
         {

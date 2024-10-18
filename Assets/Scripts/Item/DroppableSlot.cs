@@ -7,12 +7,12 @@ using TMPro;
 
 public class DroppableSlot : MonoBehaviour, IDropHandler
 {
-    public EquipmentSlot slotType; // 해당 슬롯의 유형 (장비 슬롯일 경우)
+    public SlotType slotType = SlotType.Equipment;
+    public EquipmentSlot itemSlotType; // 해당 슬롯의 유형 (장비 슬롯일 경우)
     public Image iconImage; // 슬롯에 표시될 아이콘
     public Image highlightImage;
     public TMP_Text typeText;
-    private EquipmentItem currentItem;
-    
+    public InventorySlot inventorySlot;
 
     private void Awake()
     {
@@ -32,7 +32,7 @@ public class DroppableSlot : MonoBehaviour, IDropHandler
 
             if (droppedItem is EquipmentItem equipment)
             {
-                if (equipment.slot == slotType)
+                if (equipment.slot == itemSlotType)
                 {
                     UIManager uI = FindObjectOfType<UIManager>();
                     uI.EquipItem(equipment);
@@ -50,33 +50,16 @@ public class DroppableSlot : MonoBehaviour, IDropHandler
         }
     }
 
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (highlightImage != null)
-        {
-            highlightImage.gameObject.SetActive(true);
-        }
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        if (highlightImage != null)
-        {
-            highlightImage.gameObject.SetActive(false);
-        }
-    }
-
-
     public void UnEquipItem()
     {
-        if(currentItem is EquipmentItem equipment && currentItem != null) 
+        if(inventorySlot.item != null) 
         {
             UIManager uI = FindObjectOfType<UIManager>();
-            equipment.Unequip(uI.character);
-            iconImage.sprite = null;
-            iconImage.color = Color.clear;
-            currentItem = null;
+            EquipmentItem equipmentItem = inventorySlot.item as EquipmentItem;
+            equipmentItem.Unequip(uI.character);
+            uI.AddItemToInventory(equipmentItem);
+
+            inventorySlot.SetItem(null);
         }
         
     }

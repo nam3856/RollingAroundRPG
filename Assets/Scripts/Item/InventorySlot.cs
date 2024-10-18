@@ -4,12 +4,18 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public enum SlotType
+{
+    Inventory,
+    Equipment
+}
 public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public BaseItem item; // 슬롯에 담긴 아이템
     public Image iconImage; // 슬롯에 표시될 아이콘
     public TMP_Text quantityText;
     private Tooltip tooltip;
+    public SlotType slotType = SlotType.Inventory;
 
     public int quantity = 1;
     private DraggableItem draggableItem;
@@ -40,7 +46,8 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             }
             iconImage.sprite = item.icon;
             iconImage.color = Color.white;
-            quantityText.text = quantity > 1 ? quantity.ToString() : "";
+
+            if(quantityText != null) quantityText.text = quantity > 1 ? quantity.ToString() : "";
         }
         else
         {
@@ -50,7 +57,8 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             }
             iconImage.sprite = null;
             iconImage.color = Color.clear;
-            quantityText.text = "";
+
+            if (quantityText != null) quantityText.text = "";
         }
     }
 
@@ -63,23 +71,34 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
     public void OnPointerClick(PointerEventData eventData)
     {
         if (item == null) return;
-        if (item is ConsumableItem consumable)
+        UIManager uI = FindObjectOfType<UIManager>();
+        if (slotType == SlotType.Inventory)
         {
-            UIManager uI = FindObjectOfType<UIManager>();
-            consumable.Use(uI.character);
-            quantity--;
-            if (quantity <= 0)
+            if (item is ConsumableItem consumable)
             {
-                ClearSlot();
+                consumable.Use(uI.character);
+                quantity--;
+                if (quantity <= 0)
+                {
+                    ClearSlot();
+                }
+                else
+                {
+                    SetItem(item, quantity);
+                }
             }
-            else
+            else if (item is EquipmentItem equip)
             {
-                SetItem(item, quantity);
+                uI.EquipItem(equip);
             }
         }
-        else if(TryGetComponent<DroppableSlot>(out DroppableSlot equipment))
+        else if (slotType == SlotType.Equipment)
         {
-            equipment.UnEquipItem();
+            DroppableSlot equipmentSlot = GetComponent<DroppableSlot>();
+            if (equipmentSlot != null)
+            {
+                equipmentSlot.UnEquipItem();
+            }
         }
         tooltip.HideTooltip();
     }

@@ -478,6 +478,9 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
 
         if (currentHealth >= maxHealth) currentHealth = maxHealth;
         if (currentMP >= maxMP) currentMP = maxMP;
+
+        uiManager.SetHp((int)currentHealth, (int)maxHealth);
+        uiManager.SetMp((int)currentMP, (int)maxMP);
     }
 
     /// <summary>
@@ -523,7 +526,8 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             {
                 RemoveTrait(trait);
             }
-
+            maxHealth = CalculateMaxHealth(level);
+            maxMP = CalculateMaxMP(level);
             attackDamage = basicAttackDamage + additionalAttackDamage;
         }
     }
@@ -547,7 +551,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             audioSource.PlayOneShot(receivedArcaneShieldSound);
             magicAnimator.SetTrigger("Arcane Shield");
         }
-        float armoredDamage = (float)Math.Ceiling(damage - damage * (additionalArmor+armor) * 0.01);
+        float armoredDamage = (float)Math.Ceiling(damage * 1 / (1+ (additionalArmor+armor) * 0.01));
 
         GameObject damageTextInstance = PhotonNetwork.Instantiate("DamageText", canvasTransform.position, Quaternion.identity);
         DamageText damageTextScript = damageTextInstance.GetComponent<DamageText>();

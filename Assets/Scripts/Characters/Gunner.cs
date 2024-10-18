@@ -247,7 +247,7 @@ public class Gunner : Character
     {
         while (!isDead)
         {
-            currentHealth += maxHealth / 400;
+            currentHealth += maxHealth / 400 * healthRecoveryPer;
             if (currentHealth > maxHealth) currentHealth = maxHealth;
 
             HealthImage.fillAmount = currentHealth / maxHealth;
@@ -257,9 +257,6 @@ public class Gunner : Character
                 uiManager.SetHp((int)currentHealth, (int)maxHealth);
                 uiManager.SetMp((int)currentMP, (int)maxMP);
             }
-
-            
-
             await UniTask.Delay(1000);
         }
     }

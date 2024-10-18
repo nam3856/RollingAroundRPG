@@ -11,8 +11,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private RectTransform rectTransform;
     private Vector3 originalPosition;
     private Action<BaseItem, Vector3> onDragEnd;
-
+    private DroppableSlot targetDroppableSlot;
     private GameObject dragImageInstance;
+    public MonoBehaviour originalSlot;
 
     public static bool IsDragging { get; private set; } = false;
 
@@ -31,9 +32,36 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (item == null) return;
         IsDragging = true;
-        originalPosition = rectTransform.position;
+
+        InventorySlot inventorySlot = GetComponentInParent<InventorySlot>();
+        DroppableSlot droppableSlot = GetComponentInParent<DroppableSlot>();
+
+        if (inventorySlot != null && inventorySlot.slotType == SlotType.Inventory)
+        {
+            originalSlot = inventorySlot;
+        }
+        else if (inventorySlot != null && inventorySlot.slotType == SlotType.Equipment)
+        {
+            originalSlot = droppableSlot;
+        }
+        else
+        {
+            Debug.LogError("원래 슬롯을 찾을 수 없습니다.");
+        }
+
         canvasGroup.blocksRaycasts = false; // 드래그 중에 Raycast 차단
         UIManager uIManager = FindObjectOfType<UIManager>();
+
+        // 아이템이 EquipmentItem인지 확인
+        if (item is EquipmentItem equipmentItem && originalSlot == inventorySlot)
+        {
+            // UIManager에서 해당 장비 슬롯을 가져옴
+            targetDroppableSlot = uIManager.GetDroppableSlot(equipmentItem.slot);
+            if (targetDroppableSlot != null && targetDroppableSlot.highlightImage != null)
+            {
+                targetDroppableSlot.highlightImage.gameObject.SetActive(true);
+            }
+        }
         // 드래그 이미지 생성
         if (uIManager.dragImagePrefab != null)
         {
@@ -79,7 +107,12 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             Destroy(dragImageInstance); // 드래그 이미지 삭제
         }
-        Debug.Log("DraggableItem.cs : 이벤트 호출");
+
+        if (targetDroppableSlot != null && targetDroppableSlot.highlightImage != null)
+        {
+            targetDroppableSlot.highlightImage.gameObject.SetActive(false);
+            targetDroppableSlot = null;
+        }
         onDragEnd?.Invoke(item, eventData.position);
     }
 
