@@ -927,21 +927,24 @@ public class UIManager : MonoBehaviour
 
     // 인벤토리에 아이템 추가
 
-    public void AddItemToInventory(BaseItem item)
+    public bool AddItemToInventory(BaseItem item, int quantity = 1)
     {
         foreach (InventorySlot slot in inventorySlots)
         {
             if (slot.item != null && slot.item.id == item.id && item is ConsumableItem)
             {
-                slot.AddQuantity(1);
-                return;
+                slot.AddQuantity(quantity);
+                return true;
             }
             if (slot.item == null)
             {
                 slot.SetItem(item, 1);
-                break;
+                
+                return true;
             }
         }
+        Debug.LogWarning("인벤토리에 자리가 없습니다.");
+        return false;
     }
 
     // 인벤토리에서 아이템 제거

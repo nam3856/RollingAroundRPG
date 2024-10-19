@@ -15,8 +15,8 @@ public class PlayerData
     public int Level;
     public int Experience;
     public List<string> LearnedSkills;
-    public List<string> EquippedItems;
-    public List<string> InventoryItems;
+    public List<int> EquippedItems;
+    public Dictionary<int,int> InventoryItems;
     public List<string> LearnedTraits;
     public Vector3 LastPosition;
     public int currentCMRangeId;
@@ -72,8 +72,8 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                     Level = 1,
                     Experience = 0,
                     LearnedSkills = new List<string>(),
-                    EquippedItems = new List<string>(),
-                    InventoryItems = new List<string>(),
+                    EquippedItems = new List<int>(),
+                    InventoryItems = new Dictionary<int, int>(),
                     LearnedTraits = new List<string>(),
                     LastPosition = transform.position,
                     currentCMRangeId = 0,

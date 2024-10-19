@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -81,7 +82,8 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     protected float attackTime = 0f;
     protected int arcaneShieldStack = 0;
 
-    protected List<EquipmentItem> equipedItems; 
+    protected List<EquipmentItem> equipedItems;
+    protected ItemDatabase itemDatabase;
 
     public UIManager uiManager;
     public PlayerData playerData;
@@ -131,7 +133,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
         AN = GetComponent<Animator>();
         PV = GetComponent<PhotonView>();
         RB = GetComponent<Rigidbody2D>();
-        
+        itemDatabase = Resources.Load<ItemDatabase>("Item/ItemDatabase");
         skillTreeManager = FindObjectOfType<SkillTreeManager>();
         equipedItems = new List<EquipmentItem>();
         
@@ -324,6 +326,32 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
                 Traits.Add(trait);
                 trait.Apply(this);
             }
+
+            foreach(var itemID in playerData.EquippedItems)
+            {
+                var item = itemDatabase.items.Find(item => item.id == itemID);
+                uiManager.AddItemToInventory(item);
+                var equip = item as EquipmentItem;
+                uiManager.EquipItem(equip);
+            }
+
+            foreach(var keyvalue in playerData.InventoryItems)
+            {
+                var item = itemDatabase.items.Find(item => item.id == keyvalue.Key);
+                var quantity = keyvalue.Value;
+
+                if(item is ConsumableItem consumable)
+                {
+                    uiManager.AddItemToInventory(consumable, quantity);
+                }
+                else if(item is EquipmentItem equipment)
+                {
+                    for(int i=0;i<quantity;i++)
+                    {
+                        uiManager.AddItemToInventory(equipment);
+                    }
+                }
+            }
         }
     }
     #endregion
@@ -494,7 +522,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     /// <param name="mpr">마나회복량</param>
     /// <param name="trait">특성</param>
     /// <param name="isApplying">true=착용 false=해제</param>
-    public void ApplyEquipment(float armorBonus, float attackBonus,float hp = 0, float mp = 0, float hpr = 1, float mpr = 1,string traitName = "", bool isApplying = true)
+    public void ApplyEquipment(int id,float armorBonus, float attackBonus,float hp = 0, float mp = 0, float hpr = 1, float mpr = 1,string traitName = "", bool isApplying = true)
     {
         if (isApplying)
         {
@@ -512,6 +540,8 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             maxHealth = CalculateMaxHealth(level);
             maxMP = CalculateMaxMP(level);
             attackDamage = basicAttackDamage + additionalAttackDamage;
+            playerData.EquippedItems.Add(id);
+            SaveSystem.SavePlayerData(playerData);
         }
         else
         {
@@ -529,6 +559,8 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             maxHealth = CalculateMaxHealth(level);
             maxMP = CalculateMaxMP(level);
             attackDamage = basicAttackDamage + additionalAttackDamage;
+            playerData.EquippedItems.Remove(id);
+            SaveSystem.SavePlayerData(playerData);
         }
     }
     #endregion

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public enum SlotType
@@ -36,9 +37,9 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             draggableItem = GetComponent<DraggableItem>();
         }
 
+        UIManager uI = FindObjectOfType<UIManager>();
         if (item != null)
         {
-            UIManager uI = FindObjectOfType<UIManager>();
             tooltip = uI.tooltip;
             if (draggableItem != null)
             {
@@ -46,8 +47,8 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             }
             iconImage.sprite = item.icon;
             iconImage.color = Color.white;
-
-            if(quantityText != null) quantityText.text = quantity > 1 ? quantity.ToString() : "";
+            uI.character.playerData.InventoryItems[item.id] = uI.character.playerData.InventoryItems.TryGetValue(item.id, out int cur) ? cur + 1 : quantity;
+            if (quantityText != null) quantityText.text = quantity > 1 ? quantity.ToString() : "";
         }
         else
         {
@@ -57,15 +58,16 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             }
             iconImage.sprite = null;
             iconImage.color = Color.clear;
-
+            uI.character.playerData.InventoryItems.Remove(item.id);
             if (quantityText != null) quantityText.text = "";
         }
+        SaveSystem.SavePlayerData(uI.character.playerData);
     }
 
     // ½½·Ô ºñ¿ì±â
     public void ClearSlot()
     {
-        SetItem(null);
+        SetItem(null, 0);
     }
 
     public void OnPointerClick(PointerEventData eventData)

@@ -15,10 +15,10 @@ public class EquipmentItem : BaseItem
 
     public void Equip(Character character)
     {
-        character.ApplyEquipment(defenseBonus,attackBonus,hpBonus,mpBonus,hpRecoveryBonus,mpRecoveryBonus,traitName);
+        character.ApplyEquipment(id,defenseBonus,attackBonus,hpBonus,mpBonus,hpRecoveryBonus,mpRecoveryBonus,traitName);
     }
     public void Unequip(Character character)
     {
-        character.ApplyEquipment(defenseBonus, attackBonus, hpBonus, mpBonus, hpRecoveryBonus, mpRecoveryBonus, traitName, false);
+        character.ApplyEquipment(id,defenseBonus, attackBonus, hpBonus, mpBonus, hpRecoveryBonus, mpRecoveryBonus, traitName, false);
     }
 }
