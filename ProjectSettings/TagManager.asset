@@ -8,6 +8,7 @@ TagManager:
   - Obstacle
   - Removable Obstacle
   - Ignore Raycast
+  - Item
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - Player
   - Obstacle
   - Pathfinding Obstacle
-  - 
+  - Item
   - 
   - 
   - 
@@ -51,8 +52,14 @@ TagManager:
   - name: Character
     uniqueID: 631191443
     locked: 0
+  - name: Item
+    uniqueID: 3938918327
+    locked: 0
   - name: Obstacle
     uniqueID: 2749009317
+    locked: 0
+  - name: Monster
+    uniqueID: 4183022107
     locked: 0
   - name: UI
     uniqueID: 259969185
