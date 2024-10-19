@@ -2,6 +2,7 @@ using UnityEngine;
 using Photon.Pun;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Triggers;
 
 public class MonsterAttack : MonoBehaviourPunCallbacks
 {
@@ -10,13 +11,13 @@ public class MonsterAttack : MonoBehaviourPunCallbacks
     private List<PhotonView> playersInRange = new List<PhotonView>();
     private Dictionary<PhotonView, float> lastAttackTimes = new Dictionary<PhotonView, float>();
     private PhotonView PV;
-    MonsterBase health;
+    private MonsterBase health;
     public float attackCooldown = 1.0f;
 
     void Start()
     {
-        PV = GetComponentInParent<PhotonView>();
         health = GetComponentInParent<MonsterBase>();
+        PV = health.GetComponent<PhotonView>();
         PlayerScript.OnPlayerDied += HandlePlayerDied;
     }
     private void OnTriggerEnter2D(Collider2D other)
@@ -49,6 +50,8 @@ public class MonsterAttack : MonoBehaviourPunCallbacks
             if (playerPV != null)
             {
                 playersInRange.Remove(playerPV);
+                if(playersInRange.Count == 0)
+                    health.animator.SetBool("isAttacking", false);
             }
         }
     }
@@ -66,9 +69,11 @@ public class MonsterAttack : MonoBehaviourPunCallbacks
     {
         while (!health.isDead && playersInRange.Contains(playerPV))
         {
+            health.animator.SetBool("isAttacking", true);
             if (Time.time >= lastAttackTimes[playerPV] + attackCooldown)
             {
                 PV.RPC("TriggerAttackAnimation", RpcTarget.All);
+                await UniTask.Delay((int)(attackCooldown) * 200);
 
                 if (playerPV != null && playerPV.Owner != null && playerPV.gameObject != null && playerPV.gameObject.activeInHierarchy)
                 {
@@ -77,7 +82,7 @@ public class MonsterAttack : MonoBehaviourPunCallbacks
                     lastAttackTimes[playerPV] = Time.time;
                 }
 
-                await UniTask.Delay((int)(attackCooldown * 1000));
+                await UniTask.Delay((int)(attackCooldown * 800));
             }
             else
             {

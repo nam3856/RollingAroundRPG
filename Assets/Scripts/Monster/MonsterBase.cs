@@ -14,14 +14,14 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
     [SerializeField] protected float speed;
     [SerializeField] protected float attackCooldown;
     [SerializeField] protected int damage;
-    
+
     protected int currentHealth;
     public bool isDead { get; protected set; } = false;
     protected HashSet<int> attackers = new HashSet<int>();
     protected float lastHitTime = 0;
     protected PhotonView PV;
 
-    protected float nextWaypointDistance = 1f;
+    protected float nextWaypointDistance = 0.2f;
 
 
     #endregion
@@ -36,7 +36,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
     private float lastTargetingTime;
     private Seeker seeker;
     private Rigidbody2D rb;
-    private Animator animator;
+    public Animator animator;
     private Path path;
     private int currentWaypoint = 0;
     private bool reachedEndOfPath = false;
@@ -68,12 +68,12 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
         initialPosition = transform.position;
         PV = GetComponent<PhotonView>();
 
-        if(damageTextPrefab == null)
+        if (damageTextPrefab == null)
         {
             damageTextPrefab = Resources.Load<GameObject>("damageText");
         }
 
-        if(canvasTransform == null)
+        if (canvasTransform == null)
         {
             canvasTransform = GetComponentInChildren<Canvas>().transform;
         }
@@ -107,8 +107,8 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
         }
 
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
-        Vector2 force = direction * speed * Time.deltaTime;
-        rb.AddForce(force, ForceMode2D.Impulse);
+        Vector2 force = direction * speed;// * Time.deltaTime;
+        rb.AddForce(force);//, ForceMode2D.Impulse);
 
         Vector2 currentWaypointPos = path.vectorPath[currentWaypoint];
 
@@ -131,17 +131,8 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
 
         animator.SetFloat("moveX", velocity.x);
         animator.SetFloat("moveY", velocity.y);
-        if (Mathf.Abs(velocity.x) > Mathf.Abs(velocity.y))
-        {
-            if (velocity.x > 0)
-            {
-                GetComponent<SpriteRenderer>().flipX = true;
-            }
-            else
-            {
-                GetComponent<SpriteRenderer>().flipX = false;
-            }
-        }
+
+        GetComponent<SpriteRenderer>().flipX = velocity.x > 0;
     }
 
     #endregion
@@ -149,9 +140,9 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
     #region Combat
 
     [PunRPC]
-    private void TriggerAttackAnimation()
+    protected virtual void TriggerAttackAnimation()
     {
-        GetComponent<Animator>().SetTrigger("attack");
+        animator.SetTrigger("attack");
     }
 
     [PunRPC]
@@ -167,9 +158,10 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
         if (lastHitTime + 0.5f < Time.time)
         {
             GetComponent<Animator>().SetTrigger("hit");
+            lastHitTime = Time.time;
         }
 
-        lastHitTime = Time.time;
+        
         GameObject damageTextInstance = PhotonNetwork.Instantiate("DamageText", canvasTransform.position, Quaternion.identity);
         DamageText damageTextScript = damageTextInstance.GetComponent<DamageText>();
         PhotonView damageTextPV = damageTextInstance.GetComponent<PhotonView>();
@@ -181,8 +173,8 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
         {
             attackers.Add(attackerViewID);
         }
-        
-        
+
+
         if (currentHealth <= 0)//죽을 때
         {
             isDead = true;
@@ -250,7 +242,6 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
         {
             rb.AddForce(knockbackDirection * force, ForceMode2D.Impulse);
         }
-        ForceUpdatePath();
     }
     #endregion
 
@@ -284,6 +275,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
 
         if (target == playerTransform)
         {
+            Debug.Log("Removed Target Player. Setting new target...");
             SetNewTarget();
         }
     }
@@ -304,6 +296,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
 
         if (target == null)
         {
+            Debug.Log("Added new target...");
             SetNewTarget();
         }
     }
@@ -313,7 +306,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
         if (playersInRange.Count > 0)
         {
             target = playersInRange[UnityEngine.Random.Range(0, playersInRange.Count)];
-            
+
             PV.RPC("SetTargetRPC", RpcTarget.AllBuffered, target.GetComponent<PhotonView>().ViewID);
         }
         else
@@ -391,18 +384,21 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
 
     private async UniTaskVoid StartUpdatingPathToInitialPosition()
     {
+        if (isUpdatingPath) return;
         isUpdatingPath = true;
 
-        while (isUpdatingPath && !isDead && PhotonNetwork.IsMasterClient)
+        while (isUpdatingPath && !isDead && PhotonNetwork.IsMasterClient && playersInRange.Count == 0)
         {
+            Debug.Log("Updating Path To Initial Position...");
             float distanceToInitialPosition = Vector2.Distance(rb.position, initialPosition);
 
-            if (distanceToInitialPosition < 0.1f)
+            if (distanceToInitialPosition < 0.3f)
             {
                 isUpdatingPath = false;
                 path = null;
-                rb.velocity = Vector2.zero;
-                rb.angularVelocity = 0f;
+
+                animator.SetFloat("moveX", 0);
+                animator.SetFloat("moveY", 0);
                 return;
             }
 
@@ -411,27 +407,21 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
                 seeker.StartPath(rb.position, initialPosition, OnPathComplete);
             }
 
-            await UniTask.Delay(500); // 0.5초마다 경로 갱신
+            await UniTask.Delay(500); // 0.1초마다 경로 갱신
         }
     }
 
     private async UniTaskVoid StartUpdatingPath()
     {
+        if (isUpdatingPath) return;
         isUpdatingPath = true;
 
-        while (isUpdatingPath && !isDead && target != null && PhotonNetwork.IsMasterClient)
+        while (isUpdatingPath && !isDead && target != null && PhotonNetwork.IsMasterClient && playersInRange.Count > 0)
         {
-            if (target == null || !target.gameObject.activeInHierarchy)
-            {
-                Debug.Log("타겟이 비활성화됨");
-                target = null;
-                path = null;
-                isUpdatingPath = false;
-                return;
-            }
 
             if (Vector2.Distance(target.position, lastTargetPosition) > 0.2f || Time.time - lastTargetingTime > 1f || path == null)
             {
+                Debug.Log($"Updating Path To target Position... {target.position}");
                 if (seeker.IsDone())
                 {
                     seeker.StartPath(rb.position, target.position, OnPathComplete);
@@ -440,24 +430,16 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
                 }
             }
 
-            await UniTask.Delay(500); // 0.5초마다 경로 갱신
+            await UniTask.Delay(500);
         }
     }
 
     private void StopUpdatingPaths()
     {
+        Debug.Log("Stop Updating Paths...");
         isUpdatingPath = false;
     }
 
-    public void ForceUpdatePath()
-    {
-        if (isDead) return;
-        if (seeker.IsDone())
-        {
-            seeker.StartPath(rb.position, target.position, OnPathComplete);
-            lastTargetPosition = target.position;
-        }
-    }
 
     void OnPathComplete(Path p)
     {
@@ -467,7 +449,6 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
             currentWaypoint = 0;
         }
     }
-    
+
     #endregion
 }
-

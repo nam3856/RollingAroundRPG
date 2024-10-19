@@ -122,8 +122,8 @@ GameObject:
   - component: {fileID: 5856181449652476405}
   - component: {fileID: 2302683002018069703}
   - component: {fileID: 6078699674918161088}
-  - component: {fileID: 6531732837724116031}
   - component: {fileID: 4869894069005534690}
+  - component: {fileID: -4263642539435706746}
   - component: {fileID: -6932069512742507686}
   - component: {fileID: 7647938593996368712}
   - component: {fileID: 7857884359855901827}
@@ -272,9 +272,9 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.1
-  m_LinearDrag: 5
-  m_AngularDrag: 5
+  m_Mass: 1
+  m_LinearDrag: 1
+  m_AngularDrag: 1
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -285,32 +285,8 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &6531732837724116031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1738530567831270037}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 1
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 4869894069005534690}
-  - {fileID: 7857884359855901827}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!114 &4869894069005534690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,6 +303,30 @@ MonoBehaviour:
   m_SynchronizeAngularVelocity: 0
   m_TeleportEnabled: 1
   m_TeleportIfDistanceGreaterThan: 3
+--- !u!114 &-4263642539435706746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738530567831270037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 4869894069005534690}
+  - {fileID: 7857884359855901827}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!114 &-6932069512742507686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,11 +341,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 20
   experiencePoints: 1
-  speed: 5
+  speed: 1
   attackCooldown: 1.2
   damage: 10
+  animator: {fileID: 5856181449652476405}
   damageTextPrefab: {fileID: 2881201387083222830, guid: 84275735fafe6b94abddbed0b892d823, type: 3}
-  canvasTransform: {fileID: 0}
+  canvasTransform: {fileID: 801904511827541088}
 --- !u!114 &7647938593996368712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -413,6 +414,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 1
     Name: die
+  - Type: 4
+    SynchronizeType: 0
+    Name: isAttacking
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0

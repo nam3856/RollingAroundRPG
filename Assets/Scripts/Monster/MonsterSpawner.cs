@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class MonsterSpawner : MonoBehaviourPunCallbacks
 {
     public GameObject monsterPrefab; // 스폰할 몬스터 프리팹
-    public int maxMonsters = 5;      // 최대 몬스터 수
+    public int maxMonsters = 1;      // 최대 몬스터 수
     public float spawnInterval = 5f; // 몬스터 스폰 간격
 
     private Collider2D spawnArea;    // 스폰 구역
