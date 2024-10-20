@@ -1,5 +1,6 @@
 using Cinemachine;
 using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
 using Photon.Pun;
 using System;
 using System.Collections.Generic;
@@ -10,19 +11,53 @@ using UnityEngine.UI;
 [Serializable]
 public class PlayerData
 {
+    public int version = 1;
+
     public string NickName;
     public int CharacterClassIndex;
     public int Level;
     public int Experience;
     public List<string> LearnedSkills;
-    public List<int> EquippedItems;
-    public Dictionary<int,int> InventoryItems;
+
+    public List<ItemInstanceData> InventoryItemsData = new List<ItemInstanceData>();
+    public List<ItemInstanceData> EquippedItemsData = new List<ItemInstanceData>();
+    [JsonIgnore]
+    public List<ItemInstance> InventoryItems =new List<ItemInstance>();
+    [JsonIgnore]
+    public List<ItemInstance> EquippedItems = new List<ItemInstance>();
+
     public List<string> LearnedTraits;
-    public Vector3 LastPosition;
+    public SerializableVector3 LastPosition;
     public int currentCMRangeId;
     public int SkillPoint;
     public int TraitPoint;
 }
+[System.Serializable]
+public struct SerializableVector3
+{
+    public float x, y, z;
+
+    public SerializableVector3(float rX, float rY, float rZ)
+    {
+        x = rX;
+        y = rY;
+        z = rZ;
+    }
+
+    public SerializableVector3(Vector3 vector)
+    {
+        x = vector.x;
+        y = vector.y;
+        z = vector.z;
+    }
+
+    public Vector3 ToVector3()
+    {
+        return new Vector3(x, y, z);
+    }
+}
+
+
 public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
     public DebugLogger logger;
@@ -72,14 +107,14 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
                     Level = 1,
                     Experience = 0,
                     LearnedSkills = new List<string>(),
-                    EquippedItems = new List<int>(),
-                    InventoryItems = new Dictionary<int, int>(),
+                    EquippedItems = new List<ItemInstance>(),
+                    InventoryItems = new List<ItemInstance>(),
                     LearnedTraits = new List<string>(),
-                    LastPosition = transform.position,
+                    LastPosition = new SerializableVector3(transform.position),
                     currentCMRangeId = 0,
                     SkillPoint = 0,
                     TraitPoint = 0
-};
+                };
                 SaveSystem.SavePlayerData(playerData);
             }
         }
@@ -192,7 +227,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
         if (PV.IsMine)
         {
             playerData.NickName = NickNameText.text;
-            playerData.LastPosition = transform.position;
+            playerData.LastPosition = new SerializableVector3(transform.position);
             playerData.Experience = character.experience;
             SaveSystem.SavePlayerData(playerData);
         }
@@ -278,7 +313,7 @@ public class PlayerScript : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallb
             {
                 confinerComponent.m_BoundingShape2D = confiner;
                 playerData.currentCMRangeId = confinerID;
-                playerData.LastPosition = destination;
+                playerData.LastPosition = new SerializableVector3(destination);
                 SaveSystem.SavePlayerData(playerData);
             }
             else

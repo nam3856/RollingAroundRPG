@@ -75,7 +75,7 @@ public class MyNetworkManager : MonoBehaviourPunCallbacks
         if (SaveSystem.PlayerDataExists())
         {
             PlayerData data = SaveSystem.LoadPlayerData();
-            spawnPosition = data.LastPosition;
+            spawnPosition = data.LastPosition.ToVector3();
             PolygonCollider2D confiner = PlayerScript.FindConfinerByID(data.currentCMRangeId);
             if (confiner != null)
             {

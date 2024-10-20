@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 511e2cc7d8fcb33498622454ef2c7575, type: 3}
   m_Name: HealthPotion
   m_EditorClassIdentifier: 
-  itemName: aa
+  itemName: "\uCCB4\uB825 \uD3EC\uC158"
   itemDescription: "\uAC04\uB2E8\uD788 \uB9CC\uB4E4\uC5B4\uC9C4 \uD3EC\uC158\uC785\uB2C8\uB2E4."
   icon: {fileID: 21300000, guid: 6073d3ae04138cf43a4297b8fdbd3482, type: 3}
   id: 4
+  dropChance: 0.5
   isHealth: 1
   restoreAmount: 50

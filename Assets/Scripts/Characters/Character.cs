@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -104,15 +103,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     public virtual void Start()
     {
         InitializeCharacter();
-        if (PV.IsMine)
-        {
-            InitializeLocalPlayer();
-        }
-        else
-        {
-            //InitializeRemotePlayer();
-        }
-
+        StartCoroutine(InitializeAfterUIManager());
     }
 
     public virtual void OnDestroy()
@@ -123,6 +114,22 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     #endregion
 
     #region Initialization
+
+    private IEnumerator InitializeAfterUIManager()
+    {
+        while (uiManager == null || !uiManager.IsInitialized)
+        {
+            yield return null;
+        }
+
+        if (PV.IsMine)
+        {
+            InitializeLocalPlayer();
+        }
+        else
+        {
+        }
+    }
 
     /// <summary>
     /// 캐릭터의 기본 설정을 초기화합니다.
@@ -280,7 +287,6 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             maxMP = CalculateMaxMP(level);
             currentHealth = maxHealth;
             currentMP = maxMP;
-
             uiManager.SetHp((int)currentHealth, (int)maxHealth);
             uiManager.SetMp((int)currentMP, (int)maxMP);
 
@@ -308,7 +314,6 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
                 uiManager.SetExp(0, 1);
             }
 
-            // 장착 아이템 및 인벤토리 적용 (추가 구현 필요)
         }
     }
 
@@ -319,6 +324,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (playerData != null)
         {
+            // Trait 로드
             foreach (var traitName in playerData.LearnedTraits)
             {
                 var trait = traitManager.SearchTraitByName(traitName);
@@ -327,33 +333,52 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
                 trait.Apply(this);
             }
 
-            foreach(var itemID in playerData.EquippedItems)
+            // 장착된 아이템 로드
+            playerData.EquippedItems = new List<ItemInstance>(); // 초기화
+            foreach (var itemInstanceData in playerData.EquippedItemsData)
             {
-                var item = itemDatabase.items.Find(item => item.id == itemID);
-                uiManager.AddItemToInventory(item);
-                var equip = item as EquipmentItem;
-                uiManager.EquipItem(equip);
+                var baseItem = itemDatabase.items.Find(item => item.id == itemInstanceData.baseItemId);
+                if (baseItem != null)
+                {
+                    // ItemInstance 복원
+                    ItemInstance itemInstance = new ItemInstance(baseItem)
+                    {
+                        instanceId = itemInstanceData.instanceId,
+                        quantity = itemInstanceData.quantity
+                    };
+                    playerData.EquippedItems.Add(itemInstance); // 복원된 ItemInstance를 리스트에 추가
+                    uiManager.EquipItem(itemInstance, isLoading: true);
+                }
+                else
+                {
+                    Debug.LogWarning($"장착된 아이템을 찾을 수 없습니다. ID: {itemInstanceData.baseItemId}");
+                }
             }
 
-            foreach(var keyvalue in playerData.InventoryItems)
+            // 인벤토리 아이템 로드
+            playerData.InventoryItems = new List<ItemInstance>(); // 초기화
+            foreach (var itemInstanceData in playerData.InventoryItemsData)
             {
-                var item = itemDatabase.items.Find(item => item.id == keyvalue.Key);
-                var quantity = keyvalue.Value;
-
-                if(item is ConsumableItem consumable)
+                var baseItem = itemDatabase.items.Find(item => item.id == itemInstanceData.baseItemId);
+                if (baseItem != null)
                 {
-                    uiManager.AddItemToInventory(consumable, quantity);
-                }
-                else if(item is EquipmentItem equipment)
-                {
-                    for(int i=0;i<quantity;i++)
+                    // ItemInstance 복원
+                    ItemInstance itemInstance = new ItemInstance(baseItem, itemInstanceData.quantity)
                     {
-                        uiManager.AddItemToInventory(equipment);
-                    }
+                        instanceId = itemInstanceData.instanceId
+                    };
+                    playerData.InventoryItems.Add(itemInstance); // 복원된 ItemInstance를 리스트에 추가
+                    uiManager.AddItemToInventory(itemInstance, isLoading: true);
+                }
+                else
+                {
+                    Debug.LogWarning($"인벤토리 아이템을 찾을 수 없습니다. ID: {itemInstanceData.baseItemId}");
                 }
             }
         }
     }
+
+
     #endregion
 
     #region Photon Callbacks
@@ -499,6 +524,25 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     #endregion
 
     #region Item Handling
+
+    public bool TryGetItem(ItemInstance itemInstance)
+    {
+        if (uiManager.AddItemToInventory(itemInstance)) return true;
+        return false;
+    }
+    [PunRPC]
+    public void GetItem(int baseItemId, string instanceId)
+    {
+        var baseItem = itemDatabase.items.Find(item => item.id == baseItemId);
+        if (baseItem != null)
+        {
+            ItemInstance itemInstance = new ItemInstance(baseItem)
+            {
+                instanceId = instanceId
+            };
+            uiManager.AddItemToInventory(itemInstance);
+        }
+    }
     public virtual void Restore(bool isHealth, float amount)
     {
         if (isHealth) currentHealth += amount;
@@ -540,8 +584,6 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             maxHealth = CalculateMaxHealth(level);
             maxMP = CalculateMaxMP(level);
             attackDamage = basicAttackDamage + additionalAttackDamage;
-            playerData.EquippedItems.Add(id);
-            SaveSystem.SavePlayerData(playerData);
         }
         else
         {
@@ -559,8 +601,6 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             maxHealth = CalculateMaxHealth(level);
             maxMP = CalculateMaxMP(level);
             attackDamage = basicAttackDamage + additionalAttackDamage;
-            playerData.EquippedItems.Remove(id);
-            SaveSystem.SavePlayerData(playerData);
         }
     }
     #endregion
@@ -674,7 +714,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
             // 데이터 저장
             playerData.Level = level;
             playerData.Experience = experience;
-            playerData.LastPosition = transform.position;
+            playerData.LastPosition = new SerializableVector3(transform.position);
             playerData.SkillPoint = skillTreeManager.PlayerSkillPoints;
             playerData.TraitPoint = traitPoints;
 

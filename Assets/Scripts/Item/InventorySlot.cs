@@ -12,13 +12,14 @@ public enum SlotType
 }
 public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public BaseItem item; // 슬롯에 담긴 아이템
-    public Image iconImage; // 슬롯에 표시될 아이콘
+    public BaseItem item;
+    public Image iconImage;
     public TMP_Text quantityText;
-    private Tooltip tooltip;
     public SlotType slotType = SlotType.Inventory;
-
+    public ItemInstance itemInstance;
     public int quantity = 1;
+
+    private Tooltip tooltip;
     private DraggableItem draggableItem;
 
     private void Awake()
@@ -26,72 +27,81 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         draggableItem = GetComponent<DraggableItem>();
     }
 
-    // 슬롯에 아이템을 설정하는 메서드
-    public void SetItem(BaseItem newItem, int newQuantity = 1)
+    public void SetItemInstance(ItemInstance newItemInstance)
     {
-        item = newItem;
-        quantity = newQuantity;
+        itemInstance = newItemInstance;
+
+        UIManager uI = FindObjectOfType<UIManager>();
 
         if (draggableItem == null)
         {
             draggableItem = GetComponent<DraggableItem>();
         }
 
-        UIManager uI = FindObjectOfType<UIManager>();
-        if (item != null)
+        draggableItem.itemInstance = newItemInstance;
+
+        if (itemInstance != null)
         {
             tooltip = uI.tooltip;
-            if (draggableItem != null)
-            {
-                draggableItem.item = newItem;
-            }
-            iconImage.sprite = item.icon;
+            iconImage.sprite = itemInstance.baseItem.icon;
             iconImage.color = Color.white;
-            uI.character.playerData.InventoryItems[item.id] = uI.character.playerData.InventoryItems.TryGetValue(item.id, out int cur) ? cur + 1 : quantity;
-            if (quantityText != null) quantityText.text = quantity > 1 ? quantity.ToString() : "";
+            UpdateQuantityText();
         }
         else
         {
-            if (draggableItem != null)
-            {
-                draggableItem.item = null;
-            }
             iconImage.sprite = null;
             iconImage.color = Color.clear;
-            uI.character.playerData.InventoryItems.Remove(item.id);
-            if (quantityText != null) quantityText.text = "";
+            UpdateQuantityText();
         }
-        SaveSystem.SavePlayerData(uI.character.playerData);
+    }
+    public void UpdateQuantityText()
+    {
+        if (slotType == SlotType.Equipment) return;
+        if (itemInstance == null) return;
+        if (itemInstance.baseItem == null)
+        {
+            quantityText.text = "";
+        }
+        else if (itemInstance.baseItem is ConsumableItem)
+        {
+            quantityText.text = itemInstance.quantity > 1 ? itemInstance.quantity.ToString() : "";
+        }
+        else
+        {
+            quantityText.text = "";
+        }
     }
 
     // 슬롯 비우기
     public void ClearSlot()
     {
-        SetItem(null, 0);
+        SetItemInstance(null);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (item == null) return;
+        if (itemInstance == null) return;
         UIManager uI = FindObjectOfType<UIManager>();
         if (slotType == SlotType.Inventory)
         {
-            if (item is ConsumableItem consumable)
+            if (itemInstance.baseItem is ConsumableItem consumable)
             {
                 consumable.Use(uI.character);
-                quantity--;
-                if (quantity <= 0)
+                itemInstance.quantity--;
+                if (itemInstance.quantity <= 0)
                 {
+                    uI.RemoveItemFromInventory(itemInstance);
                     ClearSlot();
                 }
                 else
                 {
-                    SetItem(item, quantity);
+                    UpdateQuantityText();
+                    SaveSystem.SavePlayerData(uI.character.playerData);
                 }
             }
-            else if (item is EquipmentItem equip)
+            else if (itemInstance.baseItem is EquipmentItem)
             {
-                uI.EquipItem(equip);
+                uI.EquipItem(itemInstance);
             }
         }
         else if (slotType == SlotType.Equipment)
@@ -99,39 +109,40 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             DroppableSlot equipmentSlot = GetComponent<DroppableSlot>();
             if (equipmentSlot != null)
             {
-                equipmentSlot.UnEquipItem();
+                uI.UnEquipItem(equipmentSlot);
             }
         }
         tooltip.HideTooltip();
     }
-
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (item != null && tooltip != null)
+        if (itemInstance != null && tooltip != null)
         {
-            string title = item.itemName;
-            string description = item.itemDescription + "\n";
+            BaseItem baseItem = itemInstance.baseItem;
+            string title = baseItem.itemName;
+            string description = baseItem.itemDescription + "\n";
 
-            if (item is ConsumableItem consumable)
+            if (baseItem is ConsumableItem consumable)
             {
                 if (consumable.isHealth) description += "HP";
                 else description += "MP";
                 description += $" 회복량: {consumable.restoreAmount}";
             }
-            else if (item is EquipmentItem equipment)
+            else if (baseItem is EquipmentItem equipment)
             {
                 description += equipment.attackBonus > 0 ? $"공격력 증가: {equipment.attackBonus}\n" : "";
                 description += equipment.defenseBonus > 0 ? $"방어력 증가: {equipment.defenseBonus}\n" : "";
                 description += equipment.hpBonus > 0 ? $"최대 체력 증가: {equipment.hpBonus}\n" : "";
                 description += equipment.mpBonus > 0 ? $"최대 마나 증가: {equipment.mpBonus}\n" : "";
-                description += equipment.hpRecoveryBonus > 1 ? $"체력 회복량 증가: {equipment.hpRecoveryBonus*100}%\n" : "";
+                description += equipment.hpRecoveryBonus > 1 ? $"체력 회복량 증가: {equipment.hpRecoveryBonus * 100}%\n" : "";
                 description += equipment.mpRecoveryBonus > 1 ? $"마나 회복량 증가: {equipment.mpRecoveryBonus * 100}%\n" : "";
-                description += equipment.traitName !="" ? $"(고유) {equipment.traitName}" : "";
+                description += !string.IsNullOrEmpty(equipment.traitName) ? $"(고유) {equipment.traitName}" : "";
             }
 
             tooltip.ShowTooltip(title, description);
         }
     }
+
 
     // 마우스 호버 종료 시 툴팁 숨기기
     public void OnPointerExit(PointerEventData eventData)
@@ -143,8 +154,8 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
     }
     public void AddQuantity(int amount)
     {
-        quantity += amount;
-        SetItem(item, quantity);
+        itemInstance.quantity += amount;
+        quantityText.text = itemInstance.quantity > 1 ? itemInstance.quantity.ToString() : "";
     }
 
 }

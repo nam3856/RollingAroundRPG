@@ -16,6 +16,7 @@ MonoBehaviour:
   itemDescription: "\uC774\uAC8C \uBB34\uAE30\uB0D0?"
   icon: {fileID: 21300000, guid: 95af913ad30be9c4c943e3cd1bb65be6, type: 3}
   id: 6
+  dropChance: 1
   slot: 3
   attackBonus: 1
   defenseBonus: 0

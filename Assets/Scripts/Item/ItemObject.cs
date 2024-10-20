@@ -1,58 +1,135 @@
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemObject : MonoBehaviour
 {
-    private BaseItem BaseItem;
-    public Sprite itemSprite;
+    private ItemInstance itemInstance;
+    public SpriteRenderer itemSprite;
     public Rigidbody2D Rigidbody2D;
     public CircleCollider2D CircleCollider2D;
     public PhotonView PhotonView;
     private bool IsSet = false;
     private Vector2 dir;
+    [SerializeField]
     private int owner;
+    public PhotonView targetPhotonView;
 
-    private void Start()
-    {
-        if (PhotonView == null) PhotonView = GetComponent<PhotonView>();
-        if (itemSprite == null) itemSprite = GetComponent<Sprite>();
-        if (Rigidbody2D == null) Rigidbody2D = GetComponent<Rigidbody2D>();
-        if (CircleCollider2D == null) CircleCollider2D = GetComponent<CircleCollider2D>();
-    }
-    private void OnEnable()
-    {
-        
-    }
 
     private async UniTaskVoid DropItem()
     {
         while(IsSet) await UniTask.Yield();
+        await UniTask.Delay(TimeSpan.FromSeconds(1));
+        gameObject.SetActive(true);
         CircleCollider2D.enabled = true;
         await UniTask.Delay(TimeSpan.FromSeconds(30));
         owner = -1;
         await UniTask.Delay(TimeSpan.FromSeconds(30));
-        
-        //이 다음 풀로 반환
+
+        PhotonView.RPC("DestroyItem", RpcTarget.AllBuffered);
     }
 
-    [PunRPC]
-    private void SetItem(BaseItem baseItem, Vector2 vector2, int owner = -1)
+    public void SetItem(ItemInstance itemInstance, Vector2 vector2, int owner = -1)
     {
-        itemSprite = baseItem.icon;
-        BaseItem = baseItem;
-        dir = vector2 * 0.1f;
+        if (PhotonView == null) PhotonView = GetComponent<PhotonView>();
+        if (itemSprite == null) itemSprite = GetComponent<SpriteRenderer>();
+        if (Rigidbody2D == null) Rigidbody2D = GetComponent<Rigidbody2D>();
+        if (CircleCollider2D == null) CircleCollider2D = Rigidbody2D.GetComponent<CircleCollider2D>();
+        Color color = itemSprite.color;
+        color.a = 1f;
+        itemSprite.color = color;
+
+        itemSprite.sprite = itemInstance.baseItem.icon;
+        this.itemInstance = itemInstance;
+
+        dir = vector2 * 1f;
         Rigidbody2D.AddForce(dir);
+        this.owner = owner;
         IsSet = true;
     }
 
-    //circleCollider2d stay인가 뭐시기로 들어와 있는 사람의 viewID가 owner면 아이템 먹어지게
-    //owner가 -1이면 그냥 아무나 먹어지게
 
-    //먹어지는로직 : 아이템 추가 시도, 성공시 오브젝트 풀로 반환
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        targetPhotonView = col.GetComponent<PhotonView>();
+        if (col.CompareTag("Player"))
+        {
+            if (targetPhotonView != null)
+            {
+                if (IsSet && (owner == -1 || owner == targetPhotonView.OwnerActorNr))
+                {
+                    IsSet = false;
+                    if (targetPhotonView.IsMine)
+                    {
+                        MoveTowardsPlayerAsync(targetPhotonView.transform).Forget();
+                        Character character = targetPhotonView.GetComponent<Character>();
+                        if (character != null && character.TryGetItem(itemInstance))
+                        {
+                            // 다른 플레이어들에게 아이템 획득을 알림
+                            targetPhotonView.RPC("GetItem", RpcTarget.Others, itemInstance.baseItem.id, itemInstance.instanceId);
+                        }
+                        else
+                        {
+                            IsSet = true;
+                            return;
+                        }
+                    }
+                    dir = (targetPhotonView.transform.position - transform.position).normalized * 0.1f;
+                    PhotonView.RPC("DestroyItem", RpcTarget.AllBuffered);
+                }
+            }
+        }
+    }
 
-    //풀로 반환할때
+
+    private async UniTaskVoid MoveTowardsPlayerAsync(Transform playerTransform)
+    {
+        float moveDuration = 1.0f;  // 아이템이 이동할 시간 (초)
+        float elapsedTime = 0f;
+
+        Vector2 startPosition = transform.position;
+        Vector2 targetPosition = playerTransform.position;
+
+        Vector2 dir = (targetPosition - startPosition).normalized * 2f;
+        // 지정된 시간 동안 이동
+        while (elapsedTime < moveDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / moveDuration;
+
+            Rigidbody2D.AddForce(dir * Time.deltaTime, ForceMode2D.Impulse);
+
+            await UniTask.Yield();  // 다음 프레임으로 넘어가기
+        }
+
+    }
+
+    [PunRPC]
+    private async UniTask DestroyItem()
+    {
+        IsSet = false;
+        CircleCollider2D.enabled = false;
+        itemInstance = null;
+        float elapsedTime = 0f;
+        float fadedTime = 0.7f;
+        while (elapsedTime < fadedTime)
+        {
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadedTime);
+            Color color = itemSprite.color;
+            color.a = alpha;
+            itemSprite.color = color;
+
+            elapsedTime += Time.deltaTime;
+            await UniTask.Yield();
+        }
+        dir = Vector2.zero;
+        itemSprite = null;
+
+        gameObject.SetActive(false);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
+    }
 }

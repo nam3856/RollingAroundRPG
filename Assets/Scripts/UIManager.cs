@@ -66,6 +66,8 @@ public class UIManager : MonoBehaviour
     public Transform equipmentPanel;
     public GameObject equipmentSlotPrefab;
 
+    public bool IsInitialized { get; private set; } = false;
+
 
     #endregion
 
@@ -126,7 +128,7 @@ public class UIManager : MonoBehaviour
         InitializeInventory();
         InitializeEquipmentSlots();
 
-        
+        IsInitialized = true;
     }
 
     private void Update()
@@ -175,7 +177,7 @@ public class UIManager : MonoBehaviour
             if (slot != null)
             {
                 inventorySlots.Add(slot);
-                slot.SetItem(null);
+                slot.SetItemInstance(null);
                 // DraggableItem 설정
                 DraggableItem draggable = slotObj.GetComponent<DraggableItem>();
                 if (draggable != null)
@@ -193,21 +195,7 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        BaseItem testItem = Resources.Load<BaseItem>("Item/HealthPotion");
-        BaseItem mana = Resources.Load<BaseItem>("Item/ManaPotion");
-        for (int i = 0; i < 20; i++)
-        {
-            AddItemToInventory(testItem);
-            AddItemToInventory(mana);
-        }
-        BaseItem testItem2 = Resources.Load<BaseItem>("Item/3LevelDduk");
-        AddItemToInventory(testItem2);
-        BaseItem testItem3 = Resources.Load<BaseItem>("Item/CrazyWeapon");
-        AddItemToInventory(testItem3);
-        BaseItem testItem4 = Resources.Load<BaseItem>("Item/1LevelDduk");
-        AddItemToInventory(testItem4);
-        BaseItem testItem5 = Resources.Load<BaseItem>("Item/basicWeapon");
-        AddItemToInventory(testItem5);
+        
     }
 
     private void InitializeEquipmentSlots()
@@ -819,16 +807,15 @@ public class UIManager : MonoBehaviour
 
     #region Drag and Drop Handling
 
-    private void OnInventoryItemDragEnd(BaseItem item, Vector3 dropPosition)
+    private void OnInventoryItemDragEnd(ItemInstance itemInstance, Vector3 dropPosition)
     {
-        DraggableItem draggable = GetDraggableItemFromItem(item);
-
+        DraggableItem draggable = GetDraggableItemFromItem(itemInstance);
+        var original = draggable.originalSlot;
         PointerEventData pointerData = new PointerEventData(EventSystem.current)
         {
             position = dropPosition,
-            pointerDrag = draggable != null ? draggable.gameObject : null // pointerDrag 설정
+            pointerDrag = draggable != null ? draggable.gameObject : null
         };
-
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerData, results);
 
@@ -847,34 +834,36 @@ public class UIManager : MonoBehaviour
             if (inventorySlot != null)
             {
                 // 드래그한 아이템의 원래 슬롯이 장비 슬롯인지 확인
-                if (draggable.originalSlot is DroppableSlot equipmentSlot)
+                if (original is DroppableSlot equipmentSlot)
                 {
                     // 인벤토리 슬롯의 아이템이 같은 부위의 장비 아이템인지 확인
-                    if (inventorySlot.item is EquipmentItem targetEquipment && targetEquipment.slot == equipmentSlot.itemSlotType)
+                    if (inventorySlot.itemInstance != null &&
+                        inventorySlot.itemInstance.baseItem is EquipmentItem targetEquipment &&
+                        targetEquipment.slot == equipmentSlot.itemSlotType)
                     {
-                        EquipItem(targetEquipment);
+                        EquipItem(inventorySlot.itemInstance);
                     }
                     else
                     {
-                        equipmentSlot.UnEquipItem();
+                        UnEquipItem(equipmentSlot);
                     }
                     return;
                 }
-                else if (draggable.originalSlot is InventorySlot sourceInventorySlot)
+                else if (original is InventorySlot sourceInventorySlot)
                 {
                     SwapItems(sourceInventorySlot, inventorySlot);
                     return;
                 }
             }
-
         }
     }
 
-    private DraggableItem GetDraggableItemFromItem(BaseItem item)
+    private DraggableItem GetDraggableItemFromItem(ItemInstance itemInstance)
     {
+        if(itemInstance == null) return null;
         foreach (InventorySlot slot in inventorySlots)
         {
-            if (slot.item == item)
+            if (slot.itemInstance != null && slot.itemInstance.instanceId == itemInstance.instanceId)
             {
                 return slot.GetComponent<DraggableItem>();
             }
@@ -882,7 +871,7 @@ public class UIManager : MonoBehaviour
 
         foreach (var slotUI in equipmentSlots.Values)
         {
-            if (slotUI.inventorySlot.item == item)
+            if (slotUI.inventorySlot.itemInstance != null && slotUI.inventorySlot.itemInstance.instanceId == itemInstance.instanceId)
             {
                 return slotUI.inventorySlot.GetComponent<DraggableItem>();
             }
@@ -913,13 +902,17 @@ public class UIManager : MonoBehaviour
 
     private void SwapItems(InventorySlot fromSlot, InventorySlot toSlot)
     {
-        BaseItem tempItem = toSlot.item;
-        int tempQuantity = toSlot.quantity;
+        if (fromSlot == toSlot)
+            return;
+        // 두 슬롯의 아이템 인스턴스를 교환
+        ItemInstance tempItemInstance = toSlot.itemInstance;
 
-        toSlot.SetItem(fromSlot.item, fromSlot.quantity);
-        fromSlot.SetItem(tempItem, tempQuantity);
-        Debug.Log($"아이템 교환: {fromSlot.item?.itemName} <-> {toSlot.item?.itemName}");
+        toSlot.SetItemInstance(fromSlot.itemInstance);
+        fromSlot.SetItemInstance(tempItemInstance);
+
+        Debug.Log($"아이템 교환: {fromSlot.itemInstance?.baseItem.itemName} <-> {toSlot.itemInstance?.baseItem.itemName}");
     }
+
 
     #endregion
 
@@ -927,36 +920,85 @@ public class UIManager : MonoBehaviour
 
     // 인벤토리에 아이템 추가
 
-    public bool AddItemToInventory(BaseItem item, int quantity = 1)
+    public bool AddItemToInventory(ItemInstance itemInstance, bool isLoading = false)
     {
+
+        if (character == null)
+        {
+            Debug.LogError("character가 null입니다.");
+        }
+        if (character.playerData == null)
+        {
+            Debug.LogError("character.playerData가 null입니다.");
+        }
+        if (character.playerData.InventoryItems == null)
+        {
+            Debug.LogError("character.playerData.InventoryItems가 null입니다.");
+        }
+        if (itemInstance == null)
+        {
+            Debug.LogError("itemInstance 가 null입니다.");
+        }
+        if (itemInstance.baseItem == null)
+        {
+            Debug.LogError("baseItem 이 null입니다.");
+        }
+        BaseItem baseItem = itemInstance.baseItem;
+        
+
+        // 소비 아이템의 경우 수량을 합칠 수 있음
+        if (baseItem is ConsumableItem)
+        {
+            // 동일한 아이템이 이미 있는지 확인
+            foreach (InventorySlot slot in inventorySlots)
+            {
+                if (slot.itemInstance != null && slot.itemInstance.baseItem == baseItem)
+                {
+                    slot.itemInstance.quantity += itemInstance.quantity;
+                    slot.UpdateQuantityText();
+                    if (!isLoading)
+                    {
+                        SaveSystem.SavePlayerData(character.playerData);
+                    }
+                    return true;
+                }
+            }
+        }
+
+        // 빈 슬롯에 추가
         foreach (InventorySlot slot in inventorySlots)
         {
-            if (slot.item != null && slot.item.id == item.id && item is ConsumableItem)
+            if (slot.itemInstance == null)
             {
-                slot.AddQuantity(quantity);
-                return true;
-            }
-            if (slot.item == null)
-            {
-                slot.SetItem(item, 1);
-                
+                slot.SetItemInstance(itemInstance);
+                character.playerData.InventoryItems.Add(itemInstance);
+                if (!isLoading)
+                {
+                    SaveSystem.SavePlayerData(character.playerData);
+                }
                 return true;
             }
         }
-        Debug.LogWarning("인벤토리에 자리가 없습니다.");
-        return false;
+        return false; // 인벤토리에 빈 슬롯이 없을 경우
     }
 
     // 인벤토리에서 아이템 제거
-    public void RemoveItemFromInventory(BaseItem item)
+    public void RemoveItemFromInventory(ItemInstance itemInstance, bool isLoading = false)
     {
+        bool res = false;
         foreach (InventorySlot slot in inventorySlots)
         {
-            if (slot.item == item)
+            if (slot.itemInstance != null && slot.itemInstance.instanceId == itemInstance.instanceId)
             {
                 slot.ClearSlot();
+                res = true;
                 break;
             }
+        }
+        if (res && !isLoading)
+        {
+            character.playerData.InventoryItems.RemoveAll(i => i.instanceId == itemInstance.instanceId);
+            SaveSystem.SavePlayerData(character.playerData);
         }
     }
 
@@ -964,36 +1006,58 @@ public class UIManager : MonoBehaviour
 
     #region Equipment Management
 
-    // 장비 슬롯에 아이템 장착
-    public void EquipItem(EquipmentItem equipment)
+    public void EquipItem(ItemInstance itemInstance, bool isLoading = false)
     {
+        EquipmentItem equipment = itemInstance.baseItem as EquipmentItem;
+        if (equipment == null) return;
+
         if (equipmentSlots.TryGetValue(equipment.slot, out DroppableSlot slotUI))
         {
             InventorySlot slot = slotUI.inventorySlot;
 
-            // 기존 장비 아이템이 있다면 인벤토리로 반환
-            if (slot.item != null)
+            // 기존 장비 아이템이 있다면 장비 해제
+            if(slot.itemInstance != null)
             {
-                EquipmentItem a = slot.item as EquipmentItem;
-                a.Unequip(character);
-                AddItemToInventory(slot.item);
+                if (slot.itemInstance.baseItem != null)
+                {
+                    UnEquipItem(slotUI, isLoading);
+                }
             }
+           
 
             equipment.Equip(character);
-            slot.SetItem(equipment);
+            slot.SetItemInstance(itemInstance);
 
             // 인벤토리에서 아이템 제거
-            RemoveItemFromInventory(equipment);
+            RemoveItemFromInventory(itemInstance, isLoading);
 
-            Debug.Log($"장비 아이템 장착: {equipment.itemName}");
+            if (!isLoading)
+            {
+                character.playerData.EquippedItems.Add(itemInstance);
+                SaveSystem.SavePlayerData(character.playerData);
+            }
         }
         else
         {
             Debug.LogError($"해당 장비 슬롯을 찾을 수 없습니다: {equipment.slot}");
         }
     }
+    public void UnEquipItem(DroppableSlot equipmentSlot, bool isLoading = false)
+    {
+        if (equipmentSlot.inventorySlot.itemInstance != null)
+        {
+            ItemInstance itemInstance = equipmentSlot.inventorySlot.itemInstance;
+            EquipmentItem equipmentItem = itemInstance.baseItem as EquipmentItem;
+            equipmentItem.Unequip(character);
+            AddItemToInventory(itemInstance, isLoading: isLoading);
+            equipmentSlot.inventorySlot.SetItemInstance(null);
 
-
-
+            if (!isLoading)
+            {
+                character.playerData.EquippedItems.RemoveAll(i => i.instanceId == itemInstance.instanceId);
+                SaveSystem.SavePlayerData(character.playerData);
+            }
+        }
+    }
     #endregion
 }

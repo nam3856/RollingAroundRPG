@@ -1,8 +1,8 @@
 using Cysharp.Threading.Tasks;
 using Pathfinding;
 using Photon.Pun;
-using System;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public abstract class MonsterBase : MonoBehaviourPunCallbacks
@@ -22,6 +22,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
     protected PhotonView PV;
 
     protected float nextWaypointDistance = 0.2f;
+    protected 
 
 
     #endregion
@@ -46,6 +47,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
     #region References
     public GameObject damageTextPrefab;
     public Transform canvasTransform;
+    public List<BaseItem> dropItems;
 
     #endregion
 
@@ -184,6 +186,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
             if (PhotonNetwork.IsMasterClient)
             {
                 GiveExperienceToAttackers();
+                DropLoot();
             }
         }
         else
@@ -194,6 +197,41 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
             }
         }
     }
+    void DropLoot()
+    {
+        foreach (BaseItem dropItem in dropItems)
+        {
+            float randomAngle = UnityEngine.Random.Range(-180, 180);
+            float randomValue = UnityEngine.Random.Range(0f, 1f);
+            int owner = UnityEngine.Random.Range(1, attackers.Count);
+            Vector2 randomDirection = RotateVector(Vector2.up, randomAngle);
+            if (randomValue <= dropItem.dropChance)
+            {
+                Debug.Log($"drop Item : {dropItem}, owner = {owner}");
+                // 드롭할 아이템 인스턴스 생성
+                ItemInstance itemInstance = new ItemInstance(dropItem);
+
+                // 드롭할 아이템 생성
+                GameObject droppedItem = PhotonNetwork.Instantiate("ItemPrefab", transform.position, Quaternion.identity);
+                ItemObject itemObject = droppedItem.GetComponent<ItemObject>();
+                itemObject.SetItem(itemInstance, randomDirection, owner);
+            }
+            else Debug.Log($"drop Item : {dropItem}, 확률 실패");
+        }
+    }
+
+    private Vector2 RotateVector(Vector2 direction, float angle)
+    {
+        float radian = angle * Mathf.Deg2Rad;
+        float cos = Mathf.Cos(radian);
+        float sin = Mathf.Sin(radian);
+
+        return new Vector2(
+            direction.x * cos - direction.y * sin,
+            direction.x * sin + direction.y * cos
+        );
+    }
+
 
     /// <summary>
     /// 죽으면서 때린 사람들에게 경험치 지급
@@ -275,7 +313,6 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
 
         if (target == playerTransform)
         {
-            Debug.Log("Removed Target Player. Setting new target...");
             SetNewTarget();
         }
     }
@@ -296,7 +333,6 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
 
         if (target == null)
         {
-            Debug.Log("Added new target...");
             SetNewTarget();
         }
     }
@@ -389,7 +425,6 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
 
         while (isUpdatingPath && !isDead && PhotonNetwork.IsMasterClient && playersInRange.Count == 0)
         {
-            Debug.Log("Updating Path To Initial Position...");
             float distanceToInitialPosition = Vector2.Distance(rb.position, initialPosition);
 
             if (distanceToInitialPosition < 0.3f)
@@ -421,7 +456,6 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
 
             if (Vector2.Distance(target.position, lastTargetPosition) > 0.2f || Time.time - lastTargetingTime > 1f || path == null)
             {
-                Debug.Log($"Updating Path To target Position... {target.position}");
                 if (seeker.IsDone())
                 {
                     seeker.StartPath(rb.position, target.position, OnPathComplete);
@@ -436,7 +470,6 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
 
     private void StopUpdatingPaths()
     {
-        Debug.Log("Stop Updating Paths...");
         isUpdatingPath = false;
     }
 

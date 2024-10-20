@@ -75,8 +75,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 0}
   iconImage: {fileID: 1835725926020055382}
-  quantityText: {fileID: 0}
+  quantityText: {fileID: 3923929865165358892}
   slotType: 0
+  itemInstance:
+    instanceId: 
+    baseItem: {fileID: 0}
+    quantity: 0
   quantity: 1
 --- !u!222 &354369542943093545
 CanvasRenderer:
@@ -128,8 +132,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a933fcfddbe64e43acc0074f14036f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 0}
   originalSlot: {fileID: 0}
+  itemInstance:
+    instanceId: 
+    baseItem: {fileID: 0}
+    quantity: 0
 --- !u!1 &1110386386478014788
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,7 +283,7 @@ GameObject:
   - component: {fileID: 1927288170760269815}
   - component: {fileID: 1835725926020055382}
   m_Layer: 5
-  m_Name: Image
+  m_Name: IconImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

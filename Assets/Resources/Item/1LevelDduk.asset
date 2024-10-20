@@ -16,6 +16,7 @@ MonoBehaviour:
   itemDescription: 
   icon: {fileID: 21300000, guid: d7e1d8d937e32324a89f4403347eee29, type: 3}
   id: 0
+  dropChance: 0.5
   slot: 0
   attackBonus: 0
   defenseBonus: 0

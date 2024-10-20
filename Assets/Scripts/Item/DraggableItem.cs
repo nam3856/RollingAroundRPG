@@ -5,15 +5,15 @@ using System;
 
 public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public BaseItem item; // 드래그할 아이템 데이터
     private Canvas canvas;
     private CanvasGroup canvasGroup;
     private RectTransform rectTransform;
     private Vector3 originalPosition;
-    private Action<BaseItem, Vector3> onDragEnd;
+    private Action<ItemInstance, Vector3> onDragEnd;
     private DroppableSlot targetDroppableSlot;
     private GameObject dragImageInstance;
     public MonoBehaviour originalSlot;
+    public ItemInstance itemInstance;
 
     public static bool IsDragging { get; private set; } = false;
 
@@ -30,7 +30,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     // 드래그 시작 시 호출
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (item == null) return;
+        if (itemInstance == null) return;
         IsDragging = true;
 
         InventorySlot inventorySlot = GetComponentInParent<InventorySlot>();
@@ -49,11 +49,13 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             Debug.LogError("원래 슬롯을 찾을 수 없습니다.");
         }
 
+        Debug.Log("draggable: " + originalSlot);
+
         canvasGroup.blocksRaycasts = false; // 드래그 중에 Raycast 차단
         UIManager uIManager = FindObjectOfType<UIManager>();
 
         // 아이템이 EquipmentItem인지 확인
-        if (item is EquipmentItem equipmentItem && originalSlot == inventorySlot)
+        if (itemInstance.baseItem is EquipmentItem equipmentItem && originalSlot == inventorySlot)
         {
             // UIManager에서 해당 장비 슬롯을 가져옴
             targetDroppableSlot = uIManager.GetDroppableSlot(equipmentItem.slot);
@@ -67,9 +69,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             dragImageInstance = Instantiate(uIManager.dragImagePrefab, canvas.transform);
             Image dragImage = dragImageInstance.GetComponent<Image>();
-            if (dragImage != null && item != null)
+            if (dragImage != null && itemInstance != null)
             {
-                dragImage.sprite = item.icon;
+                dragImage.sprite = itemInstance.baseItem.icon;
                 dragImage.SetNativeSize();
                 dragImage.gameObject.SetActive(true);
                 dragImage.GetComponent<CanvasGroup>().alpha = 0.5f;
@@ -79,13 +81,13 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             Debug.LogError("DraggableItem: DragImage 프리팹이 할당되지 않았습니다.");
         }
-
     }
+
 
     // 드래그 중일 때 호출
     public void OnDrag(PointerEventData eventData)
     {
-        if (item == null) return;
+        if (itemInstance == null) return;
         if (dragImageInstance != null)
         {
             Vector3 globalMousePos;
@@ -95,6 +97,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             }
         }
     }
+
 
     // 드래그 끝날 때 호출
     public void OnEndDrag(PointerEventData eventData)
@@ -113,11 +116,12 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             targetDroppableSlot.highlightImage.gameObject.SetActive(false);
             targetDroppableSlot = null;
         }
-        onDragEnd?.Invoke(item, eventData.position);
+        onDragEnd?.Invoke(itemInstance, eventData.position);
     }
 
+
     // 드래그 종료 시 호출할 액션 설정
-    public void SetOnDragEndAction(Action<BaseItem, Vector3> action)
+    public void SetOnDragEndAction(Action<ItemInstance, Vector3> action)
     {
         onDragEnd = action;
     }
