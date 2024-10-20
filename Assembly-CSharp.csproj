@@ -74,7 +74,6 @@
     <Compile Include="Assets\Scripts\Skills\Mage\ArcaneShield.cs" />
     <Compile Include="Assets\Scripts\ObstacleManager.cs" />
     <Compile Include="Assets\Scripts\Portal.cs" />
-    <Compile Include="Assets\Scripts\LogToFile.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
     <Compile Include="Assets\Scripts\AttackArea.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
@@ -106,6 +105,7 @@
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\FriendItem.cs" />
     <Compile Include="Assets\Scripts\Skills\MeteorMovement.cs" />
     <Compile Include="Assets\Scripts\DebugManager.cs" />
+    <Compile Include="Assets\Scripts\Item\ItemInstance.cs" />
     <Compile Include="Assets\Scripts\Skills\Gunner\roll.cs" />
     <Compile Include="Assets\Scripts\ChatManager.cs" />
     <Compile Include="Assets\Scripts\Skills\GrenadeScript.cs" />

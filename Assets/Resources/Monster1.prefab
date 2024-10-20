@@ -347,6 +347,13 @@ MonoBehaviour:
   animator: {fileID: 5856181449652476405}
   damageTextPrefab: {fileID: 2881201387083222830, guid: 84275735fafe6b94abddbed0b892d823, type: 3}
   canvasTransform: {fileID: 801904511827541088}
+  dropItems:
+  - {fileID: 11400000, guid: 1a36337ad4d714141adc97bbc5db39ee, type: 2}
+  - {fileID: 11400000, guid: 69caa4b02d36054478050afdce2ef5c6, type: 2}
+  - {fileID: 11400000, guid: 7e0901dc19ede32418495b1010de5510, type: 2}
+  - {fileID: 11400000, guid: 8f5c8c8c1bc5f0c4d9841a40aaba353d, type: 2}
+  - {fileID: 11400000, guid: 45b68289eefbc3745a2699308789cd74, type: 2}
+  - {fileID: 11400000, guid: f6ab188a0b001e44aa9ee30f638de255, type: 2}
 --- !u!114 &7647938593996368712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,7 +422,7 @@ MonoBehaviour:
     SynchronizeType: 1
     Name: die
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: isAttacking
   m_SynchronizeLayers:
   - SynchronizeType: 0

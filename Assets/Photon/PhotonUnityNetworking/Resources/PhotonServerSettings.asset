@@ -76,6 +76,8 @@ MonoBehaviour:
   - LevelUp
   - TriggerAttackAnimation
   - SetItem
+  - DestroyItem
+  - GetItem
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

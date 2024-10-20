@@ -305,10 +305,12 @@ MonoBehaviour:
     Level: 0
     Experience: 0
     LearnedSkills: []
-    EquippedItems: []
-    InventoryItems: []
+    EquippedItems: 
     LearnedTraits: []
-    LastPosition: {x: 0, y: 0, z: 0}
+    LastPosition:
+      x: 0
+      y: 0
+      z: 0
     currentCMRangeId: 0
     SkillPoint: 0
     TraitPoint: 0
@@ -366,31 +368,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 4
-    SynchronizeType: 1
-    Name: walk left
-  - Type: 4
-    SynchronizeType: 1
-    Name: walk right
-  - Type: 4
-    SynchronizeType: 1
-    Name: walk down
-  - Type: 4
-    SynchronizeType: 1
-    Name: walk up
-  - Type: 9
-    SynchronizeType: 1
-    Name: attack left
-  - Type: 9
-    SynchronizeType: 1
-    Name: attack right
-  - Type: 9
-    SynchronizeType: 1
-    Name: attack down
-  - Type: 9
-    SynchronizeType: 1
-    Name: attack up
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1122,7 +1100,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1545957979
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: -598372096, guid: 3f427f7e95a322d4a997ad07b10f23fd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1360,7 +1338,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1545957979
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: -598372096, guid: 3f427f7e95a322d4a997ad07b10f23fd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
