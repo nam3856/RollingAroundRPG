@@ -108,6 +108,6 @@ public class MyNetworkManager : MonoBehaviourPunCallbacks
 
     public void MonsterSpawn()
     {
-        PhotonNetwork.Instantiate("Monster1", new Vector3(1, 0, 0), Quaternion.identity);
+        PhotonNetwork.Instantiate("BossSlime", new Vector3(0, 0, 0), Quaternion.identity);
     }
 }

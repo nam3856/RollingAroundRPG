@@ -18,10 +18,6 @@ public class Gunner : Character
     public AudioClip reloadSound;
     public AudioClip[] grenadeSounds;
 
-    private float rollTime;
-    private float lastRollTime = -10f;
-    private BulletPool pool;
-
     private bool isChargingGrenade = false;
     private float grenadeChargeTime = 0f;
     private float currentGrenadeForce = 2f;
@@ -71,7 +67,6 @@ public class Gunner : Character
         AttackCooldown = 0.05f;
         attackDamage = 4;
         basicAttackDamage = attackDamage;
-        pool = FindObjectOfType<BulletPool>();
         SubscribeToRollEvents();
 
         currentMP = maxMP;

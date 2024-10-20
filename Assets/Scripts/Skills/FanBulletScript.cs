@@ -1,9 +1,6 @@
 using Photon.Pun;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 public class FanBulletScript : MonoBehaviourPunCallbacks
 {
@@ -11,7 +8,6 @@ public class FanBulletScript : MonoBehaviourPunCallbacks
     public Collider2D attackTrigger;
     public PhotonView PV;
     Vector2 dir;
-    private float attackRange = 0.65f;
     private float attackAngle = 90f;
     private int attackDamage = 1;
     private float knockbackForce = 0.4f;

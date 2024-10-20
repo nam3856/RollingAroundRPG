@@ -28,11 +28,11 @@ public class DebugLogger : MonoBehaviour
         //GUI.Box(boxRect, GUIContent.none); // 빈 박스 그리기
 
         // 박스 안에 흰색 텍스트를 출력
-        //GUI.color = Color.white; // 텍스트 색상 설정
-        //scrollPosition = GUI.BeginScrollView(new Rect(10, 10, 500, 300), scrollPosition, new Rect(0, 0, 480, 1000));
-        //GUI.Label(new Rect(0, 0, 480, 1000), debugLog); // 텍스트를 그리는 위치와 크기
-        //GUI.EndScrollView();
-        //if (GUI.Button(new Rect(500, 0, 400, 200), "소환"))
-            //myNetworkManager.MonsterSpawn();
+        GUI.color = Color.white; // 텍스트 색상 설정
+        scrollPosition = GUI.BeginScrollView(new Rect(10, 10, 500, 300), scrollPosition, new Rect(0, 0, 480, 1000));
+        GUI.Label(new Rect(0, 0, 480, 1000), debugLog); // 텍스트를 그리는 위치와 크기
+        GUI.EndScrollView();
+        if (GUI.Button(new Rect(500, 0, 400, 200), "소환"))
+            myNetworkManager.MonsterSpawn();
     }
 }
