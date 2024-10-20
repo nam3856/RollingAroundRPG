@@ -23,7 +23,7 @@ public class CustomPrefabPool : IPunPrefabPool
         "Player",
         "Death",
         "FanBullet",
-        "Monster1"
+        "Slime"
     };
 
     public CustomPrefabPool(List<GameObject> prefabs, int initialSize = 10)

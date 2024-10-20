@@ -42,10 +42,13 @@ public class BossSlimeMedium : MonsterBase
     protected override void GiveExperienceToAttackers()
     {
         parentBoss.mediumSlimes.Remove(gameObject);
-        if(parentBoss.mediumSlimes.Count == 0)
+        if(parentBoss.mediumSlimes.Count == 0 && parentBoss.isSplit)
         {
             parentBoss.gameObject.SetActive(true);
-
+            if (PhotonNetwork.IsMasterClient)
+            {
+                parentBoss.GetComponent<PhotonView>().RPC("DieInstant", RpcTarget.All);
+            }
         }
         UniTask.Void(async () =>
         {

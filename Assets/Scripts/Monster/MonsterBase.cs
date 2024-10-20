@@ -24,7 +24,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
     protected PhotonView PV;
 
     protected float nextWaypointDistance = 0.2f;
-    protected 
+    protected Rigidbody2D rb;
 
 
     #endregion
@@ -38,7 +38,6 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
     private float targetLostDelay = 0.5f;
     private float lastTargetingTime;
     private Seeker seeker;
-    private Rigidbody2D rb;
     public Animator animator;
     private Path path;
     private int currentWaypoint = 0;
@@ -98,45 +97,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
     /// </summary>
     private void FixedUpdate()
     {
-        if (!PhotonNetwork.IsMasterClient || path == null || IsDead) return;
-
-        if (currentWaypoint >= path.vectorPath.Count)
-        {
-            reachedEndOfPath = true;
-            return;
-        }
-        else
-        {
-            reachedEndOfPath = false;
-        }
-
-        Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
-        Vector2 force = direction * speed;// * Time.deltaTime;
-        rb.AddForce(force);//, ForceMode2D.Impulse);
-
-        Vector2 currentWaypointPos = path.vectorPath[currentWaypoint];
-
-        if (Mathf.Approximately(rb.position.x, currentWaypointPos.x) &&
-            Mathf.Approximately(rb.position.y, currentWaypointPos.y))
-        {
-            currentWaypoint++;
-        }
-        else
-        {
-            float distance = Vector2.Distance(rb.position, currentWaypointPos);
-
-            if (distance < nextWaypointDistance)
-            {
-                currentWaypoint++;
-            }
-        }
-
-        Vector2 velocity = rb.velocity;
-
-        animator.SetFloat("moveX", velocity.x);
-        animator.SetFloat("moveY", velocity.y);
-
-        GetComponent<SpriteRenderer>().flipX = velocity.x > 0;
+        Move();
     }
 
     #endregion
@@ -400,7 +361,48 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
 
     #region Movement
 
+    protected virtual void Move()
+    {
+        if (!PhotonNetwork.IsMasterClient || path == null || IsDead) return;
 
+        if (currentWaypoint >= path.vectorPath.Count)
+        {
+            reachedEndOfPath = true;
+            return;
+        }
+        else
+        {
+            reachedEndOfPath = false;
+        }
+
+        Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
+        Vector2 force = direction * speed;// * Time.deltaTime;
+        rb.AddForce(force);//, ForceMode2D.Impulse);
+
+        Vector2 currentWaypointPos = path.vectorPath[currentWaypoint];
+
+        if (Mathf.Approximately(rb.position.x, currentWaypointPos.x) &&
+            Mathf.Approximately(rb.position.y, currentWaypointPos.y))
+        {
+            currentWaypoint++;
+        }
+        else
+        {
+            float distance = Vector2.Distance(rb.position, currentWaypointPos);
+
+            if (distance < nextWaypointDistance)
+            {
+                currentWaypoint++;
+            }
+        }
+
+        Vector2 velocity = rb.velocity;
+
+        animator.SetFloat("moveX", velocity.x);
+        animator.SetFloat("moveY", velocity.y);
+
+        GetComponent<SpriteRenderer>().flipX = velocity.x > 0;
+    }
     public void SetTarget(Transform targetTransform)
     {
         target = targetTransform;

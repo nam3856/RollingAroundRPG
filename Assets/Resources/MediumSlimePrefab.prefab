@@ -81,9 +81,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 631191443
-  m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingLayerID: -111945189
+  m_SortingLayer: 5
+  m_SortingOrder: 2
   m_Sprite: {fileID: -1543091613, guid: 9b69a3e4c185da34cbf186aac227c2f2, type: 3}
   m_Color: {r: 1, g: 0.5330188, b: 0.6233597, a: 1}
   m_FlipX: 0
@@ -167,7 +167,7 @@ Rigidbody2D:
   m_LinearDrag: 1
   m_AngularDrag: 1
   m_GravityScale: 0
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 438882510d7aae84c981380b562995c7, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -310,6 +310,12 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 1
     Name: isAttacking
+  - Type: 9
+    SynchronizeType: 0
+    Name: bounce
+  - Type: 4
+    SynchronizeType: 0
+    Name: isBouncing
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -533,7 +539,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6290748298390384148}
   - component: {fileID: 1825756426780269625}
-  - component: {fileID: 4484884667136411658}
   - component: {fileID: 7611465646355856564}
   m_Layer: 3
   m_Name: TriggerCollider
@@ -592,33 +597,6 @@ CapsuleCollider2D:
   m_Offset: {x: -0.0006298721, y: 0.015064657}
   m_Size: {x: 0.5565221, y: 0.5565221}
   m_Direction: 0
---- !u!50 &4484884667136411658
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8066727430023673011}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!114 &7611465646355856564
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,8 +1,9 @@
 using Cysharp.Threading.Tasks;
 using Photon.Pun;
 using System;
+using UnityEngine;
 
-public class SlimeMonster : MonsterBase
+public class Slime : MonsterBase
 {
     protected override void Start()
     {
@@ -10,6 +11,13 @@ public class SlimeMonster : MonsterBase
 
     }
 
+    [PunRPC]
+    void SetForBoss()
+    {
+        experiencePoints = 0;
+        Vector2 dir = new Vector2(UnityEngine.Random.Range(-1f,1f), UnityEngine.Random.Range(-1f,1f)).normalized * UnityEngine.Random.Range(2f,3f);
+        GetComponent<Rigidbody2D>().AddForce(dir,ForceMode2D.Impulse);
+    }
     protected override void Attack()
     {
     }

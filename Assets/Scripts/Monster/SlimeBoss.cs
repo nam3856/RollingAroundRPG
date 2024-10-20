@@ -11,14 +11,54 @@ public class SlimeBoss : MonsterBase
     private BossPhase currentPhase = BossPhase.Phase1;
     public float splitStartTime;
 
+    [Header("Jump Attack")]
+    [SerializeField] private GameObject jumpAttackIndicatorPrefab;
+    private GameObject jumpAttackIndicatorInstance;
+    private float jumpAttackCooldown = 12f;
+    private float lastJumpAttackTime = -Mathf.Infinity;
+    private bool isPreparingJumpAttack = false;
+
+    [Header("Spawn Mini Slimes")]
+    [SerializeField] private float spawnCooldown = 5f;
+    private float lastSpawnTime = -Mathf.Infinity;
+
+    [Header("Split Into Medium Slimes")]
+    [SerializeField] private float splitInterval = 40f;
+    public float recombineDelay = 20f;
+    private float lastSplitTime = -Mathf.Infinity;
+    public bool isSplit = false;
+    public List<GameObject> mediumSlimes = new List<GameObject>();
+
+    private int phase3StartHealth;
+
+
     public event Action<int> OnPhaseChanged;
+
+    #region Unity Callbacks
     protected override void Start()
     {
         base.Start();
         currentPhase = BossPhase.Phase1;
         // Initialize timers and health checkpoints
     }
+    private void Update()
+    {
+        if (PhotonNetwork.IsMasterClient && !IsDead)
+        {
+            if (currentPhase >= BossPhase.Phase1 && !isSplit)
+                HandleJumpAttack();
+            if (currentPhase == BossPhase.Phase3 && !isPreparingJumpAttack)
+                HandleSplitting();
+        }
+    }
 
+    protected override void Move()
+    {
+        if (isPreparingJumpAttack || isSplit) return;
+        base.Move();
+    }
+
+    #endregion
     private void HandlePhaseTransitions()
     {
         if (currentPhase == BossPhase.Phase1 && currentHealth <= maxHealth * 0.7f)
@@ -38,16 +78,14 @@ public class SlimeBoss : MonsterBase
     {
     }
 
-    private float jumpAttackCooldown = 10f;
-    private float lastJumpAttackTime = -Mathf.Infinity;
-    private bool isPreparingJumpAttack = false;
+    
 
     private void HandleJumpAttack()
     {
         if (Time.time >= lastJumpAttackTime + jumpAttackCooldown && !isPreparingJumpAttack)
         {
             isPreparingJumpAttack = true;
-            StartCoroutine(PrepareJumpAttack());
+            StartJumpAttack();
             lastJumpAttackTime = Time.time;
         }
     }
@@ -56,24 +94,43 @@ public class SlimeBoss : MonsterBase
     {
         float preparationTime = 2f;
         float elapsedTime = 0f;
-
-        // Show and grow the circle indicator here
+        rb.velocity = Vector2.zero;
+        rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+        if (jumpAttackIndicatorPrefab != null)
+        {
+            jumpAttackIndicatorInstance = Instantiate(jumpAttackIndicatorPrefab, transform.position, Quaternion.identity);
+            jumpAttackIndicatorInstance.transform.SetParent(transform);
+            jumpAttackIndicatorInstance.transform.localScale = Vector3.zero;
+        }
 
         while (elapsedTime < preparationTime)
         {
             elapsedTime += Time.deltaTime;
-            // Update indicator size
+            float scale = Mathf.Lerp(0f, 2f, elapsedTime / preparationTime); // 최대 크기 조정
+            if (jumpAttackIndicatorInstance != null)
+            {
+                jumpAttackIndicatorInstance.transform.localScale = Vector3.one * scale;
+            }
             yield return null;
         }
 
         PerformJumpAttack();
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        animator.SetBool("isBouncing", false);
+        if (jumpAttackIndicatorInstance != null)
+        {
+            Destroy(jumpAttackIndicatorInstance);
+        }
         isPreparingJumpAttack = false;
     }
+
 
     private void PerformJumpAttack()
     {
         float attackRadius = 3f;
         Collider2D[] hitPlayers = Physics2D.OverlapCircleAll(transform.position, attackRadius, LayerMask.GetMask("Player"));
+
         foreach (Collider2D playerCollider in hitPlayers)
         {
             PhotonView playerPV = playerCollider.GetComponent<PhotonView>();
@@ -83,10 +140,9 @@ public class SlimeBoss : MonsterBase
                 playerPV.RPC("ReceiveDamage", RpcTarget.All, damageAmount, Vector2.zero);
             }
         }
+
     }
 
-    private float spawnCooldown = 5f;
-    private float lastSpawnTime = -Mathf.Infinity;
 
     [PunRPC]
     public override void TakeDamage(object[] data)
@@ -140,6 +196,21 @@ public class SlimeBoss : MonsterBase
         }
     }
 
+    [PunRPC]
+    public void DieInstant()
+    {
+        isSplit = IsDead = true;
+        
+        GetComponent<CircleCollider2D>().enabled = false;
+        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+        GetComponent<Animator>().SetTrigger("die");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            GiveExperienceToAttackers();
+            DropLoot();
+        }
+    }
+
     private void SpawnSmallSlimes()
     {
         int numberOfSlimes = UnityEngine.Random.Range(2, 4);
@@ -147,25 +218,10 @@ public class SlimeBoss : MonsterBase
         for (int i = 0; i < numberOfSlimes; i++)
         {
             Vector2 spawnPosition = (Vector2)transform.position + UnityEngine.Random.insideUnitCircle * 1f;
-            PhotonNetwork.Instantiate("Monster1", spawnPosition, Quaternion.identity);
-        }
-    }
-
-    private float splitInterval = 40f;
-    public float recombineDelay = 20f;
-    private float lastSplitTime = -Mathf.Infinity;
-    public bool isSplit = false;
-    public List<GameObject> mediumSlimes = new List<GameObject>();
-    private int phase3StartHealth;
-
-    private void Update()
-    {
-        if (PhotonNetwork.IsMasterClient && !IsDead)
-        {
-            if (currentPhase >= BossPhase.Phase1 && !isSplit)
-                HandleJumpAttack();
-            if (currentPhase == BossPhase.Phase3)
-                HandleSplitting();
+            GameObject miniSlime = PhotonNetwork.Instantiate("Slime", spawnPosition, Quaternion.identity);
+            Slime miniSlimeScript = miniSlime.GetComponent<Slime>();
+            miniSlimeScript.dropItems.Clear();
+            miniSlimeScript.photonView.RPC("SetForBoss", RpcTarget.AllBuffered);
         }
     }
     private void HandleSplitting()
@@ -188,7 +244,7 @@ public class SlimeBoss : MonsterBase
     {
         int mediumSlimeCount = 5;
         int slimeHealth = currentHealth / mediumSlimeCount;
-
+        rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
         for (int i = 0; i < mediumSlimeCount; i++)
         {
             Vector2 spawnPosition = (Vector2)transform.position + UnityEngine.Random.insideUnitCircle * 1f;
@@ -219,29 +275,12 @@ public class SlimeBoss : MonsterBase
         }
 
         mediumSlimes.Clear();
-
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         PV.RPC("SetActiveRPC", RpcTarget.All, true);
 
         currentHealth = Mathf.Min(phase3StartHealth, totalHealth);
         IsDead = false;
     }
-
-    public void OnAllMediumSlimeDead()
-    {
-        IsDead = true;
-        isSplit = false;
-
-        GetComponent<CircleCollider2D>().enabled = false;
-        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-        GetComponent<Animator>().SetTrigger("die");
-        if (PhotonNetwork.IsMasterClient)
-        {
-            GiveExperienceToAttackers();
-            DropLoot();
-        }
-
-    }
-
 
     [PunRPC]
     private void SetActiveRPC(bool active)
@@ -252,10 +291,11 @@ public class SlimeBoss : MonsterBase
     [PunRPC]
     private void StartJumpAttackRPC()
     {
+        animator.SetBool("isBouncing", true);
+        animator.SetTrigger("bounce");
         StartCoroutine(PrepareJumpAttack());
     }
 
-    // Call this method on the master client
     private void StartJumpAttack()
     {
         PV.RPC("StartJumpAttackRPC", RpcTarget.All);
@@ -264,11 +304,16 @@ public class SlimeBoss : MonsterBase
     protected override void GiveExperienceToAttackers()
     {
         base.GiveExperienceToAttackers();
+        if (jumpAttackIndicatorInstance != null)
+        {
+            Destroy(jumpAttackIndicatorInstance);
+        }
         UniTask.Void(async () =>
         {
             await UniTask.Delay(TimeSpan.FromSeconds(0.7f));
             PhotonNetwork.Destroy(gameObject);
         });
+
     }
 }
 
