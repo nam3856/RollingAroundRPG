@@ -238,9 +238,12 @@ MonoBehaviour:
   dir: {x: 0, y: 0}
   damage: 0
   shooterActorNumber: 0
+  attackerViewId: 0
+  velocity: {x: 0, y: 0}
   boxCollider: {fileID: 0}
   circleCollider: {fileID: 0}
   targetPhotonView: {fileID: 0}
+  critical: 0
 --- !u!1 &8464199481796525833
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,7 +255,6 @@ GameObject:
   - component: {fileID: 3082290109742841377}
   - component: {fileID: 438183215630435686}
   - component: {fileID: 6962632782478980948}
-  - component: {fileID: 3996125955535075954}
   m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
@@ -322,30 +324,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f477373b34213b4a8ca0c456a77c6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!50 &3996125955535075954
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8464199481796525833}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 0.0001
-  m_LinearDrag: 0
-  m_AngularDrag: 0
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0

@@ -60,6 +60,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
 
     [Header("Audio Clips")]
     protected AudioClip receivedArcaneShieldSound;
+    protected AudioClip levelUpSound;
 
     [Header("Movement")]
     public float moveSpeed = 3f;
@@ -227,6 +228,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
     private void LoadResources()
     {
         receivedArcaneShieldSound = Resources.Load<AudioClip>("Sounds/ReceivedArcaneShieldSound");
+        levelUpSound = Resources.Load<AudioClip>("Sounds/LevelUpSound");
     }
 
     /// <summary>
@@ -674,6 +676,7 @@ public abstract class Character : MonoBehaviourPunCallbacks, IPunObservable
         experience += amount;
         if (experience >= levelPerExperience[level - 1])
         {
+            audioSource.PlayOneShot(levelUpSound);
             PV.RPC("LevelUp", RpcTarget.All);
         }
 

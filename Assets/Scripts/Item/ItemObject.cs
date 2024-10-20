@@ -43,7 +43,7 @@ public class ItemObject : MonoBehaviour
         itemSprite.sprite = itemInstance.baseItem.icon;
         this.itemInstance = itemInstance;
 
-        dir = vector2 * 1f;
+        dir = vector2 * 20f;
         Rigidbody2D.AddForce(dir);
         this.owner = owner;
         IsSet = true;
@@ -66,7 +66,6 @@ public class ItemObject : MonoBehaviour
                         Character character = targetPhotonView.GetComponent<Character>();
                         if (character != null && character.TryGetItem(itemInstance))
                         {
-                            // 다른 플레이어들에게 아이템 획득을 알림
                             targetPhotonView.RPC("GetItem", RpcTarget.Others, itemInstance.baseItem.id, itemInstance.instanceId);
                         }
                         else
@@ -75,7 +74,7 @@ public class ItemObject : MonoBehaviour
                             return;
                         }
                     }
-                    dir = (targetPhotonView.transform.position - transform.position).normalized * 0.1f;
+                    dir = (targetPhotonView.transform.position - transform.position).normalized * 1f;
                     PhotonView.RPC("DestroyItem", RpcTarget.AllBuffered);
                 }
             }
@@ -85,7 +84,7 @@ public class ItemObject : MonoBehaviour
 
     private async UniTaskVoid MoveTowardsPlayerAsync(Transform playerTransform)
     {
-        float moveDuration = 1.0f;  // 아이템이 이동할 시간 (초)
+        float moveDuration = 0.5f;  // 아이템이 이동할 시간 (초)
         float elapsedTime = 0f;
 
         Vector2 startPosition = transform.position;
