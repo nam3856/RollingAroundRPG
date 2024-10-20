@@ -67,7 +67,7 @@ public class MonsterAttack : MonoBehaviourPunCallbacks
 
     private async UniTaskVoid Attack(PhotonView playerPV)
     {
-        while (!health.isDead && playersInRange.Contains(playerPV))
+        while (!health.IsDead && playersInRange.Contains(playerPV))
         {
             health.animator.SetBool("isAttacking", true);
             if (Time.time >= lastAttackTimes[playerPV] + attackCooldown)

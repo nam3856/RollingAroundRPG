@@ -4,6 +4,7 @@ using Photon.Pun;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using System.Collections;
 
 public abstract class MonsterBase : MonoBehaviourPunCallbacks
 {
@@ -14,9 +15,10 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
     [SerializeField] protected float speed;
     [SerializeField] protected float attackCooldown;
     [SerializeField] protected int damage;
+    [SerializeField] protected bool IsBoss = false;
 
     protected int currentHealth;
-    public bool isDead { get; protected set; } = false;
+    public bool IsDead { get; protected set; } = false;
     protected HashSet<int> attackers = new HashSet<int>();
     protected float lastHitTime = 0;
     protected PhotonView PV;
@@ -96,7 +98,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
     /// </summary>
     private void FixedUpdate()
     {
-        if (!PhotonNetwork.IsMasterClient || path == null || isDead) return;
+        if (!PhotonNetwork.IsMasterClient || path == null || IsDead) return;
 
         if (currentWaypoint >= path.vectorPath.Count)
         {
@@ -150,7 +152,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
     [PunRPC]
     public virtual void TakeDamage(object[] data)
     {
-        if (isDead) return;
+        if (IsDead) return;
         int damage = (int)data[0];
         int attackerViewID = (int)data[1];
         bool isCritical = (bool)data[2];
@@ -179,7 +181,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
 
         if (currentHealth <= 0)//Á×À» ¶§
         {
-            isDead = true;
+            IsDead = true;
             GetComponent<CircleCollider2D>().enabled = false;
             GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
             GetComponent<Animator>().SetTrigger("die");
@@ -197,7 +199,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
             }
         }
     }
-    void DropLoot()
+    protected void DropLoot()
     {
         foreach (BaseItem dropItem in dropItems)
         {
@@ -423,7 +425,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
         if (isUpdatingPath) return;
         isUpdatingPath = true;
 
-        while (isUpdatingPath && !isDead && PhotonNetwork.IsMasterClient && playersInRange.Count == 0)
+        while (isUpdatingPath && !IsDead && PhotonNetwork.IsMasterClient && playersInRange.Count == 0)
         {
             float distanceToInitialPosition = Vector2.Distance(rb.position, initialPosition);
 
@@ -451,7 +453,7 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
         if (isUpdatingPath) return;
         isUpdatingPath = true;
 
-        while (isUpdatingPath && !isDead && target != null && PhotonNetwork.IsMasterClient && playersInRange.Count > 0)
+        while (isUpdatingPath && !IsDead && target != null && PhotonNetwork.IsMasterClient && playersInRange.Count > 0)
         {
 
             if (Vector2.Distance(target.position, lastTargetPosition) > 0.2f || Time.time - lastTargetingTime > 1f || path == null)
@@ -485,3 +487,4 @@ public abstract class MonsterBase : MonoBehaviourPunCallbacks
 
     #endregion
 }
+
