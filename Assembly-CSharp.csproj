@@ -70,6 +70,7 @@
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\AppSettingsExtensions.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
     <Compile Include="Assets\Scripts\BulletPool.cs" />
+    <Compile Include="Assets\Scripts\Monster\SlimeBoss.cs" />
     <Compile Include="Assets\Scripts\Item\DraggableItem.cs" />
     <Compile Include="Assets\Scripts\Skills\Mage\ArcaneShield.cs" />
     <Compile Include="Assets\Scripts\ObstacleManager.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Assets\Scripts\Characters\Character.cs" />
     <Compile Include="Assets\Photon\PhotonChat\Demos\DemoChat\FriendItem.cs" />
     <Compile Include="Assets\Scripts\Skills\MeteorMovement.cs" />
+    <Compile Include="Assets\Scripts\Monster\MediumSlime.cs" />
     <Compile Include="Assets\Scripts\DebugManager.cs" />
     <Compile Include="Assets\Scripts\Item\ItemInstance.cs" />
     <Compile Include="Assets\Scripts\Skills\Gunner\roll.cs" />
