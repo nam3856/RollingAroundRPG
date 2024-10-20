@@ -99,7 +99,6 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
 
     private void Shoot()
     {
-        IsSniping = false;
         // 화면 중앙의 스크린 좌표를 월드 좌표로 변환
         Vector2 screenCenter = new Vector2(Screen.width / 2, Screen.height / 2);
         Vector2 worldPoint = Camera.main.ScreenToWorldPoint(screenCenter);
@@ -131,6 +130,8 @@ public class SnipeShotSkill : MonoBehaviourPunCallbacks
 
     public void DeactivateSnipeShot()
     {
+        if (!IsSniping) return;
+        Debug.Log("Deactivate");
         IsSniping = false;
         character.RB.constraints = RigidbodyConstraints2D.FreezeRotation;
 

@@ -33,7 +33,7 @@ public class GrenadeChildScript : MonoBehaviour
             if (targetPhotonView != null)
             {
                 // 몬스터의 체력 감소 처리
-                targetPhotonView.RPC("TakeDamage", RpcTarget.All, new object[] { damage, parentGrenadeScript.attackerViewId, isCriticalHit, transform.position, 1f });
+                targetPhotonView.RPC("TakeDamage", RpcTarget.All, new object[] { (int)damage, parentGrenadeScript.attackerViewId, isCriticalHit, transform.position, 1f });
             }
         }
         if (col.CompareTag("Removable Obstacle"))
